@@ -19,6 +19,10 @@
 	- A quest turn-in is added to the completed quests right away, the Attunements tab no
 	  longer waits for the next server poll.
 
+	- Fixed errors in the account summary caused by mail sent to an alt of the other faction.
+	  The mail was filed under an empty character of the sender's faction; it is now moved to
+	  the right character at login, and empty characters are left out of the lists.
+
 	- Lists redraw when the client receives data for an item it didn't know yet.
 
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the

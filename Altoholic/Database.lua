@@ -225,6 +225,37 @@ local function cleanDefaults(t, defaults)
 	return next(t) == nil
 end
 
+-- Mail sent to an alt of the other faction used to be filed under the sender's faction,
+-- leaving a record there with mail but no class or level. Hand the mail that is still
+-- pending to the real character and drop the record.
+-- Runs on the stored data, before the defaults are applied: a missing field is a default.
+local function mergeMisfiledCharacters(data)
+	if type(data) ~= "table" then return end
+	for faction, realms in pairs(data) do
+		for realm, r in pairs(realms) do
+			for name, c in pairs(type(r.char) == "table" and r.char or {}) do
+				if not c.class or c.class == "" then
+					for otherFaction, otherRealms in pairs(data) do
+						local other = otherRealms[realm]
+						local real = otherFaction ~= faction and other and other.char and other.char[name]
+						if real and real.class and real.class ~= "" then
+							for _, m in ipairs(c.mail or {}) do
+								-- anything older was already there when the mailbox was last scanned
+								if (m.lastcheck or 0) > (real.lastmailcheck or 0) then
+									real.mail = real.mail or {}
+									table.insert(real.mail, m)
+								end
+							end
+							break
+						end
+					end
+					r.char[name] = nil
+				end
+			end
+		end
+	end
+end
+
 function Altoholic:InitDatabase()
 	if type(AltoholicDB) ~= "table" then
 		AltoholicDB = {}
@@ -232,6 +263,7 @@ function Altoholic:InitDatabase()
 	if type(AltoholicDB.account) ~= "table" then
 		AltoholicDB.account = {}
 	end
+	mergeMisfiledCharacters(AltoholicDB.account.data)
 	self.db = { account = inheritDefaults(AltoholicDB.account, defaults) }
 end
 

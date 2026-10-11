@@ -1468,7 +1468,7 @@ function Altoholic:GetDelayInDays(delay)
 end
 
 function Altoholic:GetRestedXP(level, restXP, logout, isResting)
-	if level == LEVEL_CAP then
+	if level >= LEVEL_CAP then
 		return L["No rest XP"]
 	end
 	local rate = self:GetRestXPRate(level, restXP)
@@ -1502,8 +1502,10 @@ function Altoholic:GetRestedXP(level, restXP, logout, isResting)
 end
 
 function Altoholic:GetRestXPRate(level, restXP)
-	if not restXP then return 0 end
-	return (restXP / ((self.XPToNext[level] / 100) * 1.5))
+	local xpToNext = self.XPToNext[level]
+	-- no entry for a character whose level was never scanned (0) or is past the table
+	if not restXP or not xpToNext then return 0 end
+	return (restXP / ((xpToNext / 100) * 1.5))
 end
 
 function Altoholic:GetCharacterInfo(line)
@@ -1986,7 +1988,10 @@ function Altoholic:Get_Sorted_Character_List(faction, realm)
 	Altoholic_compare_realm = realm
 	-- DEFAULT_CHAT_FRAME:AddMessage(TEAL .. "getting list for "..faction.." on "..realm)
 	for CharacterName, c in pairs(self.db.account.data[faction][realm].char) do
-		table.insert(Altoholic_sorted_character_list, CharacterName)
+		-- no class: the record was only ever looked up, never scanned
+		if c.class ~= "" then
+			table.insert(Altoholic_sorted_character_list, CharacterName)
+		end
 	end
 	table.sort(Altoholic_sorted_character_list, compare_Character_By_Level)
 	return Altoholic_sorted_character_list

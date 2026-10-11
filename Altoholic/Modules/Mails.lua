@@ -151,59 +151,69 @@ function Altoholic:UpdatePlayerMail()
 end
 
 -- *** Hooks ***
+-- the record of one of this account's characters on this realm, whichever faction it is in
+local function FindRecipient(name)
+    for _, f in pairs(Altoholic.db.account.data) do
+        -- rawget: a plain lookup would create the realm or the character
+        local r = rawget(f, V.realm)
+        local c = r and rawget(r.char, name)
+        if c and c.class ~= "" then
+            return c
+        end
+    end
+end
+
 -- this has to run before the mail leaves: the attachments and the money are gone afterwards,
 -- so a post-hook (hooksecurefunc) is no use here
 local Orig_SendMail = SendMail
 function SendMail(recipient, ...)
-    for CharacterName, c in pairs(Altoholic.db.account.data[V.faction][V.realm].char) do
-        if CharacterName == recipient then
-            for k, v in pairs(V.Attachments) do
-                table.insert(c.mail, {
-                    icon = v.icon,
-                    subject = v.subject,
-                    count = v.count,
-                    sender = V.player,
-                    lastcheck = time(),
-                    daysleft = 30,
-                    realm = V.realm
-                } )
-            end
-            local moneySent = GetSendMailMoney()
-            local gold, silver, copper, mSent, altText, mailIcon
-            if (moneySent > 0) then
-                copper = tostring(moneySent)
-                silver = tostring(moneySent / 100)
-                gold = tostring((moneySent - (moneySent % COPPER_PER_SILVER)) / 10000)
-                if moneySent < 100 then
-                    mailIcon = "Interface\\Icons\\INV_Misc_Coin_05"
-                    mSent = copper .. " Copper"
-                elseif moneySent < 10000 then
-                    mailIcon = "Interface\\Icons\\INV_Misc_Coin_03"
-                    mSent = silver .. " Silver"
-                elseif moneySent >= 10000 then
-                    mailIcon = "Interface\\Icons\\INV_Misc_Coin_01"
-                    mSent = gold .. " Gold"
-                else
-                    mailIcon = "Interface\\Icons\\INV_Misc_Note_01"
-                end
-                table.insert(c.mail, {
-                    money = moneySent,
-                    icon = mailIcon,
-                    subject = mSent,
-                    sender = V.player,
-                    lastcheck = time(),
-                    daysleft = 30,
-                    realm = V.realm
-                } )
-            end
-            if (c.lastmailcheck == nil) or (c.lastmailcheck == 0) then
-                c.lastmailcheck = time()
-            end
-            table.sort(c.mail, function(a, b)
-                return a.daysleft < b.daysleft
-            end)
-            break
+    local c = FindRecipient(recipient)
+    if c then
+        for k, v in pairs(V.Attachments) do
+            table.insert(c.mail, {
+                icon = v.icon,
+                subject = v.subject,
+                count = v.count,
+                sender = V.player,
+                lastcheck = time(),
+                daysleft = 30,
+                realm = V.realm
+            } )
         end
+        local moneySent = GetSendMailMoney()
+        local gold, silver, copper, mSent, altText, mailIcon
+        if (moneySent > 0) then
+            copper = tostring(moneySent)
+            silver = tostring(moneySent / 100)
+            gold = tostring((moneySent - (moneySent % COPPER_PER_SILVER)) / 10000)
+            if moneySent < 100 then
+                mailIcon = "Interface\\Icons\\INV_Misc_Coin_05"
+                mSent = copper .. " Copper"
+            elseif moneySent < 10000 then
+                mailIcon = "Interface\\Icons\\INV_Misc_Coin_03"
+                mSent = silver .. " Silver"
+            elseif moneySent >= 10000 then
+                mailIcon = "Interface\\Icons\\INV_Misc_Coin_01"
+                mSent = gold .. " Gold"
+            else
+                mailIcon = "Interface\\Icons\\INV_Misc_Note_01"
+            end
+            table.insert(c.mail, {
+                money = moneySent,
+                icon = mailIcon,
+                subject = mSent,
+                sender = V.player,
+                lastcheck = time(),
+                daysleft = 30,
+                realm = V.realm
+            } )
+        end
+        if (c.lastmailcheck == nil) or (c.lastmailcheck == 0) then
+            c.lastmailcheck = time()
+        end
+        table.sort(c.mail, function(a, b)
+            return a.daysleft < b.daysleft
+        end)
     end
     V.Attachments = {}
     return Orig_SendMail(recipient, ...)
