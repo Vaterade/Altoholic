@@ -1,5 +1,5 @@
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
@@ -77,11 +77,11 @@ function Altoholic:Raids_Update()
 	local VisibleLines = 14
 	local frame = "AltoRaids"
 	local entry = frame.."Entry"
-	if table.getn(self.CharacterInfo) == 0 then
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 18)
+	if #self.CharacterInfo == 0 then
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 18)
 		return
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawRealm
@@ -106,7 +106,7 @@ function Altoholic:Raids_Update()
 			end
 		else		-- line will be displayed
 			for _, raidname in pairs(RaidNames) do
-				getglobal(entry..i..raidname):SetWidth(35)
+				_G[entry..i..raidname]:SetWidth(35)
 			end
 
 			if s.linetype == INFO_REALM_LINE then
@@ -114,24 +114,24 @@ function Altoholic:Raids_Update()
 				CurrentRealm = s.realm
 				TotalLockouts = {}
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
 					DrawRealm = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawRealm = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."Name"):SetText(self:GetFullRealmString(s.faction, s.realm))
-				getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-				getglobal(entry..i.."Name"):SetWidth(100)
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."Name"]:SetText(self:GetFullRealmString(s.faction, s.realm))
+				_G[entry..i.."Name"]:SetJustifyH("LEFT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Name"]:SetWidth(100)
 
 				for _, raidname in pairs(RaidNames) do
-					getglobal(entry..i..raidname):SetText(WHITE .. raidname)
+					_G[entry..i..raidname]:SetText(WHITE .. raidname)
 				end
 
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -139,26 +139,26 @@ function Altoholic:Raids_Update()
 				if (s.linetype == INFO_CHARACTER_LINE) then
 					local c = self.db.account.data[CurrentFaction][CurrentRealm].char[s.name]
 					local color = self:GetClassColor(c.class)
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(color .. s.name)
-					getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-					getglobal(entry..i.."Name"):SetWidth(100)
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(color .. s.name)
+					_G[entry..i.."Name"]:SetJustifyH("LEFT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+					_G[entry..i.."Name"]:SetWidth(100)
 					for _, raidname in pairs(RaidNames) do
-						getglobal(entry..i..raidname):SetText(getraidid(c.SavedInstance, raidname))
+						_G[entry..i..raidname]:SetText(getraidid(c.SavedInstance, raidname))
 					end
 				elseif (s.linetype == INFO_TOTAL_LINE) then
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(L["Totals"])
-					getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-					getglobal(entry..i.."Name"):SetWidth(100)
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(L["Totals"])
+					_G[entry..i.."Name"]:SetJustifyH("LEFT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+					_G[entry..i.."Name"]:SetWidth(100)
 					for _, raidname in pairs(RaidNames) do
-						getglobal(entry..i..raidname):SetText(TotalLockouts[raidname] or "")
+						_G[entry..i..raidname]:SetText(TotalLockouts[raidname] or "")
 					end
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -166,11 +166,11 @@ function Altoholic:Raids_Update()
 		end
 	end
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 18);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end
 
 function Altoholic_Raid_OnEnter(self)

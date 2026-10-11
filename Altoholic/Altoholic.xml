@@ -18,18 +18,13 @@
 				this:RegisterForDrag("RightButton")
 			</OnLoad>
 			<OnClick>
-				Altoholic_MiniMapButton_OnClick(arg1, this:GetID())
+				Altoholic_MiniMapButton_OnClick(arg1)
 			</OnClick>
-			<OnUpdate>
-				if(this.isMoving == true) then
-					Altoholic:UpdateMinimapIconCoords()
-				end
-			</OnUpdate>
 			<OnDragStart>
-				this.isMoving = true;
+				Altoholic_MiniMapButton_OnDragStart(this)
 			</OnDragStart>
 			<OnDragStop>
-				this.isMoving = false;
+				Altoholic_MiniMapButton_OnDragStop(this)
 			</OnDragStop>
 			<OnEnter> 
 				AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
@@ -87,15 +82,12 @@
 		<Scripts>
 			<OnLoad>
 				this:RegisterForDrag("LeftButton");
-				this.elapsed = 0;
 			</OnLoad>
 			<OnDragStart>
 				this:StartMoving();
-				this.isMoving = true;
 			</OnDragStart>
 			<OnDragStop>
 				this:StopMovingOrSizing();
-				this.isMoving = false;
 			</OnDragStop>
 			<OnShow>
 				Altoholic:OnShow();
@@ -463,7 +455,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(20, function(this)
+						FauxScrollFrame_OnVerticalScroll(20, function()
 							Altoholic:Menu_Update();
 						end)
 					</OnVerticalScroll>
@@ -575,7 +567,7 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_1);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_1)
 						AltoholicFrame_IncludeNoMinLevel:SetChecked(1)
 					</OnLoad>
 				</Scripts>
@@ -590,7 +582,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_2);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_2)
 						AltoholicFrame_RadioButton1:SetChecked(1)
 					</OnLoad>
 					<OnClick>
@@ -609,7 +601,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_3);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_3)
 						AltoholicFrame_RadioButton2:SetChecked(nil)
 					</OnLoad>
 					<OnClick>
@@ -628,7 +620,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_4);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_4)
 						AltoholicFrame_RadioButton3:SetChecked(nil)
 					</OnLoad>
 					<OnClick>
@@ -650,7 +642,7 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_5);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_5)
 						AltoholicFrame_CheckButton1:SetChecked(1)
 					</OnLoad>
 				</Scripts>
@@ -668,7 +660,7 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_6);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_6)
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
@@ -685,7 +677,7 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_MAIN_WINDOW_7);
+						Altoholic:SetLabel(this, XML_TEXT_MAIN_WINDOW_7)
 						AltoholicFrame_CheckButton3:SetChecked(1);
 					</OnLoad>
 				</Scripts>

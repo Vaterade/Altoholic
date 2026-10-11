@@ -120,7 +120,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(41, function(this) 
+						FauxScrollFrame_OnVerticalScroll(41, function()
 							Altoholic:Mail_Update();
 						end)
 					</OnVerticalScroll>

@@ -1,6 +1,5 @@
-﻿local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
 
-L:RegisterTranslations("frFR", function() return {
+Altoholic:RegisterTranslations("frFR", function() return {
 
 	-- Note: since 2.4.004 and the support of LibBabble, certain lines are commented, but remain there for clarity (especially those concerning the menu)
 	-- A lot of translations, especially those concerning the loot table, comes from atlas loot, credit goes to their team for gathering this info, I (Thaoky) simply took what I needed.

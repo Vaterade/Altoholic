@@ -1,4 +1,4 @@
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
@@ -19,46 +19,46 @@ function Altoholic:Equipment_Update()
 	-- ** draw class icons **
 	local i = 1
 	local byLevel = Altoholic:Get_Sorted_Character_List(V.CurrentFaction, V.CurrentRealm)
-	for _, CharacterName in byLevel do
+	for _, CharacterName in ipairs(byLevel) do
 		local c = self.db.account.data[V.CurrentFaction][V.CurrentRealm].char[CharacterName]
 		local itemName = entry .. "1Item" .. i;
-		local itemButton = getglobal(itemName);
+		local itemButton = _G[itemName];
 		if itemButton == nil then break end
 		itemButton:SetScript("OnEnter", Altoholic_Equipment_OnEnter)
 		itemButton:SetScript("OnLeave", function(self) AltoTooltip:Hide() end)
 		itemButton:SetScript("OnClick", Altoholic_Equipment_OnClick)
 		local tc = self.ClassInfo[ self.Classes[c.class] ].texcoord
-		local itemTexture = getglobal(itemName .. "IconTexture")		
+		local itemTexture = _G[itemName .. "IconTexture"]		
 		itemTexture:SetTexture(self.classicon);
 		itemTexture:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
 		itemTexture:SetWidth(36);
 		itemTexture:SetHeight(36);
 		itemTexture:SetAllPoints(itemButton);
 		itemButton.CharName = CharacterName
-		getglobal(itemName):Show()
+		_G[itemName]:Show()
 		i = i + 1
 	end
 	while i <= 10 do
-		getglobal(entry .. "1Item" .. i):Hide()
-		getglobal(entry .. "1Item" .. i).CharName = nil
+		_G[entry .. "1Item" .. i]:Hide()
+		_G[entry .. "1Item" .. i].CharName = nil
 		i = i + 1
 	end
-	getglobal(entry .. "1"):Show()
-	getglobal(entry .. "1"):SetID(0)
+	_G[entry .. "1"]:Show()
+	_G[entry .. "1"]:SetID(0)
 	-- ** draw equipment icons **
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	for i=2, VisibleLines do
 		local line = i + offset - 1
-		getglobal(entry..i.."Name"):SetText(self.equipment[line].color .. self.equipment[line].name)
+		_G[entry..i.."Name"]:SetText(self.equipment[line].color .. self.equipment[line].name)
 		local j = 1
-		for _, CharacterName in byLevel do
+		for _, CharacterName in ipairs(byLevel) do
 			local c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 			local itemName = entry.. i .. "Item" .. j;
-			local itemButton = getglobal(itemName);
+			local itemButton = _G[itemName];
 			if itemButton == nil then break end
 			itemButton:SetScript("OnEnter", Altoholic_Equipment_OnEnter)
 			itemButton:SetScript("OnClick", Altoholic_Equipment_OnClick)
-			local itemTexture = getglobal(itemName .. "IconTexture")
+			local itemTexture = _G[itemName .. "IconTexture"]
 			local itemID = c.inventory[line]
 			if itemID ~= nil then
 				itemButton.CharName = CharacterName
@@ -71,31 +71,30 @@ function Altoholic:Equipment_Update()
 			itemTexture:SetWidth(36);
 			itemTexture:SetHeight(36);
 			itemTexture:SetAllPoints(itemButton);
-			getglobal(itemName):Show()
+			_G[itemName]:Show()
 			j = j + 1
 		end
 		while j <= 10 do
-			getglobal(entry.. i .. "Item" .. j):Hide()
+			_G[entry.. i .. "Item" .. j]:Hide()
 			j = j + 1
 		end
-		getglobal(entry..i):Show()
-		getglobal(entry..i):SetID(line)
+		_G[entry..i]:Show()
+		_G[entry..i]:SetID(line)
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), 19, VisibleLines, 41);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], 19, VisibleLines, 41);
 end
 
-function Altoholic_Equipment_OnEnter()
-    if not this then return end
+function Altoholic_Equipment_OnEnter(self)
 	local r = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm]		-- this realm
-	local itemID = this:GetParent():GetID()
+	local itemID = self:GetParent():GetID()
 	if itemID == 0 then		-- class icon
-		Altoholic:DrawCharacterTooltip(this.CharName)
+		Altoholic:DrawCharacterTooltip(self, self.CharName)
 		return
 	end
-    if not this.CharName then return end
-	local item = r.char[this.CharName].inventory[itemID]	--  equipment slot
+    if not self.CharName then return end
+	local item = r.char[self.CharName].inventory[itemID]	--  equipment slot
 	--if not item then return end
-	GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+	GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 	if type(item) == "number" then
         local _, link = GetItemInfo(item)
 		GameTooltip:SetHyperlink(link);
@@ -107,14 +106,13 @@ function Altoholic_Equipment_OnEnter()
 	GameTooltip:Show();
 end
 
-function Altoholic_Equipment_OnClick()
-    if not this then return end
+function Altoholic_Equipment_OnClick(self, button)
 	local r = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm]		-- this realm
-	local itemID = this:GetParent():GetID()
+	local itemID = self:GetParent():GetID()
 
 	if itemID == 0 then return end		-- class icon
-	if not this.CharName then return end
-	local item = r.char[this.CharName].inventory[itemID]	--  equipment slot
+	if not self.CharName then return end
+	local item = r.char[self.CharName].inventory[itemID]	--  equipment slot
 	if not item then return end
 	
 	local link
@@ -123,11 +121,10 @@ function Altoholic_Equipment_OnClick()
 	else
 		link = item
 	end
-	local button = arg1
 	if button == "RightButton" then
 		V.UpgradeItemID = Altoholic:GetIDFromLink(link)		-- item ID of the item to find an upgrade for
-		V.CharacterClass = Altoholic.Classes[ r.char[this.CharName].class ]
-		ToggleDropDownMenu(1, nil, AltoEquipmentRightClickMenu, this:GetName(), 0, -5);
+		V.CharacterClass = Altoholic.Classes[ r.char[self.CharName].class ]
+		ToggleDropDownMenu(1, nil, AltoEquipmentRightClickMenu, self:GetName(), 0, -5);
 		return
 	end
 	
@@ -220,7 +217,7 @@ function Altoholic_FindEquipmentUpgrade(self)
 		AltoTooltip:SetHyperlink(itemLink)
 		for _, BaseStat in pairs(Altoholic.BaseStats[V.CharacterClass]) do
 			for i = 4, AltoTooltip:NumLines() do
-				local tooltipText = getglobal("AltoTooltipTextLeft" .. i):GetText()
+				local tooltipText = _G["AltoTooltipTextLeft" .. i]:GetText()
 				if tooltipText then
 					if string.find(tooltipText, BaseStat) ~= nil then
 						V.SearchItemStats[BaseStat] = tonumber(string.sub(tooltipText, string.find(tooltipText, "%d+")))

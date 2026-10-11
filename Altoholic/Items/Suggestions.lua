@@ -1,4 +1,4 @@
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()

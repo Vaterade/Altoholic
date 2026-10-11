@@ -1,6 +1,5 @@
-﻿local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
 
-L:RegisterTranslations("enUS", function() return {
+Altoholic:RegisterTranslations("enUS", function() return {
 
 	-- Note: since 2.4.004 and the support of LibBabble, certain lines are commented, but remain there for clarity (especially those concerning the menu)
 

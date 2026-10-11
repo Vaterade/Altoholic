@@ -1,0 +1,52 @@
+## Interface: 11200
+## Title: Altoholic for Vanilla WoW
+## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
+## Notes: Provides information about your alts
+## Notes-zhTW: 讓你即時撿閱你所有角色的資料
+## Notes-zhCN: 能让你全面掌握你的所有角色的信息。
+## Author: Dyaxler, with some additions by Giselbaer
+## Version: 1.4.0
+## Dependencies: !!!ClassicAPI
+## OptionalDeps: LibBabble-Zone-3.0, LibBabble-Boss-3.0, LibBabble-Inventory-3.0, LibBabble-Faction-3.0
+## SavedVariables: AltoholicDB
+## X-Category: Interface Enhancements
+
+Libs\LibStub\LibStub.lua
+Libs\LibBabble-Boss-3.0\LibBabble-Boss-3.0.lua
+Libs\LibBabble-Zone-3.0\LibBabble-Zone-3.0.lua
+Libs\LibBabble-Faction-3.0\LibBabble-Faction-3.0.lua
+Libs\LibBabble-Inventory-3.0\LibBabble-Inventory-3.0.lua
+
+ClassicAPICheck.lua
+Init.lua
+Locale.lua
+Locale\localization_enUS.lua
+Locale\localization_frFR.lua
+Locale\localization_deDE.lua
+Locale\localization_zhTW.lua
+Locale\localization_zhCN.lua
+Database.lua
+
+AltoholicTemplates.xml
+Core.lua
+Items\Loots.lua
+Items\Suggestions.lua
+Items\Suggestions_zhCN.lua
+Items\Suggestions_zhTW.lua
+Altoholic.lua
+Altoholic.xml
+
+Modules\AccountSummary.xml
+Modules\AuctionHouse.xml
+Modules\BagUsage.xml
+Modules\Containers.xml
+Modules\Equipment.xml
+Modules\Mails.xml
+Modules\Options.xml
+Modules\Reputations.xml
+Modules\Recipes.xml
+Modules\Quests.xml
+Modules\Search.xml
+Modules\Skills.xml
+Modules\Raids.xml
+Modules\Attunements.xml

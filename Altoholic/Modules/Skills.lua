@@ -1,5 +1,5 @@
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
@@ -15,11 +15,11 @@ function Altoholic:Skills_Update()
 	local VisibleLines = 14
 	local frame = "AltoSkills"
 	local entry = frame.."Entry"
-	if table.getn(self.CharacterInfo) == 0 then
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 18)
+	if #self.CharacterInfo == 0 then
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 18)
 		return
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawRealm
@@ -46,28 +46,28 @@ function Altoholic:Skills_Update()
 				CurrentFaction = s.faction
 				CurrentRealm = s.realm
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
 					DrawRealm = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawRealm = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."Name"):SetText(self:GetFullRealmString(s.faction, s.realm))
-				getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-				getglobal(entry..i.."Name"):SetWidth(190)
-				getglobal(entry..i.."LevelNormalText"):SetText("")
-				getglobal(entry..i.."LevelNormalText"):SetWidth(10)
-				getglobal(entry..i.."Level"):SetWidth(10)
-				getglobal(entry..i.."Skill1NormalText"):SetText(WHITE .. L["Prof. 1"])
-				getglobal(entry..i.."Skill2NormalText"):SetText(WHITE .. L["Prof. 2"])
-				getglobal(entry..i.."CookingNormalText"):SetText(WHITE .. BI["Cooking"])
-				getglobal(entry..i.."FirstAidNormalText"):SetText(WHITE .. BI["First Aid"])
-				getglobal(entry..i.."FishingNormalText"):SetText(WHITE .. BI["Fishing"])
-				getglobal(entry..i.."RidingNormalText"):SetText(WHITE .. L["Riding"])
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."Name"]:SetText(self:GetFullRealmString(s.faction, s.realm))
+				_G[entry..i.."Name"]:SetJustifyH("LEFT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Name"]:SetWidth(190)
+				_G[entry..i.."LevelNormalText"]:SetText("")
+				_G[entry..i.."LevelNormalText"]:SetWidth(10)
+				_G[entry..i.."Level"]:SetWidth(10)
+				_G[entry..i.."Skill1NormalText"]:SetText(WHITE .. L["Prof. 1"])
+				_G[entry..i.."Skill2NormalText"]:SetText(WHITE .. L["Prof. 2"])
+				_G[entry..i.."CookingNormalText"]:SetText(WHITE .. BI["Cooking"])
+				_G[entry..i.."FirstAidNormalText"]:SetText(WHITE .. BI["First Aid"])
+				_G[entry..i.."FishingNormalText"]:SetText(WHITE .. BI["Fishing"])
+				_G[entry..i.."RidingNormalText"]:SetText(WHITE .. L["Riding"])
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -75,40 +75,40 @@ function Altoholic:Skills_Update()
 				if (s.linetype == INFO_CHARACTER_LINE) then
 					local c = self.db.account.data[CurrentFaction][CurrentRealm].char[s.name]
 					local color = self:GetClassColor(c.class)
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(color .. s.name)
-					getglobal(entry..i.."Name"):SetJustifyH("RIGHT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
-					getglobal(entry..i.."Name"):SetWidth(70)
-					getglobal(entry..i.."LevelNormalText"):SetText(color .. "Lv |cFF00FF00" .. c.level .. color .. " " .. c.race .. " " .. c.class)
-					getglobal(entry..i.."LevelNormalText"):SetJustifyH("LEFT")
-					getglobal(entry..i.."LevelNormalText"):SetWidth(140)
-					getglobal(entry..i.."Level"):SetWidth(140)
-					getglobal(entry..i.."Skill1NormalText"):SetText(string.sub(s.skillName1, 1, 1) .. self:GetSkillColor(s.skillRank1) .. s.skillRank1)
-					getglobal(entry..i.."Skill2NormalText"):SetText(string.sub(s.skillName2, 1, 1) .. self:GetSkillColor(s.skillRank2) .. s.skillRank2)
-					getglobal(entry..i.."CookingNormalText"):SetText(self:GetSkillColor(s.cooking) .. s.cooking)
-					getglobal(entry..i.."FirstAidNormalText"):SetText(self:GetSkillColor(s.firstaid) .. s.firstaid)
-					getglobal(entry..i.."FishingNormalText"):SetText(self:GetSkillColor(s.fishing) .. s.fishing)
-					getglobal(entry..i.."RidingNormalText"):SetText(self:GetSkillColor(s.riding) .. s.riding)
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(color .. s.name)
+					_G[entry..i.."Name"]:SetJustifyH("RIGHT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
+					_G[entry..i.."Name"]:SetWidth(70)
+					_G[entry..i.."LevelNormalText"]:SetText(color .. "Lv |cFF00FF00" .. c.level .. color .. " " .. c.race .. " " .. c.class)
+					_G[entry..i.."LevelNormalText"]:SetJustifyH("LEFT")
+					_G[entry..i.."LevelNormalText"]:SetWidth(140)
+					_G[entry..i.."Level"]:SetWidth(140)
+					_G[entry..i.."Skill1NormalText"]:SetText(string.sub(s.skillName1, 1, 1) .. self:GetSkillColor(s.skillRank1) .. s.skillRank1)
+					_G[entry..i.."Skill2NormalText"]:SetText(string.sub(s.skillName2, 1, 1) .. self:GetSkillColor(s.skillRank2) .. s.skillRank2)
+					_G[entry..i.."CookingNormalText"]:SetText(self:GetSkillColor(s.cooking) .. s.cooking)
+					_G[entry..i.."FirstAidNormalText"]:SetText(self:GetSkillColor(s.firstaid) .. s.firstaid)
+					_G[entry..i.."FishingNormalText"]:SetText(self:GetSkillColor(s.fishing) .. s.fishing)
+					_G[entry..i.."RidingNormalText"]:SetText(self:GetSkillColor(s.riding) .. s.riding)
 				elseif (s.linetype == INFO_TOTAL_LINE) then
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(L["Totals"])
-					getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
-					getglobal(entry..i.."Name"):SetWidth(70)
-					getglobal(entry..i.."LevelNormalText"):SetText(s.level)
-					getglobal(entry..i.."LevelNormalText"):SetJustifyH("RIGHT")
-					getglobal(entry..i.."LevelNormalText"):SetWidth(140)
-					getglobal(entry..i.."Level"):SetWidth(140)
-					getglobal(entry..i.."Skill1NormalText"):SetText("")
-					getglobal(entry..i.."Skill2NormalText"):SetText("")
-					getglobal(entry..i.."CookingNormalText"):SetText("")
-					getglobal(entry..i.."FirstAidNormalText"):SetText("")
-					getglobal(entry..i.."FishingNormalText"):SetText("")
-					getglobal(entry..i.."RidingNormalText"):SetText("")
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(L["Totals"])
+					_G[entry..i.."Name"]:SetJustifyH("LEFT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
+					_G[entry..i.."Name"]:SetWidth(70)
+					_G[entry..i.."LevelNormalText"]:SetText(s.level)
+					_G[entry..i.."LevelNormalText"]:SetJustifyH("RIGHT")
+					_G[entry..i.."LevelNormalText"]:SetWidth(140)
+					_G[entry..i.."Level"]:SetWidth(140)
+					_G[entry..i.."Skill1NormalText"]:SetText("")
+					_G[entry..i.."Skill2NormalText"]:SetText("")
+					_G[entry..i.."CookingNormalText"]:SetText("")
+					_G[entry..i.."FirstAidNormalText"]:SetText("")
+					_G[entry..i.."FishingNormalText"]:SetText("")
+					_G[entry..i.."RidingNormalText"]:SetText("")
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -116,11 +116,11 @@ function Altoholic:Skills_Update()
 		end
 	end
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 18);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end	
 
 function Altoholic_Skill_OnEnter(self)
@@ -331,17 +331,13 @@ function Altoholic:UpdateCraft(tradeskillName)
 end
 
 -- *** Hooks ***
-local Orig_DoTradeSkill = DoTradeSkill
-function DoTradeSkill(index, repeatCount,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9)
-	Orig_DoTradeSkill(index, repeatCount,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9)
+hooksecurefunc("DoTradeSkill", function()
 	Altoholic:RegisterEvent("TRADE_SKILL_UPDATE")
-end
+end)
 
-local Orig_DoCraft = DoCraft
-function DoCraft(index,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9)
-	Orig_DoCraft(index,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9)
+hooksecurefunc("DoCraft", function()
 	Altoholic:RegisterEvent("CRAFT_UPDATE")
-end
+end)
 
 -- *** EVENT HANDLERS ***
 function Altoholic:TRADE_SKILL_SHOW()

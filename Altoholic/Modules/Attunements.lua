@@ -2,7 +2,7 @@
 	    Lua 5.1 Copyright (C) 1994-2006 Lua.org, PUC-Rio
 ]]
 
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
@@ -48,8 +48,8 @@ local function hasAnyQuestComplete(charInfo, questsString)
 
 	local quests = {}
 	-- can't use strsplit as that unpacks
-    string.gsub(questsString, "[^|]+", function(c) quests[table.getn(quests)+1] = c end)
-	for _, quest in quests do
+    string.gsub(questsString, "[^|]+", function(c) quests[#quests+1] = c end)
+	for _, quest in ipairs(quests) do
 		-- DEFAULT_CHAT_FRAME:AddMessage("Check if "..quest.." is complete")
 		if charInfo.CompletedQuests[quest] then
 			return true
@@ -89,47 +89,47 @@ function Altoholic:Attunements_Update()
 	local i = 1
 
 	local byLevel = Altoholic:Get_Sorted_Character_List(V.faction, V.realm)
-	for _, CharacterName in byLevel do
+	for _, CharacterName in ipairs(byLevel) do
 		local c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 		Altoholic:ResetWeeklyQuestsIfExpired(c)
 	end
 
-	for _, CharacterName in byLevel do
+	for _, CharacterName in ipairs(byLevel) do
 		-- DEFAULT_CHAT_FRAME:AddMessage("Handling "..CharacterName)
 		local c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 		local itemName = "AltoAttunementsClassesItem" .. i;
-		local itemButton = getglobal(itemName);
+		local itemButton = _G[itemName];
 		-- Only buttons for 10 columns defined; so we stop when buttons stop being defined
 		if itemButton == nil then break end
 		itemButton:SetScript("OnEnter", Altoholic_Attunements_OnEnter)
 		itemButton:SetScript("OnLeave", function(self) AltoTooltip:Hide() end)
 		itemButton:SetScript("OnClick", Altoholic_Equipment_OnClick)
 		local tc = self.ClassInfo[ self.Classes[c.class] ].texcoord
-		local itemTexture = getglobal(itemName .. "IconTexture")
+		local itemTexture = _G[itemName .. "IconTexture"]
 		itemTexture:SetTexture(self.classicon);
 		itemTexture:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
 		itemTexture:SetWidth(36);
 		itemTexture:SetHeight(36);
 		itemTexture:SetAllPoints(itemButton);
 		itemButton.CharName = CharacterName
-		getglobal(itemName):Show()
+		_G[itemName]:Show()
 		i = i + 1
 	end
 	while i <= 10 do
-		getglobal("AltoAttunementsClassesItem" .. i):Hide()
-		getglobal("AltoAttunementsClassesItem" .. i).CharName = nil
+		_G["AltoAttunementsClassesItem" .. i]:Hide()
+		_G["AltoAttunementsClassesItem" .. i].CharName = nil
 		i = i + 1
 	end
 
-	getglobal(entry .. "1"):Show()
-	getglobal(entry .. "1"):SetID(0)
+	_G[entry .. "1"]:Show()
+	_G[entry .. "1"]:SetID(0)
 	-- ** draw factions **
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawAttuneGroup
 	i=1
-	for lineno, line in attunements do
+	for lineno, line in ipairs(attunements) do
 		if line["id"] == "0" then
 			DrawAttuneGroup = not line.collapsed
 		end
@@ -144,18 +144,18 @@ function Altoholic:Attunements_Update()
 		else
 			if line.id == "0" then
 				if line.collapsed then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."Name"):SetText(line.name)
-				getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-				getglobal(entry..i):SetID(lineno)
-				getglobal(entry..i):Show()
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."Name"]:SetText(line.name)
+				_G[entry..i.."Name"]:SetJustifyH("LEFT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i]:SetID(lineno)
+				_G[entry..i]:Show()
 				for j=1, 10 do		-- hide the 10 characters
-					itemButton = getglobal(entry.. i .. "Item" .. j);
+					itemButton = _G[entry.. i .. "Item" .. j];
 					itemButton.CharName = nil
 					itemButton:Hide()
 				end
@@ -163,18 +163,18 @@ function Altoholic:Attunements_Update()
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
 			elseif DrawAttuneGroup then
-				getglobal(entry..i.."Collapse"):Hide()
-				getglobal(entry..i.."Name"):SetText(WHITE .. line.name)
-				getglobal(entry..i.."Name"):SetJustifyH("RIGHT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
+				_G[entry..i.."Collapse"]:Hide()
+				_G[entry..i.."Name"]:SetText(WHITE .. line.name)
+				_G[entry..i.."Name"]:SetJustifyH("RIGHT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
 				local j = 1
-				for _, CharacterName in byLevel do
+				for _, CharacterName in ipairs(byLevel) do
 					c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 					local itemName = entry.. i .. "Item" .. j;
-					local itemButton = getglobal(itemName);
+					local itemButton = _G[itemName];
                     if itemButton == nil then break end
 					if hasAnyQuestComplete(c, line.id) then
-						getglobal(itemName .. "Name"):SetText("ok")
+						_G[itemName .. "Name"]:SetText("ok")
 						itemButton.CharName = CharacterName
 						itemButton:Show()
 					else
@@ -184,8 +184,8 @@ function Altoholic:Attunements_Update()
 					j = j + 1
 				end
 				-- DEFAULT_CHAT_FRAME:AddMessage("Line "..i.." has attunement line "..lineno)
-				getglobal(entry..i):SetID(lineno)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(lineno)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -193,11 +193,11 @@ function Altoholic:Attunements_Update()
 		end
 	end
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 41);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 41);
 end
 
 function Altoholic:Attunements_Toggle(id)
@@ -205,22 +205,21 @@ function Altoholic:Attunements_Toggle(id)
 	attunements[id].collapsed = not attunements[id].collapsed
 end
 
-function Altoholic_Attunements_OnEnter()
-    if not this then return end
-	local rowID = this:GetParent():GetID()
+function Altoholic_Attunements_OnEnter(self)
+	local rowID = self:GetParent():GetID()
 	if rowID == 0 then		-- class icon
 		V.CurrentFaction = V.faction
 		V.CurrentRealm = V.realm
-		Altoholic:DrawCharacterTooltip(this.CharName)
+		Altoholic:DrawCharacterTooltip(self, self.CharName)
 		return
 	end
 	local r = Altoholic.db.account.data[V.faction][V.realm]
 	-- DEFAULT_CHAT_FRAME:AddMessage("rowID is "..rowID)
 	local attune = attunements[rowID]
-	local charName = this.CharName
+	local charName = self.CharName
 	local c = Altoholic.db.account.data[V.faction][V.realm].char[charName]
 
-	AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
+	AltoTooltip:SetOwner(self, "ANCHOR_LEFT");
 	AltoTooltip:ClearLines();
 	AltoTooltip:AddLine(Altoholic:GetClassColor(c.class) .. charName .. WHITE .. " @ " .. V.realm, 1, 1, 1);
 	AltoTooltip:AddLine("completed this quest (id "..attune.id .. ")",1,1,1);
@@ -232,5 +231,5 @@ function Altoholic_Attunements_OnEnter()
 	AltoTooltip:Show();
 end
 
-function Altoholic_Attunements_OnClick()
+function Altoholic_Attunements_OnClick(self, button)
 end

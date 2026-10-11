@@ -1,51 +1,11 @@
-﻿Altoholic = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceEvent-2.0", "AceDB-2.0", "AceHook-2.1")
-Altoholic:RegisterChatCommand({"/Altoholic", "/Alto"}, options)	
-Altoholic:RegisterDB("AltoholicDB")
 Altoholic.SearchResults = {}
 Altoholic.CharacterInfo = {}
 Altoholic.BagIndices = {}
 Altoholic.MenuCache = {}
-Altoholic.vars = {}
-Altoholic.vars.version = "v1.2.2"
-local G = AceLibrary("Gratuity-2.0")
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-
-
-local options = { 
-	type='group',
-	args = {
-		search = {
-			type = 'text',
-			name = L['search'],
-			usage = "<item name>",
-			desc = L["Search in bags"],
-			get = false,
-			set = "CmdSearchBags",
-			input = true,
-		},
-		show = {
-			type = 'execute',
-			name = L['show'],
-			desc = L["Shows the UI"],
-			func = function() AltoholicFrame:Show() end
-		},
-		hide = {
-			type = 'execute',
-			name = L['hide'],
-			desc = L["Hides the UI"],
-			func = function() AltoholicFrame:Hide() end
-		},
-		toggle = {
-			type = 'execute',
-			name = L['toggle'],
-			desc = L["Toggles the UI"],
-			func = function() Altoholic:ToggleUI() end
-		},
-    }
-}
 
 Altoholic.Categories = {
 	"AltoSummary", 
@@ -99,175 +59,6 @@ Altoholic.XPToNext	= {
 
 -- Allow ESC to close the main frame
 tinsert(UISpecialFrames, "AltoholicFrame");
-
---[[	*** Note on reputation ***
-the "reputation" table is kept out of the "char" table for practical reasons, as the table will be populated with so many different entries for each alt,
-it was much easier to organize things this way to ensure a more efficient parsing when data will be displayed, this also prevents from creating
-a large temporary table that would have to be garbage collected later on. Character names will be duplicated in each sub-table, 
-but this is a little trade-off I accept.
---]]
- 
-Altoholic:RegisterDefaults('account', {
-	options = {
-		MinimapIconAngle = 268,
-		MinimapIconRadius = 78,
-		MailWarningThreshold = 5,
-		SortDescending = 0, 				-- display search results in the loot table in ascending (0) or descending (1) order ?
-		RestXPMode = 0, 					-- display max rest xp in normal 100% mode or in level equivalent 150% mode (1) ?
-		ScanMailBody = 0,					-- by default, scan the body of a mail (this action marks it as read)
-		TooltipSource = 1,
-		TooltipCount = 1,
-		TooltipTotal = 1,
-		TooltipAlreadyKnown = 0,
-        TooltipLearnableBy = 1,
-		ShowMinimap = 1,
-		SearchAutoQuery = 0,
-		TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
-		UnknownLoots = 0
-	},
-	data = {
-		['*'] = {							-- Faction
-			['*'] = {						-- Realm
-				reputation = {
-					['*'] = {				-- "Ironforge"
-						['*'] = nil
-					}
-				},
-				guild = {
-					['*'] = {				-- guild["MyUberGuild"]
-						lastbankvisitby = "",
-						lastbankvisittime = 0,
-						bankmoney = 0,
-						bank = {
-							['*'] = {
-								tabID = nil,
-								name = "",
-								ids = { ['*'] = nil },
-								links = { ['*'] = nil },
-								counts = { ['*'] = nil }
-							}
-						}
-					}
-				},
-				unsafeItems = {},
-				char = {
-					['*'] = {					-- Character Name
-						level = 0,
-						race = "",
-						class = "",
-						talent = "",
-						bags = "",
-						bankslots = "",
-						zone = "",				-- in which zone the player went offline
-						subzone = "",			-- in which subzone .. 
-						xp = 0,					-- current level xp
-						xpmax = 0,				-- max xp at current level 
-						restxp = 0,
-						isResting = true,		-- most players will logout at an inn, so default to true
-						money = 0,
-						played = 0,				-- 57396 seconds = 0 days 15 hours 56 minutes 36 seconds
-						lastlogout = 0,
-						lastmailcheck = 0,	-- last time the mail was checked for this char
-						lastAHcheck = 0,		-- last time the AH was checked for this char
-						pvp_hk = 0,				-- pvp honorable kills
-						pvp_dk = 0,				-- pvp dishonorable kills
-						pvp_ArenaPoints = 0,
-						pvp_HonorPoints = 0,
-						skill = {
-							['*'] = {			-- "Professions"
-								['*'] = nil
-							}
-						},
-						spells = {
-                            ['*'] = {
-                                name = nil,
-                                rank = nil
-                            }
-						},
-						inventory = {},		-- 19 inventory slots, a simple table containing item id's
-						SavedInstance = {},	-- raid timers
-						ProfessionCooldowns = {},
-						questlog = {
-							['*'] = {
-								name = nil,		-- name: name of the header (usually the location)
-								link = nil,		-- the quest link
-								isHeader = nil,
-								isCollapsed = false,
-								tag = nil,			-- quest tag=  "Elite", "Dungeon", "PVP", "Raid", "Group", "Heroic" or nil
-								groupsize = nil,
-								money = nil,
-								isComplete = nil
-							}
-						},
-						recipes = {
-							['*'] = {
-								ScanFailed = true,	-- by default, consider that scanning this profession was not valid
-								list = {
-									['*'] = {
-										id = nil,
-										name = nil,
-										link = nil,
-										isHeader = nil,
-										isCollapsed = false,
-										reagents = nil,	-- itemID : count | itemID : count .. etc
-									}
-								}
-							}
-						},
-						auctions = {
-							['*'] = {
-								id = nil,
-								count = 1,
-								AHLocation = nil,		-- nil = faction AH, 1 = goblin AH
-								highBidder = nil,
-								startPrice = nil,
-								buyoutPrice = nil,
-								timeLeft = nil
-							}
-						},
-						bids = {
-							['*'] = {
-								id = nil,
-								count = 1,
-								AHLocation = nil,		-- nil = faction AH, 1 = goblin AH
-								owner = nil,
-								bidPrice = nil,
-								buyoutPrice = nil,
-								timeLeft = nil
-							}
-						},
-						mail = {
-							['*'] = {
-								icon = nil,
-								link = nil,
-								count = 0,
-								money = 0,
-								lastcheck = 0,		-- last time "THIS" mail was checked (can be different than that of the mailbox)
-								text = "",
-								subject = "",
-								sender = "",
-								daysleft = 0,
-								realm = ""
-							}
-						},
-						bag = {
-							['*'] = {					-- bag["Bag0"]
-								icon = nil,				-- bag's texture
-								link = nil,				-- bag's itemlink
-								size = 0,
-								freeslots = 0,
-								bagtype = 0,
-								ids = { ['*'] = nil },
-								links = { ['*'] = nil },
-								counts = { ['*'] = nil }
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-})
 
 -- Factions reference table, based on http://www.wowwiki.com/Factions
 -- a table with a similar structure (but only with required lines) will be build to make the reputations frame
@@ -703,13 +494,9 @@ Altoholic.Gathering = {
 	[L["Sanguine Hibiscus"]]    = 24246,
 }
 
-function Altoholic:CmdSearchBags(word1, word2)
+function Altoholic:CmdSearchBags(text)
 	if not (AltoholicFrame:IsVisible()) then
 		AltoholicFrame:Show();
-	end
-	local text = word1
-	if word2 then
-		text = text .. " " .. word2
 	end
 	AltoholicFrame_SearchEditBox:SetText(strlower(text))
 	Altoholic:SearchItem();
@@ -719,7 +506,7 @@ function Altoholic:strsplit(delimiter, subject)
   local delimiter, fields = delimiter or ":", {}
   local pattern = string.format("([^%s]+)", delimiter)
   if subject == nil then subject = "" end
-  string.gsub(subject, pattern, function(c) fields[table.getn(fields)+1] = c end)
+  subject:gsub(pattern, function(c) fields[#fields+1] = c end)
   return unpack(fields)
 end
 

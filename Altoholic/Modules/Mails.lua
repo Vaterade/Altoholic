@@ -1,4 +1,4 @@
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local GREEN		= "|cFF00FF00"
 
@@ -7,47 +7,47 @@ function Altoholic:Mail_Update()
 	local VisibleLines = 7
 	local frame = "AltoMail"
 	local entry = frame.."Entry"
-	if table.getn(c.mail) == 0 then
+	if #c.mail == 0 then
 		if c.lastmailcheck == 0 then
-			getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L[" has not visited his/her mailbox yet"])
+			_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L[" has not visited his/her mailbox yet"])
 		else
-			getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L[" has no mail, last check "] .. self:GetDelayInDays(c.lastmailcheck).. L[" days ago"])
+			_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L[" has no mail, last check "] .. self:GetDelayInDays(c.lastmailcheck).. L[" days ago"])
 		end
-		getglobal("AltoholicFrame_Status"):Show()
+		_G["AltoholicFrame_Status"]:Show()
 		
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 41)
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 41)
 		return
 	else
-		getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L["Mailbox"])
-		getglobal("AltoholicFrame_Status"):Show()
+		_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. L["Mailbox"])
+		_G["AltoholicFrame_Status"]:Show()
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	for i=1, VisibleLines do
 		local line = i + offset
-		if line <= table.getn(c.mail) then
+		if line <= #c.mail then
 			local s = c.mail[line]
-			getglobal(entry..i.."Name"):SetText(s.subject)
-			getglobal(entry..i.."Character"):SetText(s.sender)
-			getglobal(entry..i.."Expiry"):SetText(self:FormatMailExpiry(s.lastcheck, s.daysleft) .. L[" days"])
-			getglobal(entry..i.."ItemIconTexture"):SetTexture(s.icon);
+			_G[entry..i.."Name"]:SetText(s.subject)
+			_G[entry..i.."Character"]:SetText(s.sender)
+			_G[entry..i.."Expiry"]:SetText(self:FormatMailExpiry(s.lastcheck, s.daysleft) .. L[" days"])
+			_G[entry..i.."ItemIconTexture"]:SetTexture(s.icon);
 			if (s.count ~= nil) and (s.count > 1) then
-				getglobal(entry..i.."ItemCount"):SetText(s.count)
-				getglobal(entry..i.."ItemCount"):Show()
+				_G[entry..i.."ItemCount"]:SetText(s.count)
+				_G[entry..i.."ItemCount"]:Show()
 			else
-				getglobal(entry..i.."ItemCount"):Hide()
+				_G[entry..i.."ItemCount"]:Hide()
 			end
-			getglobal(entry..i.."Item"):SetID(line)
-			getglobal(entry..i):Show()
+			_G[entry..i.."Item"]:SetID(line)
+			_G[entry..i]:Show()
 		else
-			getglobal(entry..i):Hide()
+			_G[entry..i]:Hide()
 		end
 	end
-	getglobal("AltoholicFrame_Status"):SetText(L["Mail was last checked "] .. self:GetDelayInDays(c.lastmailcheck).. L[" days ago"])
-	getglobal("AltoholicFrame_Status"):Show()
-	if table.getn(c.mail) < VisibleLines then
-		FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleLines, VisibleLines, 41);
+	_G["AltoholicFrame_Status"]:SetText(L["Mail was last checked "] .. self:GetDelayInDays(c.lastmailcheck).. L[" days ago"])
+	_G["AltoholicFrame_Status"]:Show()
+	if #c.mail < VisibleLines then
+		FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleLines, VisibleLines, 41);
 	else
-		FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), table.getn(c.mail), VisibleLines, 41);
+		FauxScrollFrame_Update(_G[frame.."ScrollFrame"], #c.mail, VisibleLines, 41);
 	end
 end
 
@@ -120,7 +120,7 @@ function Altoholic:UpdatePlayerMail()
 			if mailMoney > 0 then
                 copper = tostring(mailMoney)
                 silver = tostring(mailMoney / 100)
-                gold = tostring((mailMoney - mod(mailMoney, COPPER_PER_SILVER)) / 10000)
+                gold = tostring((mailMoney - (mailMoney % COPPER_PER_SILVER)) / 10000)
                 if mailMoney < 100 then
                     mailIcon = "Interface\\Icons\\INV_Misc_Coin_05"
                     mSent = copper .. " Copper"
@@ -151,8 +151,10 @@ function Altoholic:UpdatePlayerMail()
 end
 
 -- *** Hooks ***
+-- this has to run before the mail leaves: the attachments and the money are gone afterwards,
+-- so a post-hook (hooksecurefunc) is no use here
 local Orig_SendMail = SendMail
-function SendMail(recipient, subject, body)
+function SendMail(recipient, ...)
     for CharacterName, c in pairs(Altoholic.db.account.data[V.faction][V.realm].char) do
         if CharacterName == recipient then
             for k, v in pairs(V.Attachments) do
@@ -171,7 +173,7 @@ function SendMail(recipient, subject, body)
             if (moneySent > 0) then
                 copper = tostring(moneySent)
                 silver = tostring(moneySent / 100)
-                gold = tostring((moneySent - mod(moneySent, COPPER_PER_SILVER)) / 10000)
+                gold = tostring((moneySent - (moneySent % COPPER_PER_SILVER)) / 10000)
                 if moneySent < 100 then
                     mailIcon = "Interface\\Icons\\INV_Misc_Coin_05"
                     mSent = copper .. " Copper"
@@ -204,7 +206,7 @@ function SendMail(recipient, subject, body)
         end
     end
     V.Attachments = {}
-    Orig_SendMail(recipient, subject, body)
+    return Orig_SendMail(recipient, ...)
 end
 
 -- *** EVENT HANDLERS ***

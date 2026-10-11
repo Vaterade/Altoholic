@@ -2,6 +2,12 @@
 
 This is my version for Turtle WOW. See the original README below.
 
+## Requirements
+
+Since 1.4.0 this addon requires [ClassicAPI](https://github.com/brues-code/ClassicAPI),
+a client mod that brings Lua 5.1 and parts of the modern addon API to the 1.12 client.
+Without it Altoholic only shows a notice at login and leaves your saved data untouched.
+
 
 This version fixes several bugs, improves some things, and adds a menu tab to show
 Raid lockouts and reset times.
@@ -180,8 +186,5 @@ Type: /alto search <item>
 ex: 
 /alto search cloth
 /alto search primal
-...
-
-A maximum of two words is allowed after the command, so you could type:
-/alto search primal mana 		... and get only those primals in the search results.
+/alto search primal mana 		... to get only those primals in the search results.
 This should cover most of the searches you can do via the command line, if you actually need something more complicated, please use the UI.

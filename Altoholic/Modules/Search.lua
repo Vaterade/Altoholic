@@ -1,4 +1,4 @@
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local LEVEL_CAP = 60
 local WHITE		= "|cFFFFFFFF"
@@ -11,11 +11,11 @@ function Altoholic:Search_Update()
 	local VisibleLines = 7
 	local frame = "AltoSearch"
 	local entry = frame.."Entry"
-	if table.getn(self.SearchResults) == 0 then
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 41)
+	if #self.SearchResults == 0 then
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 41)
 		return
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	for i=1, VisibleLines do
 		local line = i + offset
 		local s = self.SearchResults[line]
@@ -24,49 +24,49 @@ function Altoholic:Search_Update()
 			local itemName, itemRarity, itemIcon, hex
 			if not itemID then
 				hex = WHITE
-				getglobal(entry..i.."ItemIconTexture"):SetTexture("Interface\\Icons\\Trade_Engraving");
+				_G[entry..i.."ItemIconTexture"]:SetTexture("Interface\\Icons\\Trade_Engraving");
 			else
 				itemName, _, itemRarity, _, _, _, _, _, itemIcon = GetItemInfo(itemID)
 				_, _, _, hex = GetItemQualityColor(itemRarity)
-    			getglobal(entry..i.."ItemIconTexture"):SetTexture(itemIcon);
+    			_G[entry..i.."ItemIconTexture"]:SetTexture(itemIcon);
 			end
 			if V.SearchLoots ~= nil then
-				getglobal(entry..i.."Realm"):SetText(WHITE .. L["Item Level"] .. ": " .. YELLOW .. s.iLvl)
+				_G[entry..i.."Realm"]:SetText(WHITE .. L["Item Level"] .. ": " .. YELLOW .. s.iLvl)
 			else
-				getglobal(entry..i.."Realm"):SetText(s.realm)
+				_G[entry..i.."Realm"]:SetText(s.realm)
 			end
 			if s.craftName then
-				getglobal(entry..i.."Name"):SetText(hex .. s.craftName)
-				getglobal(entry..i.."SourceNormalText"):SetText(s.craftLink)
-				getglobal(entry..i.."Source"):SetID(line)
+				_G[entry..i.."Name"]:SetText(hex .. s.craftName)
+				_G[entry..i.."SourceNormalText"]:SetText(s.craftLink)
+				_G[entry..i.."Source"]:SetID(line)
 			else 
-				getglobal(entry..i.."Name"):SetText(hex .. itemName)
-				getglobal(entry..i.."Source"):SetText(TEAL .. s.location)
-				getglobal(entry..i.."Source"):SetID(0)
+				_G[entry..i.."Name"]:SetText(hex .. itemName)
+				_G[entry..i.."Source"]:SetText(TEAL .. s.location)
+				_G[entry..i.."Source"]:SetID(0)
 			end
-			getglobal(entry..i.."Character"):SetText(s.char)
+			_G[entry..i.."Character"]:SetText(s.char)
 			if (s.count ~= nil) and (s.count > 1) then
-				getglobal(entry..i.."ItemCount"):SetText(s.count)
-				getglobal(entry..i.."ItemCount"):Show()
+				_G[entry..i.."ItemCount"]:SetText(s.count)
+				_G[entry..i.."ItemCount"]:Show()
 			else
-				getglobal(entry..i.."ItemCount"):Hide()
+				_G[entry..i.."ItemCount"]:Hide()
 			end
-			getglobal(entry..i.."Item"):SetID(line)
-			getglobal(entry..i):Show()
+			_G[entry..i.."Item"]:SetID(line)
+			_G[entry..i]:Show()
 		else
-			getglobal(entry..i):Hide()
+			_G[entry..i]:Hide()
 		end
 	end
-	if (offset+VisibleLines) <= table.getn(self.SearchResults) then
-		getglobal("AltoholicFrame_Status"):SetText(table.getn(self.SearchResults) .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+VisibleLines) .. ")")
+	if (offset+VisibleLines) <= #self.SearchResults then
+		_G["AltoholicFrame_Status"]:SetText(#self.SearchResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+VisibleLines) .. ")")
 	else
-		getglobal("AltoholicFrame_Status"):SetText(table.getn(self.SearchResults) .. L[" results found (Showing "] .. (offset+1) .. "-" .. table.getn(self.SearchResults) .. ")")
+		_G["AltoholicFrame_Status"]:SetText(#self.SearchResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. #self.SearchResults .. ")")
 	end
-	getglobal("AltoholicFrame_Status"):Show()
-	if table.getn(self.SearchResults) < VisibleLines then
-		FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleLines, VisibleLines, 41);
+	_G["AltoholicFrame_Status"]:Show()
+	if #self.SearchResults < VisibleLines then
+		FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleLines, VisibleLines, 41);
 	else
-		FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), table.getn(self.SearchResults), VisibleLines, 41);
+		FauxScrollFrame_Update(_G[frame.."ScrollFrame"], #self.SearchResults, VisibleLines, 41);
 	end
 end
 
@@ -76,9 +76,9 @@ function Altoholic:SearchReset()
 	AltoholicFrame_MinLevel:SetText("")
 	AltoholicFrame_MaxLevel:SetText("")
 	for i=1, 7 do
-		getglobal("AltoSearchEntry" .. i):Hide()
+		_G["AltoSearchEntry" .. i]:Hide()
 	end
-	getglobal("AltoholicFrame_Status"):Hide()
+	_G["AltoholicFrame_Status"]:Hide()
     self.SearchResults = {}
 end
 
@@ -126,18 +126,18 @@ function Altoholic:SearchItem(searchType, searchSubType)
 		local O = self.db.account.options
 		O.TotalLoots = V.TotalLoots
 		O.UnknownLoots = V.TotalUnknown
-		getglobal("AltoOptionsLootInfo"):SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])								
+		_G["AltoOptionsLootInfo"]:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])								
 		V.TotalLoots = nil
 		V.TotalUnknown = nil
 		V.MaxAutoQuery = nil
 	end
-	if table.getn(self.SearchResults) == 0 then
+	if #self.SearchResults == 0 then
 		if V.SearchValue == "" then 
-			getglobal("AltoholicFrame_Status"):SetText(L["No match found!"])
+			_G["AltoholicFrame_Status"]:SetText(L["No match found!"])
 		else
-			getglobal("AltoholicFrame_Status"):SetText(value .. L[" not found!"])
+			_G["AltoholicFrame_Status"]:SetText(value .. L[" not found!"])
 		end
-		getglobal("AltoholicFrame_Status"):Show()
+		_G["AltoholicFrame_Status"]:Show()
 	end
 	V.ongoingsearch = nil
 	V.SearchValue = nil
@@ -191,7 +191,7 @@ function Altoholic:SearchRealm()
 		end
 		if AltoholicFrame_CheckButton1:GetChecked() then
 			V.SearchLocation = L["Mail"]
-			for slotID=1, table.getn(c.mail) do
+			for slotID=1, #c.mail do
 				local s = c.mail[slotID]
 				if s.link ~= nil then
 					self:VerifyItem(self:GetIDFromLink(s.link), s.count)
@@ -406,7 +406,7 @@ function Altoholic:VerifyUpgradeByStats()
 	AltoTooltip:SetHyperlink(itemLink)	-- Set the link to be able to parse item stats (set owner is done earlier, before the loop)
     V.TooltipLines = {}
 	for i = 4, AltoTooltip:NumLines() do	-- parse all tooltip lines, one by one, start at 5 since 1= item name, 2 = binds on.., 3 = type/slot/unique, 4 = Armor value ..etc
-		local tooltipLine = getglobal("AltoTooltipTextLeft" .. i):GetText()
+		local tooltipLine = _G["AltoTooltipTextLeft" .. i]:GetText()
 		if tooltipLine then
 			if string.find(tooltipLine, L["Socket"]) == nil then
 				for _, v in pairs(Altoholic.ExcludeStats[V.CharacterClass]) do
@@ -460,7 +460,7 @@ function Altoholic:VerifyUpgradeByStats()
 end
 
 function Altoholic:Search_OnClick(button, id)
-    local s = Altoholic.SearchResults[this:GetID()]
+    local s = Altoholic.SearchResults[id]
     if s.id ~= nil then
         local _, link = GetItemInfo(s.id)
         if ( button == "LeftButton" ) and ( IsControlKeyDown() ) then
@@ -475,4 +475,46 @@ function Altoholic:Search_OnClick(button, id)
             end
         end
     end
+end
+
+-- *** FRAME HANDLERS ***
+function Altoholic:Search_OnEnter(frame)
+	local s = Altoholic.SearchResults[frame:GetID()]
+	if s.id ~= nil then
+		local _, link = GetItemInfo(s.id)
+		GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+		GameTooltip:SetHyperlink(link);
+		GameTooltip:Show();
+	end
+end
+
+-- link of the craft shown on a search result line, nil when the line isn't a known recipe
+local function GetCraftLink(id)
+	if id == 0 then return end
+	local s = Altoholic.SearchResults[id]
+	if s.craftLink == nil then return end
+	local c = Altoholic.db.account.data[s.searchFaction][s.searchRealm].char[s.altName]
+	local r = c.recipes[s.location].list
+	if not r then return end
+	return r[s.craftNum].link
+end
+
+function Altoholic:SearchCraft_OnEnter(frame)
+	local link = GetCraftLink(frame:GetID())
+	if link then
+		GameTooltip:ClearLines();
+		GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+		GameTooltip:SetHyperlink(link);
+		GameTooltip:AddLine(" ",1,1,1);
+		GameTooltip:Show();
+	end
+end
+
+function Altoholic:SearchCraft_OnClick(frame, button)
+	if ( button == "LeftButton" ) and ( IsShiftKeyDown() ) and ( ChatFrameEditBox:IsShown() ) then
+		local link = GetCraftLink(frame:GetID())
+		if link then
+			ChatFrameEditBox:Insert(link);
+		end
+	end
 end

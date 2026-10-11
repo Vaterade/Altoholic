@@ -1,5 +1,5 @@
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
@@ -13,11 +13,11 @@ function Altoholic:AccountSummary_Update()
 	local VisibleLines = 14
 	local frame = "AltoSummary"
 	local entry = frame.."Entry"
-	if table.getn(self.CharacterInfo) == 0 then
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 18)
+	if #self.CharacterInfo == 0 then
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 18)
 		return
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawRealm
@@ -44,24 +44,24 @@ function Altoholic:AccountSummary_Update()
 				CurrentFaction = s.faction
 				CurrentRealm = s.realm
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
 					DrawRealm = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawRealm = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."Name"):SetText(self:GetFullRealmString(s.faction, s.realm))
-				getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
-				getglobal(entry..i.."Name"):SetWidth(210)
-				getglobal(entry..i.."LevelNormalText"):SetText("")
-				getglobal(entry..i.."Talents"):SetText("")
-				getglobal(entry..i.."Money"):SetText("")
-				getglobal(entry..i.."Played"):SetText("")
-				getglobal(entry..i.."Rested"):SetText("")
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."Name"]:SetText(self:GetFullRealmString(s.faction, s.realm))
+				_G[entry..i.."Name"]:SetJustifyH("LEFT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Name"]:SetWidth(210)
+				_G[entry..i.."LevelNormalText"]:SetText("")
+				_G[entry..i.."Talents"]:SetText("")
+				_G[entry..i.."Money"]:SetText("")
+				_G[entry..i.."Played"]:SetText("")
+				_G[entry..i.."Rested"]:SetText("")
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -69,39 +69,39 @@ function Altoholic:AccountSummary_Update()
 				if (s.linetype == INFO_CHARACTER_LINE) then
 					local c = self.db.account.data[CurrentFaction][CurrentRealm].char[s.name]
 					local color = self:GetClassColor(c.class)
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(color .. s.name)
-					getglobal(entry..i.."Name"):SetJustifyH("RIGHT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
-					getglobal(entry..i.."Name"):SetWidth(70)
-					getglobal(entry..i.."LevelNormalText"):SetText(color .. "Lv |cFF00FF00" .. c.level .. color .. " " .. c.race .. " " .. c.class)
-					getglobal(entry..i.."LevelNormalText"):SetJustifyH("LEFT")
-					getglobal(entry..i.."Talents"):SetText(c.talent)
-					getglobal(entry..i.."Money"):SetText(self:GetMoneyString(c.money))
-					getglobal(entry..i.."Played"):SetText(self:GetTimeString(c.played))
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(color .. s.name)
+					_G[entry..i.."Name"]:SetJustifyH("RIGHT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
+					_G[entry..i.."Name"]:SetWidth(70)
+					_G[entry..i.."LevelNormalText"]:SetText(color .. "Lv |cFF00FF00" .. c.level .. color .. " " .. c.race .. " " .. c.class)
+					_G[entry..i.."LevelNormalText"]:SetJustifyH("LEFT")
+					_G[entry..i.."Talents"]:SetText(c.talent)
+					_G[entry..i.."Money"]:SetText(self:GetMoneyString(c.money))
+					_G[entry..i.."Played"]:SetText(self:GetTimeString(c.played))
 					local restXP
 					if s.name == V.player then
 						restXP = self:GetRestedXP(c.level, c.restxp, 0, c.isResting)
 					else
 						restXP = self:GetRestedXP(c.level, c.restxp, c.lastlogout, c.isResting)
 					end
-					getglobal(entry..i.."Rested"):SetText(restXP)
+					_G[entry..i.."Rested"]:SetText(restXP)
 				elseif (s.linetype == INFO_TOTAL_LINE) then
-					getglobal(entry..i.."Collapse"):Hide()
-					getglobal(entry..i.."Name"):SetText(L["Totals"])
-					getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-					getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
-					getglobal(entry..i.."Name"):SetWidth(70)
-					getglobal(entry..i.."LevelNormalText"):SetText(s.level)
-					getglobal(entry..i.."LevelNormalText"):SetJustifyH("RIGHT")
-					getglobal(entry..i.."Talents"):SetText("")
-					getglobal(entry..i.."Money"):SetText(s.money)
-					getglobal(entry..i.."Money"):SetTextColor(1.0, 1.0, 1.0)
-					getglobal(entry..i.."Played"):SetText(s.played)
-					getglobal(entry..i.."Rested"):SetText("")
+					_G[entry..i.."Collapse"]:Hide()
+					_G[entry..i.."Name"]:SetText(L["Totals"])
+					_G[entry..i.."Name"]:SetJustifyH("LEFT")
+					_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
+					_G[entry..i.."Name"]:SetWidth(70)
+					_G[entry..i.."LevelNormalText"]:SetText(s.level)
+					_G[entry..i.."LevelNormalText"]:SetJustifyH("RIGHT")
+					_G[entry..i.."Talents"]:SetText("")
+					_G[entry..i.."Money"]:SetText(s.money)
+					_G[entry..i.."Money"]:SetTextColor(1.0, 1.0, 1.0)
+					_G[entry..i.."Played"]:SetText(s.played)
+					_G[entry..i.."Rested"]:SetText("")
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -109,11 +109,11 @@ function Altoholic:AccountSummary_Update()
 		end
 	end
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 18);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end
 
 function Altoholic_AccountSummaryLevel_OnEnter(self)
@@ -163,9 +163,8 @@ function Altoholic_AccountSummaryLevel_OnEnter(self)
 	AltoTooltip:Show();
 end
 
-function Altoholic_AccountSummaryLevel_OnClick(button, id)
-    if not this then return end
-	local line = this:GetParent():GetID()
+function Altoholic_AccountSummaryLevel_OnClick(self, button)
+	local line = self:GetParent():GetID()
 	if line == 0 then return end
 	local s = Altoholic.CharacterInfo[line]
 	if s.linetype ~= INFO_CHARACTER_LINE then		
@@ -173,13 +172,13 @@ function Altoholic_AccountSummaryLevel_OnClick(button, id)
 	end
 	if button == "RightButton" then
 		V.CharInfoLine = line	-- line containing info about the alt on which action should be taken (delete, ..)
-		ToggleDropDownMenu(1, nil, AltoSummaryRightClickMenu, this:GetName(), 0, -5);
+		ToggleDropDownMenu(1, nil, AltoSummaryRightClickMenu, self:GetName(), 0, -5);
 		return
 	elseif button == "LeftButton" then
 		V.CurrentFaction, V.CurrentRealm = Altoholic:GetCharacterInfo(line)
 		V.CurrentAlt = s.name
 		Altoholic:UpdateContainerCache()
-		Altoholic:ClearScrollFrame(getglobal("AltoContainersScrollFrame"), "AltoContainersEntry", 7, 41)
+		Altoholic:ClearScrollFrame(_G["AltoContainersScrollFrame"], "AltoContainersEntry", 7, 41)
 		Altoholic:ActivateMenuItem("AltoContainers")
 	end
 end
@@ -218,7 +217,7 @@ function Altoholic_ViewAltInfo()
 	V.CurrentAlt = Altoholic.CharacterInfo[line].name
 	if this.value == 1 then		-- bags
 		Altoholic:UpdateContainerCache()
-		Altoholic:ClearScrollFrame(getglobal("AltoContainersScrollFrame"), "AltoContainersEntry", 7, 41)
+		Altoholic:ClearScrollFrame(_G["AltoContainersScrollFrame"], "AltoContainersEntry", 7, 41)
 		Altoholic:ActivateMenuItem("AltoContainers")
 	elseif this.value == 2 then		-- mailbox
 		Altoholic:ActivateMenuItem("AltoMail")

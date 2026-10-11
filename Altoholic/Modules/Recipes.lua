@@ -1,5 +1,5 @@
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local TEAL		= "|cFF00FF9A"
 
@@ -9,15 +9,15 @@ function Altoholic:Recipes_Update()
 	local frame = "AltoRecipes"
 	local entry = frame.."Entry"
 	if c.recipes[V.CurrentProfession].ScanFailed then
-		getglobal("AltoholicFrame_Status"):SetText(L["No data: "] .. V.CurrentProfession .. L[" scan failed for "] .. ": |cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm)
-		getglobal("AltoholicFrame_Status"):Show()
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 18)
+		_G["AltoholicFrame_Status"]:SetText(L["No data: "] .. V.CurrentProfession .. L[" scan failed for "] .. ": |cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm)
+		_G["AltoholicFrame_Status"]:Show()
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 18)
 		return
 	else
-		getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. V.CurrentProfession .. ": " .. V.CurrentProfessionLevel)
-		getglobal("AltoholicFrame_Status"):Show()
+		_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. V.CurrentProfession .. ": " .. V.CurrentProfessionLevel)
+		_G["AltoholicFrame_Status"]:Show()
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawGroup = true
@@ -39,40 +39,40 @@ function Altoholic:Recipes_Update()
 		else		-- line will be displayed
 			if s.isHeader then
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
 					DrawGroup = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawGroup = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."RecipeLinkNormalText"):SetText(TEAL .. s.name)
-				getglobal(entry..i.."RecipeLink"):SetID(0)
-				getglobal(entry..i.."RecipeLink"):SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."RecipeLinkNormalText"]:SetText(TEAL .. s.name)
+				_G[entry..i.."RecipeLink"]:SetID(0)
+				_G[entry..i.."RecipeLink"]:SetPoint("TOPLEFT", 25, 0)
                 for j=1, 8 do
-					getglobal(entry..i .. "Item" .. j):Hide()
+					_G[entry..i .. "Item" .. j]:Hide()
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1		
 			elseif DrawGroup then
-				getglobal(entry..i.."Collapse"):Hide()
-				getglobal(entry..i.."RecipeLinkNormalText"):SetText(s.link)
-				getglobal(entry..i.."RecipeLink"):SetID(line)
-				getglobal(entry..i.."RecipeLink"):SetPoint("TOPLEFT", 15, 0)
+				_G[entry..i.."Collapse"]:Hide()
+				_G[entry..i.."RecipeLinkNormalText"]:SetText(s.link)
+				_G[entry..i.."RecipeLink"]:SetID(line)
+				_G[entry..i.."RecipeLink"]:SetPoint("TOPLEFT", 15, 0)
                 local numReagents = s.numReagents
 				for j=1, 8 do
 					local itemName = entry..i .. "Item" .. j;
-                    local _, _, first, second, third, fourth, fifth, sixth, seventh, eighth = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second, third, fourth, fifth, sixth, seventh = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second, third, fourth, fifth, sixth = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second, third, fourth, fifth = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second, third, fourth = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second, third = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first, second = string.find(s.reagents, "(%d+:%d+)|(%d+:%d+)")
-                    local _, _, first = string.find(s.reagents, "(%d+:%d+)")
+                    local first, second, third, fourth, fifth, sixth, seventh, eighth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second, third, fourth, fifth, sixth, seventh = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second, third, fourth, fifth, sixth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second, third, fourth, fifth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second, third, fourth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second, third = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
+                    local first, second = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)")
+                    local first = string.match(s.reagents, "(%d+:%d+)")
                     if eighth ~= nil and j == 8 then
                         reagent = eighth
                     elseif seventh ~= nil and j == 7 then
@@ -93,28 +93,28 @@ function Altoholic:Recipes_Update()
                         reagent = nil
                     end
 					if reagent then
-                        local _, _, reagentID, reagentCount = string.find(reagent, "(%d+):(%d+)")
+                        local reagentID, reagentCount = string.match(reagent, "(%d+):(%d+)")
                         reagentID = tonumber(reagentID)
 						reagentCount = tonumber(reagentCount)
-						local itemButton = getglobal(itemName);
+						local itemButton = _G[itemName];
 						itemButton:SetID(reagentID)
-						local itemTexture = getglobal(itemName .. "IconTexture")
+						local itemTexture = _G[itemName .. "IconTexture"]
                         local _, _, _, _, _, _, _, _, itexture  = GetItemInfo(reagentID)
 						itemTexture:SetTexture(itexture);
 						itemTexture:SetWidth(18);
 						itemTexture:SetHeight(18);
 						itemTexture:SetAllPoints(itemButton);
-						local itemCount = getglobal(itemName .. "Count")
+						local itemCount = _G[itemName .. "Count"]
 						itemCount:SetText(reagentCount);
 						itemCount:Show();
-						getglobal(itemName):Show()
+						_G[itemName]:Show()
 					else
-						getglobal(itemName):Hide()
+						_G[itemName]:Hide()
 					end
 				end
 
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -122,15 +122,14 @@ function Altoholic:Recipes_Update()
 		end
 	end 
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 18);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end
 
 function Altoholic:Recipes_OnClick(button, id)
-    local button = arg1
     if ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
         if ( ChatFrameEditBox:IsShown() ) then
             local v = Altoholic.vars
@@ -152,8 +151,8 @@ function Altoholic:Recipes_OnClick(button, id)
     end
 end
 
-function Altoholic:Recipes_OnEnter(self)
-    local id = self:GetParent():GetID()
+function Altoholic:Recipes_OnEnter(frame)
+    local id = frame:GetParent():GetID()
     local c = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt]
     if c.recipes[V.CurrentProfession].list[id].isHeader then return end
     local itemLink = itemLink
@@ -166,7 +165,16 @@ function Altoholic:Recipes_OnEnter(self)
         _, itemLink = GetItemInfo(item)
     end
     if not itemLink then return end
-    GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+    GameTooltip:SetOwner(frame, "ANCHOR_LEFT");
     GameTooltip:SetHyperlink(itemLink);
     GameTooltip:Show();
+end
+
+function Altoholic:Recipes_ToggleHeader(button)
+	local id = button:GetParent():GetID()
+	if id ~= 0 then
+		local c = self.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt]
+		self:ToggleCollapsed(c.recipes[V.CurrentProfession].list[id])
+	end
+	self:Recipes_Update()
 end

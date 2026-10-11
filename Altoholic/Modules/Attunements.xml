@@ -48,7 +48,7 @@
 				AltoTooltip:Hide();
 			</OnLeave>
 			<OnClick>
-				Altoholic_Attunements_OnClick(arg1, this:GetID())
+				Altoholic_Attunements_OnClick(this, arg1)
 			</OnClick>
 		</Scripts>
 		<Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
@@ -99,8 +99,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local id = this:GetParent():GetID()
-						Altoholic:Attunements_Toggle(id)
+						Altoholic:Attunements_Toggle(this:GetParent():GetID())
 						Altoholic:Attunements_Update()
 					</OnClick>
 				</Scripts>
@@ -169,7 +168,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(41, function(this) 
+						FauxScrollFrame_OnVerticalScroll(41, function()
 							Altoholic:Attunements_Update();
 						end)
 					</OnVerticalScroll>

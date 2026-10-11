@@ -1,6 +1,31 @@
 ****************************************************************************************************
 *	Altaholic for Vanilla WoW: Change Log							   *
 ****************************************************************************************************
+	v1.4.0
+	- Altoholic now requires the ClassicAPI client mod (https://github.com/brues-code/ClassicAPI).
+	  Without it the addon only shows a notice at login; your saved data is left untouched.
+
+	- Removed the Ace2, Dewdrop, Tablet and Gratuity libraries. Events, slash commands,
+	  localisation and saved variables are handled by the addon itself. The saved data keeps
+	  its format, so existing characters carry over.
+
+	- Item tooltips are annotated through OnTooltipSetItem, so item counts, drop source and
+	  recipe info now show on every item tooltip (merchant, loot, quest rewards...), not just
+	  bags, auctions and chat links.
+
+	- Bags are rescanned once per frame (BAG_UPDATE_DELAYED) instead of once per changed slot,
+	  equipment on PLAYER_EQUIPMENT_CHANGED instead of every unit's inventory change.
+
+	- A quest turn-in is added to the completed quests right away, the Attunements tab no
+	  longer waits for the next server poll.
+
+	- Lists redraw when the client receives data for an item it didn't know yet.
+
+	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the
+	  search results, neither ever received the mouse button.
+
+	- "/alto search" takes any number of words.
+****************************************************************************************************
 	v1.0.9
 	- RightClick menus fixed - root cause: renamed frames from previous release
 

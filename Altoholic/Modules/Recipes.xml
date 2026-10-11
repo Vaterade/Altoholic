@@ -48,20 +48,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local id = this:GetParent():GetID()
-						if id ~= 0 then
-							local v = Altoholic.vars
-							local c = Altoholic.db.account.data[v.CurrentFaction][v.CurrentRealm].char[v.CurrentAlt]
-							local s = c.recipes[v.CurrentProfession].list[id]
-							if s.isCollapsed ~= nil then
-								if s.isCollapsed == true then
-									s.isCollapsed = false
-								else
-									s.isCollapsed = true
-								end
-							end
-						end
-						Altoholic:Recipes_Update()
+						Altoholic:Recipes_ToggleHeader(this)
 					</OnClick>
 				</Scripts>
 				<NormalTexture name="$parentIcon" file="Interface\Buttons\UI-MinusButton-UP" />
@@ -227,7 +214,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(18, function(this) 
+						FauxScrollFrame_OnVerticalScroll(18, function()
 							Altoholic:Recipes_Update();
 						end)
 					</OnVerticalScroll>

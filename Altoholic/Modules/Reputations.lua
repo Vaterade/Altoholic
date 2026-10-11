@@ -1,5 +1,5 @@
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
@@ -16,36 +16,36 @@ function Altoholic:Reputations_Update()
 	local i = 1
 	-- for CharacterName, c in pairs(self.db.account.data[V.faction][V.realm].char) do
 	local byLevel = Altoholic:Get_Sorted_Character_List(V.faction, V.realm)
-	for _, CharacterName in byLevel do
+	for _, CharacterName in ipairs(byLevel) do
 		-- DEFAULT_CHAT_FRAME:AddMessage("Handling "..CharacterName)
 		local c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 		local itemName = "AltoReputationsClassesItem" .. i;
-		local itemButton = getglobal(itemName);
+		local itemButton = _G[itemName];
 		-- Only buttons for 10 columns defined; so we stop when buttons stop being defined
 		if itemButton == nil then break end
 		itemButton:SetScript("OnEnter", Altoholic_Reputations_OnEnter)
 		itemButton:SetScript("OnLeave", function(self) AltoTooltip:Hide() end)
 		itemButton:SetScript("OnClick", Altoholic_Equipment_OnClick)
 		local tc = self.ClassInfo[ self.Classes[c.class] ].texcoord
-		local itemTexture = getglobal(itemName .. "IconTexture")
+		local itemTexture = _G[itemName .. "IconTexture"]
 		itemTexture:SetTexture(self.classicon);
 		itemTexture:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
 		itemTexture:SetWidth(36);
 		itemTexture:SetHeight(36);
 		itemTexture:SetAllPoints(itemButton);
 		itemButton.CharName = CharacterName
-		getglobal(itemName):Show()
+		_G[itemName]:Show()
 		i = i + 1
 	end
 	while i <= 10 do
-		getglobal("AltoReputationsClassesItem" .. i):Hide()
-		getglobal("AltoReputationsClassesItem" .. i).CharName = nil
+		_G["AltoReputationsClassesItem" .. i]:Hide()
+		_G["AltoReputationsClassesItem" .. i].CharName = nil
 		i = i + 1
 	end
-	getglobal(entry .. "1"):Show()
-	getglobal(entry .. "1"):SetID(0)
+	_G[entry .. "1"]:Show()
+	_G[entry .. "1"]:SetID(0)
 	-- ** draw factions **
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawFactionGroup
@@ -67,62 +67,62 @@ function Altoholic:Reputations_Update()
 		else		-- line will be displayed
 			if type(s) == "table" then
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
 					DrawFactionGroup = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawFactionGroup = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."Name"):SetText(s.name)
-				getglobal(entry..i.."Name"):SetJustifyH("LEFT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."Name"]:SetText(s.name)
+				_G[entry..i.."Name"]:SetJustifyH("LEFT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 25, 0)
 				for j=1, 10 do		-- hide the 10 rep buttons
-					itemButton = getglobal(entry.. i .. "Item" .. j);
+					itemButton = _G[entry.. i .. "Item" .. j];
 					itemButton.CharName = nil
 					itemButton:Hide()
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
 			elseif DrawFactionGroup then
 				local r = self.db.account.data[V.faction][V.realm].reputation[s]
-				getglobal(entry..i.."Collapse"):Hide()
-				getglobal(entry..i.."Name"):SetText(WHITE .. s)
-				getglobal(entry..i.."Name"):SetJustifyH("RIGHT")
-				getglobal(entry..i.."Name"):SetPoint("TOPLEFT", 15, 0)
+				_G[entry..i.."Collapse"]:Hide()
+				_G[entry..i.."Name"]:SetText(WHITE .. s)
+				_G[entry..i.."Name"]:SetJustifyH("RIGHT")
+				_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
 				local j = 1
 				-- for CharacterName, c in pairs(self.db.account.data[V.faction][V.realm].char) do
-                for _, CharacterName in byLevel do
+                for _, CharacterName in ipairs(byLevel) do
                     -- DEFAULT_CHAT_FRAME:AddMessage("Handling "..CharacterName)
                     c = self.db.account.data[V.faction][V.realm].char[CharacterName]
 					local itemName = entry.. i .. "Item" .. j;
-					local itemButton = getglobal(itemName);
+					local itemButton = _G[itemName];
                     if itemButton == nil then break end
 					itemButton:SetScript("OnEnter", Altoholic_Reputations_OnEnter)
 					itemButton:SetScript("OnClick", Altoholic_Reputations_OnClick)
 					if r[CharacterName] ~= nil then		-- if the current char has info for this faction ..
-						local itemTexture = getglobal(itemName .. "_Background")
+						local itemTexture = _G[itemName .. "_Background"]
 						local bottom, _, _, rate = self:GetReputationInfo(r[CharacterName])
-						getglobal(itemName .. "Name"):SetText(format("%2d", floor(rate)) .. "%")
+						_G[itemName .. "Name"]:SetText(format("%2d", floor(rate)) .. "%")
 						if bottom == -42000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.8, 0.13, 0.13)
+							_G[itemName .. "Name"]:SetTextColor(0.8, 0.13, 0.13)
 						elseif bottom == -6000 then
-							getglobal(itemName .. "Name"):SetTextColor(1.0, 0.0, 0.0)
+							_G[itemName .. "Name"]:SetTextColor(1.0, 0.0, 0.0)
 						elseif bottom == -3000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.93, 0.4, 0.13)
+							_G[itemName .. "Name"]:SetTextColor(0.93, 0.4, 0.13)
 						elseif bottom == 0 then
-							getglobal(itemName .. "Name"):SetTextColor(1.0, 1.0, 0.0)
+							_G[itemName .. "Name"]:SetTextColor(1.0, 1.0, 0.0)
 						elseif bottom == 3000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.0, 1.0, 0.0)
+							_G[itemName .. "Name"]:SetTextColor(0.0, 1.0, 0.0)
 						elseif bottom == 9000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.0, 1.0, 0.53)
+							_G[itemName .. "Name"]:SetTextColor(0.0, 1.0, 0.53)
 						elseif bottom == 21000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.0, 1.0, 0.8)
+							_G[itemName .. "Name"]:SetTextColor(0.0, 1.0, 0.8)
 						elseif bottom == 42000 then
-							getglobal(itemName .. "Name"):SetTextColor(0.0, 1.0, 1.0)
+							_G[itemName .. "Name"]:SetTextColor(0.0, 1.0, 1.0)
 						end
 						itemButton.CharName = CharacterName
 						itemButton:Show()
@@ -132,8 +132,8 @@ function Altoholic:Reputations_Update()
 					end
 					j = j + 1
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -141,28 +141,27 @@ function Altoholic:Reputations_Update()
 		end
 	end
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 41);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 41);
 end
 
-function Altoholic_Reputations_OnEnter()
-    if not this then return end
-	local repID = this:GetParent():GetID()
+function Altoholic_Reputations_OnEnter(self)
+	local repID = self:GetParent():GetID()
 	if repID == 0 then		-- class icon
 		V.CurrentFaction = V.faction
 		V.CurrentRealm = V.realm
-		Altoholic:DrawCharacterTooltip(this.CharName)
+		Altoholic:DrawCharacterTooltip(self, self.CharName)
 		return
 	end
 	local r = Altoholic.db.account.data[V.faction][V.realm]
 	local repName = V.Factions[repID]
-	local charName = this.CharName
+	local charName = self.CharName
 	local c = Altoholic.db.account.data[V.faction][V.realm].char[charName]
 	local bottom, top, earned, rate = Altoholic:GetReputationInfo( r.reputation[repName][charName] )
-	AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
+	AltoTooltip:SetOwner(self, "ANCHOR_LEFT");
 	AltoTooltip:ClearLines();
 	AltoTooltip:AddLine(Altoholic:GetClassColor(c.class) .. charName .. WHITE .. " @ " ..	TEAL .. repName,1,1,1);
 	local repLevel = Altoholic:GetRepLevelString(bottom)
@@ -178,22 +177,20 @@ function Altoholic_Reputations_OnEnter()
 	AltoTooltip:Show();
 end
 
-function Altoholic_Reputations_OnClick()
-	if not this then return end
-    local button = arg1
-	local repID = this:GetParent():GetID()
+function Altoholic_Reputations_OnClick(self, button)
+	local repID = self:GetParent():GetID()
 	if repID == 0 then
-		Altoholic:DrawCharacterTooltip(this.CharName)
+		Altoholic:DrawCharacterTooltip(self, self.CharName)
 		return
 	end
 	local r = Altoholic.db.account.data[V.faction][V.realm]
-	local bottom, top, earned = Altoholic:GetReputationInfo( r.reputation[V.Factions[repID]][this.CharName] )
+	local bottom, top, earned = Altoholic:GetReputationInfo( r.reputation[V.Factions[repID]][self.CharName] )
 	local repLevel = Altoholic:GetRepLevelString(bottom)
     if button == "LeftButton" and IsShiftKeyDown() then
         if ( ChatFrameEditBox:IsShown() ) then
-            ChatFrameEditBox:Insert(this.CharName .. L[" is "] .. repLevel .. L[" with "] .. V.Factions[repID] .. " (" .. (earned - bottom) .. "/" .. (top - bottom) .. ")");
+            ChatFrameEditBox:Insert(self.CharName .. L[" is "] .. repLevel .. L[" with "] .. V.Factions[repID] .. " (" .. (earned - bottom) .. "/" .. (top - bottom) .. ")");
         elseif (WIM_EditBoxInFocus) then
-            WIM_EditBoxInFocus:Insert(this.CharName .. L[" is "] .. repLevel .. L[" with "] .. V.Factions[repID] .. " (" .. (earned - bottom) .. "/" .. (top - bottom) .. ")");
+            WIM_EditBoxInFocus:Insert(self.CharName .. L[" is "] .. repLevel .. L[" with "] .. V.Factions[repID] .. " (" .. (earned - bottom) .. "/" .. (top - bottom) .. ")");
         end
 	end
 end
@@ -226,4 +223,12 @@ function Altoholic:GetRepLevelString(bottom)
 	elseif bottom == 42000 then
 		return FACTION_STANDING_LABEL8 -- "Exalted"
 	end
+end
+
+function Altoholic:Reputations_ToggleHeader(button)
+	local id = button:GetParent():GetID()
+	if id ~= 0 then
+		self:ToggleCollapsed(V.Factions[id])
+	end
+	self:Reputations_Update()
 end

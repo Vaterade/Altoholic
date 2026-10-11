@@ -85,17 +85,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local id = this:GetParent():GetID()
-						if id ~= 0 then
-							local s = Altoholic.CharacterInfo[id]
-							if s.isCollapsed ~= nil then
-								if s.isCollapsed == true then
-									s.isCollapsed = false
-								else
-									s.isCollapsed = true
-								end
-							end
-						end
+						Altoholic:ToggleCharacterLine(this)
 						Altoholic:AccountSummary_Update()
 					</OnClick>
 				</Scripts>
@@ -130,7 +120,7 @@
 						this:RegisterForClicks("LeftButtonDown", "RightButtonDown");
 					</OnLoad>
 					<OnClick>
-						Altoholic_AccountSummaryLevel_OnClick(arg1, this:GetID())
+						Altoholic_AccountSummaryLevel_OnClick(this, arg1)
 					</OnClick>
 					<OnEnter>
 						Altoholic_AccountSummaryLevel_OnEnter(this)
@@ -204,7 +194,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(18, function(this)
+						FauxScrollFrame_OnVerticalScroll(18, function()
 							Altoholic:AccountSummary_Update();
 						end)
 					</OnVerticalScroll>

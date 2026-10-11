@@ -1,4 +1,4 @@
-local L = AceLibrary("AceLocale-2.2"):new("Altoholic")
+local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
 local RED		= "|cFFFF0000"
@@ -10,16 +10,16 @@ function Altoholic:Quests_Update()
 	local VisibleLines = 14
 	local frame = "AltoQuests"
 	local entry = frame.."Entry"
-	if table.getn(c.questlog) == 0 then
-		getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. "No quests found")
-		getglobal("AltoholicFrame_Status"):Show()
-		self:ClearScrollFrame(getglobal(frame.."ScrollFrame"), entry, VisibleLines, 18)
+	if #c.questlog == 0 then
+		_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. "No quests found")
+		_G["AltoholicFrame_Status"]:Show()
+		self:ClearScrollFrame(_G[frame.."ScrollFrame"], entry, VisibleLines, 18)
 		return
 	else
-		getglobal("AltoholicFrame_Status"):SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. QUEST_LOG)
-		getglobal("AltoholicFrame_Status"):Show()
+		_G["AltoholicFrame_Status"]:SetText("|cFFFFD700" .. V.CurrentAlt .. " of ".. V.CurrentRealm .. " |cFFFFFFFF" .. QUEST_LOG)
+		_G["AltoholicFrame_Status"]:Show()
 	end
-	local offset = FauxScrollFrame_GetOffset(getglobal(frame.."ScrollFrame"));
+	local offset = FauxScrollFrame_GetOffset(_G[frame.."ScrollFrame"]);
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawGroup
@@ -41,54 +41,54 @@ function Altoholic:Quests_Update()
 		else
 			if s.isHeader then
 				if s.isCollapsed == false then
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
 					DrawGroup = true
 				else
-					getglobal(entry..i.."Collapse"):SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+					_G[entry..i.."Collapse"]:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
 					DrawGroup = false
 				end
-				getglobal(entry..i.."Collapse"):Show()
-				getglobal(entry..i.."QuestLinkNormalText"):SetText(TEAL .. s.name)
-				getglobal(entry..i.."QuestLink"):SetID(0)
-				getglobal(entry..i.."QuestLink"):SetPoint("TOPLEFT", 25, 0)
-				getglobal(entry..i.."Tag"):Hide()
-				getglobal(entry..i.."Status"):Hide()
-				getglobal(entry..i.."Money"):Hide()
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i.."Collapse"]:Show()
+				_G[entry..i.."QuestLinkNormalText"]:SetText(TEAL .. s.name)
+				_G[entry..i.."QuestLink"]:SetID(0)
+				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 25, 0)
+				_G[entry..i.."Tag"]:Hide()
+				_G[entry..i.."Status"]:Hide()
+				_G[entry..i.."Money"]:Hide()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
 			elseif DrawGroup then
-				getglobal(entry..i.."Collapse"):Hide()	
+				_G[entry..i.."Collapse"]:Hide()	
 				local _, id, level = self:GetQuestDetails(s.link)
-				getglobal(entry..i.."QuestLinkNormalText"):SetText(WHITE .. "[" .. s.level .. "] " .. s.link)
-				getglobal(entry..i.."QuestLink"):SetID(line)
-				getglobal(entry..i.."QuestLink"):SetPoint("TOPLEFT", 15, 0)
+				_G[entry..i.."QuestLinkNormalText"]:SetText(WHITE .. "[" .. s.level .. "] " .. s.link)
+				_G[entry..i.."QuestLink"]:SetID(line)
+				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 15, 0)
 				if s.tag then 
-					getglobal(entry..i.."Tag"):SetText(self:GetQuestTypeString(s.tag, self:SuggestGroupSize(s.tag, s.level)))
-					getglobal(entry..i.."Tag"):Show()
+					_G[entry..i.."Tag"]:SetText(self:GetQuestTypeString(s.tag, self:SuggestGroupSize(s.tag, s.level)))
+					_G[entry..i.."Tag"]:Show()
 				else
-					getglobal(entry..i.."Tag"):Hide()
+					_G[entry..i.."Tag"]:Hide()
 				end
 				if s.isComplete then
 					if s.isComplete == 1 then
-						getglobal(entry..i.."Status"):SetText(GREEN .. COMPLETE)
+						_G[entry..i.."Status"]:SetText(GREEN .. COMPLETE)
 					elseif s.isComplete == -1 then
-						getglobal(entry..i.."Status"):SetText(RED .. FAILED)
+						_G[entry..i.."Status"]:SetText(RED .. FAILED)
 					end
-					getglobal(entry..i.."Status"):Show()
+					_G[entry..i.."Status"]:Show()
 				else
-					getglobal(entry..i.."Status"):Hide()
+					_G[entry..i.."Status"]:Hide()
 				end
 				if s.money then
-					getglobal(entry..i.."Money"):SetText(self:GetMoneyString(s.money))
-					getglobal(entry..i.."Money"):Show()
+					_G[entry..i.."Money"]:SetText(self:GetMoneyString(s.money))
+					_G[entry..i.."Money"]:Show()
 				else
-					getglobal(entry..i.."Money"):Hide()
+					_G[entry..i.."Money"]:Hide()
 				end
-				getglobal(entry..i):SetID(line)
-				getglobal(entry..i):Show()
+				_G[entry..i]:SetID(line)
+				_G[entry..i]:Show()
 				i = i + 1
 				VisibleCount = VisibleCount + 1
 				DisplayedCount = DisplayedCount + 1
@@ -96,11 +96,11 @@ function Altoholic:Quests_Update()
 		end
 	end 
 	while i <= VisibleLines do
-		getglobal(entry..i):SetID(0)
-		getglobal(entry..i):Hide()
+		_G[entry..i]:SetID(0)
+		_G[entry..i]:Hide()
 		i = i + 1
 	end
-	FauxScrollFrame_Update(getglobal(frame.."ScrollFrame"), VisibleCount, VisibleLines, 18);
+	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end	
 
 function Altoholic:GetQuestDetails(questString)
@@ -213,4 +213,13 @@ end
 function Altoholic:QUEST_LOG_UPDATE()
 	self:UnregisterEvent("QUEST_LOG_UPDATE")		-- .. and unregister it right away, since we only want it to be processed once (and it's triggered way too often otherwise)
 	self:UpdateQuestLog()	
+end
+
+function Altoholic:Quests_ToggleHeader(button)
+	local id = button:GetParent():GetID()
+	if id ~= 0 then
+		local c = self.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt]
+		self:ToggleCollapsed(c.questlog[id])
+	end
+	self:Quests_Update()
 end

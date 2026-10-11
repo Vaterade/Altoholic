@@ -1,5 +1,7 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="Options.lua"></Script>
+
 	<Frame name="AltoOptions" parent="AltoholicFrame" hidden="true">
 		<Size>
 			<AbsDimension x="615" y="306"/>
@@ -55,12 +57,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						local name = this:GetName()
-						local s = getglobal(name)
-						s.tooltipText = XML_TEXT_10; 
-						getglobal(name .. "Low"):SetText("1");
-						getglobal(name .. "High"):SetText("360"); 
-						getglobal(name .. "Text"):SetText(XML_TEXT_11 .. s:GetValue() ..")");
+						Altoholic:Options_InitSlider(this, XML_TEXT_10, "1", "360", XML_TEXT_11)
 					</OnLoad>
 					<OnValueChanged>
 						Altoholic:UpdateSlider(this:GetName(), "Minimap Icon Angle", "MinimapIconAngle")
@@ -80,12 +77,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						local name = this:GetName()
-						local s = getglobal(name)
-						s.tooltipText = XML_TEXT_12; 
-						getglobal(name .. "Low"):SetText("1");
-						getglobal(name .. "High"):SetText("200"); 
-						getglobal(name .. "Text"):SetText(XML_TEXT_13 .. s:GetValue() ..")");
+						Altoholic:Options_InitSlider(this, XML_TEXT_12, "1", "200", XML_TEXT_13)
 					</OnLoad>
 					<OnValueChanged>
 						Altoholic:UpdateSlider(this:GetName(), "Minimap Icon Radius", "MinimapIconRadius")
@@ -105,20 +97,10 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						local name = this:GetName()
-						local s = getglobal(name)
-						s.tooltipText = XML_TEXT_14; 
-						getglobal(name .. "Low"):SetText("1");
-						getglobal(name .. "High"):SetText("15"); 
-						getglobal(name .. "Text"):SetText(XML_TEXT_15 .. s:GetValue() ..")");
+						Altoholic:Options_InitSlider(this, XML_TEXT_14, "1", "15", XML_TEXT_15)
 					</OnLoad>
 					<OnValueChanged>
-						local name = this:GetName()
-						local s = getglobal(name)
-						getglobal(name .. "Text"):SetText(XML_TEXT_15 .. s:GetValue() ..")");
-						if Altoholic.db.account ~= nil then
-							Altoholic.db.account.options.MailWarningThreshold = this:GetValue()
-						end
+						Altoholic:Options_MailExpiry_OnValueChanged(this)
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
@@ -135,18 +117,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_16);
+						Altoholic:SetLabel(this, XML_TEXT_16)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.ShowMinimap = 1
-								AltoholicMinimapButton:Show()
-							else
-								Altoholic.db.account.options.ShowMinimap = 0
-								AltoholicMinimapButton:Hide()
-							end
-						end
+						Altoholic:Options_ShowMinimap_OnClick(this)
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -163,16 +137,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_17);
+						Altoholic:SetLabel(this, XML_TEXT_17)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.SortDescending = 1
-							else
-								Altoholic.db.account.options.SortDescending = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "SortDescending")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -189,16 +157,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_18);
+						Altoholic:SetLabel(this, XML_TEXT_18)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.RestXPMode = 1
-							else
-								Altoholic.db.account.options.RestXPMode = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "RestXPMode")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -215,16 +177,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_19);
+						Altoholic:SetLabel(this, XML_TEXT_19)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.ScanMailBody = 1
-							else
-								Altoholic.db.account.options.ScanMailBody = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "ScanMailBody")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -241,16 +197,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_20);
+						Altoholic:SetLabel(this, XML_TEXT_20)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.TooltipSource = 1
-							else
-								Altoholic.db.account.options.TooltipSource = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "TooltipSource")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -267,16 +217,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_21);
+						Altoholic:SetLabel(this, XML_TEXT_21)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.TooltipCount = 1
-							else
-								Altoholic.db.account.options.TooltipCount = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "TooltipCount")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -293,16 +237,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_22);
+						Altoholic:SetLabel(this, XML_TEXT_22)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.TooltipTotal = 1
-							else
-								Altoholic.db.account.options.TooltipTotal = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "TooltipTotal")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -319,16 +257,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_24);
+						Altoholic:SetLabel(this, XML_TEXT_24)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.TooltipAlreadyKnown = 1
-							else
-								Altoholic.db.account.options.TooltipAlreadyKnown = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "TooltipAlreadyKnown")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -345,16 +277,10 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_27);
+						Altoholic:SetLabel(this, XML_TEXT_27)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.TooltipLearnableBy = 1
-							else
-								Altoholic.db.account.options.TooltipLearnableBy = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "TooltipLearnableBy")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -371,22 +297,13 @@
 				</Anchors>      
 				<Scripts>
 					<OnLoad>
-						getglobal(this:GetName().."Text"):SetText(XML_TEXT_25);
+						Altoholic:SetLabel(this, XML_TEXT_25)
 					</OnLoad>
 					<OnClick>
-						if Altoholic.db.account ~= nil then
-							if this:GetChecked() then 
-								Altoholic.db.account.options.SearchAutoQuery = 1
-							else
-								Altoholic.db.account.options.SearchAutoQuery = 0
-							end
-						end
+						Altoholic:Options_Toggle(this, "SearchAutoQuery")
 					</OnClick>
 					<OnEnter>
-						AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
-						AltoTooltip:ClearLines();
-						AltoTooltip:AddLine(XML_TEXT_26)
-						AltoTooltip:Show();
+						Altoholic:Options_AutoQuery_OnEnter(this)
 					</OnEnter>
 					<OnLeave>
 						AltoTooltip:Hide();

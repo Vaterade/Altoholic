@@ -56,13 +56,7 @@
 				</Anchors>
 				<Scripts>
 					<OnEnter>
-						local s = Altoholic.SearchResults[this:GetID()]
-						if s.id ~= nil then
-							local _, link = GetItemInfo(s.id)
-							GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-							GameTooltip:SetHyperlink(link);
-							GameTooltip:Show();
-						end
+						Altoholic:Search_OnEnter(this)
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
@@ -97,46 +91,13 @@
 				</ButtonText>
 				<Scripts>
 					<OnEnter>
-						local id = this:GetID()
-						if id == 0 then return end
-						
-						local s = Altoholic.SearchResults[id]
-						if s.craftLink == nil then	return end
-						
-						local c = Altoholic.db.account.data[s.searchFaction][s.searchRealm].char[s.altName]
-						local r = c.recipes[s.location].list
-						if not r then return	end
-						local link = r[s.craftNum].link
-						
-						if link then
-							GameTooltip:ClearLines();
-							GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-							GameTooltip:SetHyperlink(link);
-							GameTooltip:AddLine(" ",1,1,1);
-							GameTooltip:Show();
-						end
+						Altoholic:SearchCraft_OnEnter(this)
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
 					</OnLeave>
 					<OnClick>
-						if ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
-							if ( ChatFrameEditBox:IsShown() ) then
-								local id = this:GetID()
-								if id == 0 then return end
-								
-								local s = Altoholic.SearchResults[id]
-								if s.craftLink == nil then	return end
-								
-								local c = Altoholic.db.account.data[s.searchFaction][s.searchRealm].char[s.altName]
-								local r = c.recipes[s.location].list
-								if not r then return end
-								local link = r[s.craftNum].link
-								
-								if not link then return end
-								ChatFrameEditBox:Insert(link);
-							end
-						end
+						Altoholic:SearchCraft_OnClick(this, arg1)
 					</OnClick>
 				</Scripts>
 				<NormalFont inherits="GameFontNormalSmall" justifyH="LEFT"/>
@@ -206,7 +167,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(41, function(this) 
+						FauxScrollFrame_OnVerticalScroll(41, function()
 							Altoholic:Search_Update();
 						end)
 					</OnVerticalScroll>
