@@ -717,4 +717,5 @@ XML_TEXT_26 = "|cFFFFFFFFIf an item not in the local item cache\n"
 				.. "is a loot from a high level dungeon.\n\n"
 				.. "|cFF00FF00Disable|r to avoid this risk";
 XML_TEXT_27 = "Include Learnable By";
+XML_TEXT_28 = "Match pfUI's look";
 end

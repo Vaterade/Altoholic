@@ -709,4 +709,5 @@ XML_TEXT_26 = "|cFFFFFFFFSi un objet n'existant pas dans le cache local\n"
 				.. "est un loot d'une instance haut niveau.\n\n"
 				.. "|cFF00FF00Désactiver|r pour éviter ce risque";
 XML_TEXT_27 = "Inclure Peut être appris par";
+XML_TEXT_28 = "Match pfUI's look";
 end

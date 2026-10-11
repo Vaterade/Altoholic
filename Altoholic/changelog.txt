@@ -23,6 +23,9 @@
 	  The mail was filed under an empty character of the sender's faction; it is now moved to
 	  the right character at login, and empty characters are left out of the lists.
 
+	- Added an option to match pfUI's look. Until it is set, it follows whether pfUI is
+	  installed.
+
 	- Lists redraw when the client receives data for an item it didn't know yet.
 
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the

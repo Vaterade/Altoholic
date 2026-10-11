@@ -33,6 +33,18 @@ function Altoholic:Options_ShowMinimap_OnClick(button)
 	end
 end
 
+-- only a click stores the setting, see Skin_Enabled
+function Altoholic:Options_MatchPfUI_OnClick(button)
+	if not self.db then return end
+	if not self:Skin_Available() then
+		button:SetChecked(nil)
+		DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF9AAltoholic: |cFFFFFFFF" .. Altoholic.L["pfUI is not installed, so there is nothing to match"])
+		return
+	end
+	self:Options_Toggle(button, "MatchPfUI")
+	self:Skin_OnSettingChanged(button:GetChecked())
+end
+
 function Altoholic:Options_AutoQuery_OnEnter(button)
 	AltoTooltip:SetOwner(button, "ANCHOR_LEFT");
 	AltoTooltip:ClearLines();

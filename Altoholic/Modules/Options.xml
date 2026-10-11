@@ -184,6 +184,26 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
+			<CheckButton name="$parent_MatchPfUI" inherits="UICheckButtonTemplate">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors> 
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension  x="40" y="-2"/>
+						</Offset>
+					</Anchor>
+				</Anchors>      
+				<Scripts>
+					<OnLoad>
+						Altoholic:SetLabel(this, XML_TEXT_28)
+					</OnLoad>
+					<OnClick>
+						Altoholic:Options_MatchPfUI_OnClick(this)
+					</OnClick>
+				</Scripts>
+			</CheckButton>
 			<CheckButton name="$parent_TooltipSource" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>

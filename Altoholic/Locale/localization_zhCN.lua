@@ -710,4 +710,5 @@ XML_TEXT_26 = "|cFFFFFFFF如果一个不在本地缓存中物品\n"
 				.. "特别是那些没有被完全推倒的首领！\n\n"
 				.. "|cFF00FF00禁用|r以防止发生这类现象。";
 XML_TEXT_27 = "可学习：";
+XML_TEXT_28 = "Match pfUI's look";
 end

@@ -377,6 +377,7 @@ function Altoholic:PLAYER_LOGIN()
 	_G["AltoOptions_RestXPMode"]:SetChecked(O.RestXPMode)
 	_G["AltoOptions_ScanMailBody"]:SetChecked(O.ScanMailBody)
 	_G["AltoOptions_SearchAutoQuery"]:SetChecked(O.SearchAutoQuery)
+	_G["AltoOptions_MatchPfUI"]:SetChecked(self:Skin_Enabled() and 1 or 0)
 	_G["AltoOptionsLootInfo"]:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])
 	if AltoOptions_ShowMinimap:GetChecked() then
 		self:MoveMinimapIcon()
@@ -452,6 +453,7 @@ function Altoholic:OnShow()
 	self:BuildCharacterInfoTable()
 	self:ActivateMenuItem("AltoSummary")
 	self:Menu_Update()
+	self:Skin_Apply()
 end
 
 function Altoholic:BuildCharacterInfoTable()

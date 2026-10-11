@@ -708,4 +708,5 @@ XML_TEXT_26 = "|cFFFFFFFF當物品不在本機的內存時\n"
 				.. "極有可能導至斷線.\n\n"
 				.. "|cFF00FF00關閉|r 這選項可避免這種情況發生";
 XML_TEXT_27 = "可被學會";
+XML_TEXT_28 = "Match pfUI's look";
 end
