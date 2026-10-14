@@ -491,6 +491,7 @@ function Altoholic:BuildCharacterInfoTable()
 				V.SkillsCache[4] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["First Aid"]] )
 				V.SkillsCache[5] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["Fishing"]] )
 				V.SkillsCache[6] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Riding"]] )
+				V.SkillsCache[7] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Survival"]] )
 				local color = self:GetClassColor(c.class)
 				local bank
 				if (c.bankslots == nil) or (c.bankslots == "") then
@@ -509,6 +510,7 @@ function Altoholic:BuildCharacterInfoTable()
 					firstaid = V.SkillsCache[4],
 					fishing = V.SkillsCache[5],
 					riding = V.SkillsCache[6],
+					survival = V.SkillsCache[7],
 				} )
 				realmlevels = realmlevels + c.level
 				realmmoney = realmmoney + c.money
@@ -1158,7 +1160,7 @@ function Altoholic:BuildRecipesSubMenu()
 							name = TradeSkillName,
 							id = skillName + (n * 10000) + (i * 100),
 							OnClick = function(self)
-								if skillName == 14 or skillName == 15 then return end -- disable disguise/survial
+								if skillName == 14 then return end -- disguise has no recipes
 								local id = skillsID
 								local skillID = (id % 100)
 								id = floor(id / 100)
@@ -1300,7 +1302,7 @@ function Altoholic:GetProfessionID(skill)
     [12] = L["Poisons"],
     [13] = L["Lockpicking"],
 	[14] = "Disguise",
-	[15] = "Survival"
+	[15] = L["Survival"]
     }
 	for i,v in (Profs) do
 		if skill == v then
@@ -1326,7 +1328,7 @@ function Altoholic:SelectProfession(id)
     [12] = L["Poisons"],
     [13] = L["Lockpicking"],
 	[14] = "Disguise",
-	[15] = "Survival"
+	[15] = L["Survival"]
     }
     for i,v in (Profs) do
         if id == i then
@@ -1334,7 +1336,7 @@ function Altoholic:SelectProfession(id)
             V.CurrentProfession = v
             if id < 8 then
                 ProfessionLevel = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt].skill[L["Professions"]][V.CurrentProfession]
-            elseif id == 8 or id == 9 or id == 10 or id == 11 then
+            elseif id == 8 or id == 9 or id == 10 or id == 11 or id == 15 then
                 ProfessionLevel = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt].skill[L["Secondary Skills"]][V.CurrentProfession]
             elseif id == 12 or id == 13 then
                 if c.class ~= L["Rogue"] then
@@ -1883,7 +1885,8 @@ function Altoholic:WhoKnowsRecipe(tooltip)
                             local curRank
                             if (ProfessionName == BI["Cooking"]) or
                                 (ProfessionName == BI["First Aid"]) or
-                                (ProfessionName == BI["Fishing"]) then
+                                (ProfessionName == BI["Fishing"]) or
+                                (ProfessionName == L["Survival"]) then
                                 curRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][ProfessionName] )
                             else
                                 curRank = Altoholic:GetSkillInfo( c.skill[L["Professions"]][ProfessionName] )

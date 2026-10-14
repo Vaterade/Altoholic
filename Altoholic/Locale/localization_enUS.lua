@@ -50,6 +50,7 @@ Altoholic:RegisterTranslations("enUS", function() return {
 	["Secondary Skills"] = true,
 	["Fishing"] = true,
 	["Riding"] = true,
+	["Survival"] = true,
 	["Herbalism"] = true,
 	["Mining"] = true,
 	["Skinning"] = true,

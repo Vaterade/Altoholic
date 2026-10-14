@@ -3,11 +3,11 @@
 
 	<Button name="SkillButtonTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="60" y="18"/>
+			<AbsDimension x="52" y="18"/>
 		</Size>
 		<ButtonText name="$parentNormalText" justifyH="CENTER">
 			<Size>
-				<AbsDimension x="60" y="18"/>
+				<AbsDimension x="52" y="18"/>
 			</Size>
 			<Anchors>
 				<Anchor point="LEFT">
@@ -84,7 +84,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentLevel" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -93,7 +93,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentSkill1" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -102,7 +102,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentSkill2" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -111,7 +111,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentCooking" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -120,7 +120,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentFirstAid" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -129,7 +129,16 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentFishing" relativePoint="BOTTOMRIGHT">
 						<Offset>
-							<AbsDimension x="5" y="0"/>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentSurvival" inherits="SkillButtonTemplate" id="8">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentRiding" relativePoint="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>

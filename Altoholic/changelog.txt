@@ -58,6 +58,9 @@
 	- Searching with "recipes" ticked finds recipes by name again. Their names were read as
 	  empty, so only a search for nothing listed them.
 
+	- Added the Survival secondary profession: a column on the Skills tab, its recipe list,
+	  and "learnable by" on recipe tooltips.
+
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the
 	  search results, neither ever received the mouse button.
 

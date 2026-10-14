@@ -66,6 +66,7 @@ function Altoholic:Skills_Update()
 				_G[entry..i.."FirstAidNormalText"]:SetText(WHITE .. BI["First Aid"])
 				_G[entry..i.."FishingNormalText"]:SetText(WHITE .. BI["Fishing"])
 				_G[entry..i.."RidingNormalText"]:SetText(WHITE .. L["Riding"])
+				_G[entry..i.."SurvivalNormalText"]:SetText(WHITE .. L["Survival"])
 				_G[entry..i]:SetID(line)
 				_G[entry..i]:Show()
 				i = i + 1
@@ -90,6 +91,7 @@ function Altoholic:Skills_Update()
 					_G[entry..i.."FirstAidNormalText"]:SetText(self:GetSkillColor(s.firstaid) .. s.firstaid)
 					_G[entry..i.."FishingNormalText"]:SetText(self:GetSkillColor(s.fishing) .. s.fishing)
 					_G[entry..i.."RidingNormalText"]:SetText(self:GetSkillColor(s.riding) .. s.riding)
+					_G[entry..i.."SurvivalNormalText"]:SetText(self:GetSkillColor(s.survival) .. s.survival)
 				elseif (s.linetype == INFO_TOTAL_LINE) then
 					_G[entry..i.."Collapse"]:Hide()
 					_G[entry..i.."Name"]:SetText(L["Totals"])
@@ -106,6 +108,7 @@ function Altoholic:Skills_Update()
 					_G[entry..i.."FirstAidNormalText"]:SetText("")
 					_G[entry..i.."FishingNormalText"]:SetText("")
 					_G[entry..i.."RidingNormalText"]:SetText("")
+					_G[entry..i.."SurvivalNormalText"]:SetText("")
 				end
 				_G[entry..i]:SetID(line)
 				_G[entry..i]:Show()
@@ -152,8 +155,11 @@ function Altoholic_Skill_OnEnter(self)
 	elseif id == 6 then
 		skill = L["Riding"]
 		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Riding"]] )
+	elseif id == 8 then
+		skill = L["Survival"]
+		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Survival"]] )
 	end
-	if (id >= 1) and (id <= 6) then
+	if id ~= 7 then
 		rank = Altoholic:GetSkillColor(curRank) .. curRank .. "/" .. maxRank
 		suggestion = Altoholic:GetSuggestion(skill, curRank)
 	elseif id == 7 then	-- class
