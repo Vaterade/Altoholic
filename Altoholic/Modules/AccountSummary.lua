@@ -146,7 +146,7 @@ function Altoholic_AccountSummaryLevel_OnEnter(self)
 			bLineBreak = nil
 		end
 		if type(InstanceInfo) == "string" then		-- temporary check, can be removed in .014, this is for players who might have saved instance data stored as table
-			local id, reset, lastcheck = Altoholic:strsplit("|", InstanceInfo)
+			local id, reset, lastcheck = strsplit("|", InstanceInfo)
 			reset = tonumber(reset)
 			lastcheck = tonumber(lastcheck)
 			local expiresIn = reset - (time() - lastcheck)

@@ -183,9 +183,9 @@ function Altoholic_Skill_OnEnter(self)
 			AltoTooltip:AddLine(" ",1,1,1);		-- add a line break only once
 			bLineBreak = nil
 		end
-		local skillName, itemID = Altoholic:strsplit("-", k)		-- keys are like : ["Tailoring-21845"] = "315459.769|1211033170"
+		local skillName, itemID = strsplit("-", k)		-- keys are like : ["Tailoring-21845"] = "315459.769|1211033170"
 		if skill == skillName	then		-- if we're on the right tradeskill ..
-			local reset, lastcheck = Altoholic:strsplit("|", v)
+			local reset, lastcheck = strsplit("|", v)
 			reset = tonumber(reset)
 			lastcheck = tonumber(lastcheck)
 			local expiresIn = reset - (time() - lastcheck)
@@ -203,7 +203,7 @@ function Altoholic:GetSkillInfo(skillString)
 	if type(skillString) ~= "string" then
 		return 0, 0
 	end
-	local rank, maxRank = Altoholic:strsplit("|", skillString)
+	local rank, maxRank = strsplit("|", skillString)
 	return tonumber(rank), tonumber(maxRank)
 end
 
@@ -225,7 +225,7 @@ function Altoholic:UpdateTradeSkill(tradeskillName)
 		end
 	end
 	for k, v in pairs(c.ProfessionCooldowns) do
-		local skill = Altoholic:strsplit("-", k)
+		local skill = strsplit("-", k)
 		if skill == tradeskillName	then
 			v = nil
 		end
@@ -288,7 +288,7 @@ function Altoholic:UpdateCraft(tradeskillName)
 		end
 	end
 	for k, v in pairs(c.ProfessionCooldowns) do
-		local skill = Altoholic:strsplit("-", k)
+		local skill = strsplit("-", k)
 		if skill == tradeskillName	then
 			v = nil
 		end

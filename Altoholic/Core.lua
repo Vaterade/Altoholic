@@ -548,12 +548,4 @@ function Altoholic:CmdSearchBags(text)
 	Altoholic:SearchItem();
 end
 
-function Altoholic:strsplit(delimiter, subject)
-  local delimiter, fields = delimiter or ":", {}
-  local pattern = string.format("([^%s]+)", delimiter)
-  if subject == nil then subject = "" end
-  subject:gsub(pattern, function(c) fields[#fields+1] = c end)
-  return unpack(fields)
-end
-
 Altoholic_UIDropDownMenu_CreateInfo = Altoholic_UIDropDownMenu_CreateInfo or loadstring("local t = {} return function() for k in pairs(t) do t[k] = nil t[k] = {} end return t end")()

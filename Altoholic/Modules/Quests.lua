@@ -61,7 +61,6 @@ function Altoholic:Quests_Update()
 				DisplayedCount = DisplayedCount + 1
 			elseif DrawGroup then
 				_G[entry..i.."Collapse"]:Hide()	
-				local _, id, level = self:GetQuestDetails(s.link)
 				_G[entry..i.."QuestLinkNormalText"]:SetText(WHITE .. "[" .. s.level .. "] " .. s.link)
 				_G[entry..i.."QuestLink"]:SetID(line)
 				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 15, 0)
@@ -102,14 +101,6 @@ function Altoholic:Quests_Update()
 	end
 	FauxScrollFrame_Update(_G[frame.."ScrollFrame"], VisibleCount, VisibleLines, 18);
 end	
-
-function Altoholic:GetQuestDetails(questString)
-	if not questString then return nil end
-	local _, _, questInfo, questName = Altoholic:strsplit("|", questString)
-	local _, questId, questLevel = Altoholic:strsplit(":", questInfo)
-	questName = string.sub(questName, 3, -2)
-	return questName, questId, questLevel
-end
 
 function Altoholic:QuestLink_OnClick(button, id)
     if id == 0 then return end

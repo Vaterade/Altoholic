@@ -730,37 +730,15 @@ function Altoholic:UpdatePlayerBags()
 	self:UpdateKeyRing()
 end
 
+-- the number of empty slots in a bag (C_Container's count leaves out the bank bags)
 function Altoholic:CheckPlayerInventory(bagID)
-    local totalSlots, usedSlosts, availableSlots;
-    local totalSlots = 0;
-    local usedSlots = 0;
-    if bagID == nil then
-        for bag = 0, 4 do
-            local size = GetContainerNumSlots(bag);
-            if (size and size > 0) then
-                totalSlots = totalSlots + size;
-                for slot = 1, size do
-                    if (GetContainerItemInfo(bag, slot)) then
-                        usedSlots = usedSlots + 1;
-                    end
-                end
-            end
-        end
-        availableSlots = totalSlots - usedSlots;
-        return availableSlots
-    else
-        local size = GetContainerNumSlots(bagID);
-        if (size and size > 0) then
-            totalSlots = totalSlots + size;
-            for slot = 1, size do
-                if (GetContainerItemInfo(bagID, slot)) then
-                    usedSlots = usedSlots + 1;
-                end
-            end
-        end
-        availableSlots = totalSlots - usedSlots;
-        return availableSlots
-    end
+	local free = 0
+	for slot = 1, GetContainerNumSlots(bagID) or 0 do
+		if not GetContainerItemInfo(bagID, slot) then
+			free = free + 1
+		end
+	end
+	return free
 end
 
 function Altoholic:UpdatePlayerBag(bagID)
@@ -1001,7 +979,7 @@ end
 
 -- *** Menu Management ***
 function Altoholic:SelectAlt(id)
-	local FactionName, RealmName, CharacterName = Altoholic:strsplit(":", id)
+	local FactionName, RealmName, CharacterName = strsplit(":", id)
 	V.CurrentFaction = FactionName
 	V.CurrentRealm = RealmName
 	V.CurrentAlt = CharacterName
@@ -1364,7 +1342,10 @@ function Altoholic:SelectProfession(id)
 		        end
                 ProfessionLevel = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt].skill[L["Rogue Proficiencies"]][V.CurrentProfession]
             end
-            local rank, maxRank = Altoholic:strsplit("|", ProfessionLevel)
+            local rank, maxRank
+            if ProfessionLevel then
+                rank, maxRank = strsplit("|", ProfessionLevel)
+            end
             if rank == nil then rank = '0' end
             if maxRank == nil then maxRank = '?' end
             V.CurrentProfessionLevel = Altoholic:GetSkillColor(tonumber(rank)) .. rank .. "/" .. maxRank
@@ -1932,13 +1913,13 @@ function Altoholic:WhoKnowsRecipe(tooltip)
 end
 
 function Altoholic:GetCraftFromRecipe(link)
-	local _, _, _, recipeName = Altoholic:strsplit("|", link)
+	local _, _, _, recipeName = strsplit("|", link)
 	local craftName
 	local pos = string.find(recipeName, L["Transmute"])
 	if pos then
 		return string.sub(recipeName, pos, -2)
 	else
-        _, _, _, craftName = Altoholic:strsplit(":", recipeName)
+        _, _, _, craftName = strsplit(":", recipeName)
 	end
 	if craftName == nil then
 		return string.sub(recipeName, 3, -2)

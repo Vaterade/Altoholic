@@ -30,7 +30,7 @@ function Altoholic:Auctions_Update_Auctions()
 		local line = i + offset
 		if line <= #c.auctions then
 			local s = c.auctions[line]
-			local itemName, _, itemRarity = GetItemInfo(s.id)
+			local itemName, _, itemRarity, _, _, _, _, _, itexture = GetItemInfo(s.id)
 			if itemRarity == nil then
 				itemRarity = 0
 			end
@@ -60,7 +60,6 @@ function Altoholic:Auctions_Update_Auctions()
 			
 			_G[entry..i.."Price"]:SetText(self:GetMoneyString(s.startPrice) .. "\n"  
 					.. GREEN .. BUYOUT .. ": " ..  self:GetMoneyString(s.buyoutPrice))
-            local _, _, _, _, _, _, _, _, itexture  = GetItemInfo(s.id)
 			_G[entry..i.."ItemIconTexture"]:SetTexture(itexture);
 			if (s.count ~= nil) and (s.count > 1) then
 				_G[entry..i.."ItemCount"]:SetText(s.count)
@@ -107,7 +106,7 @@ function Altoholic:Auctions_Update_Bids()
 		if line <= #c.bids then
 			local s = c.bids[line]
 			
-			local itemName, _, itemRarity = GetItemInfo(s.id)
+			local itemName, _, itemRarity, _, _, _, _, _, itexture = GetItemInfo(s.id)
             local _, _, _, itemQualityColor = GetItemQualityColor(itemRarity)
 			_G[entry..i.."Name"]:SetText(itemQualityColor .. itemName)
 			
@@ -122,7 +121,6 @@ function Altoholic:Auctions_Update_Bids()
 			
 			_G[entry..i.."Price"]:SetText(ORANGE .. CURRENT_BID .. ": " .. self:GetMoneyString(s.bidPrice) .. "\n"  
 					.. GREEN .. BUYOUT .. ": " ..  self:GetMoneyString(s.buyoutPrice))
-            local _, _, _, _, _, _, _, _, itexture  = GetItemInfo(s.id)
 			_G[entry..i.."ItemIconTexture"]:SetTexture(itexture);
 			if (s.count ~= nil) and (s.count > 1) then
 				_G[entry..i.."ItemCount"]:SetText(s.count)

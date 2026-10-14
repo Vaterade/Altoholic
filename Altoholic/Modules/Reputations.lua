@@ -196,7 +196,7 @@ function Altoholic_Reputations_OnClick(self, button)
 end
 
 function Altoholic:GetReputationInfo(repString)
-	local bottom, top, earned = Altoholic:strsplit("|", repString)
+	local bottom, top, earned = strsplit("|", repString)
 	bottom = tonumber(bottom)
 	top = tonumber(top)
 	earned = tonumber(earned)

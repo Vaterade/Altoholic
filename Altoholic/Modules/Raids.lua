@@ -46,7 +46,7 @@ local TotalLockouts = {}
 -- we have already found the correct row, check times
 local function raidid(info, abbr)
 	-- DEFAULT_CHAT_FRAME:AddMessage(YELLOW .. "parsing " .. info)
-	local id, reset, lastcheck = Altoholic:strsplit("|", info)
+	local id, reset, lastcheck = strsplit("|", info)
 	reset = tonumber(reset)
 	lastcheck = tonumber(lastcheck)
 	local expiresIn = reset - (time() - lastcheck)
@@ -241,7 +241,7 @@ function Altoholic_Raid_OnEnter(self)
 		local c = Altoholic.db.account.data[Faction][Realm].char[s.name]
 		for name, info in pairs(c.SavedInstance) do
 			if (string.sub(name, 1, string.len(longname)) == longname) then
-				local id, reset, lastcheck = Altoholic:strsplit("|", info)
+				local id, reset, lastcheck = strsplit("|", info)
 				reset = tonumber(reset)
 				lastcheck = tonumber(lastcheck)
 				local expiresIn = reset - (time() - lastcheck)
