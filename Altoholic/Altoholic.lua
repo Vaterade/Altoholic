@@ -604,21 +604,46 @@ function Altoholic:UpdatePlayerStats()
 	self:UpdateRaidTimers()
 	self:UpdateQuests()
 	self:PLAYER_MONEY()
-	-- *** Factions ***
+	self:UpdateReputations()
+	self:UpdateQuestLog()
+	self:UpdatePVPStats()
+end
+
+function Altoholic:UpdateReputation(name, bottom, top, earned)
+	self.db.account.data[V.faction][V.realm].reputation[name][V.player] = bottom .. "|" .. top .. "|" .. earned
+end
+
+function Altoholic:UpdateReputations()
+	-- factions under a collapsed header are not in the list, so open the headers for the scan ..
+	local collapsed = {}
 	for i = GetNumFactions(), 1, -1 do
-		local _, _, _, _, _, _, _,	_, isHeader, isCollapsed, _ = GetFactionInfo(i)
+		local name, _, _, _, _, _, _, _, isHeader, isCollapsed = GetFactionInfo(i)
 		if isHeader and isCollapsed then
+			collapsed[name] = true
 			ExpandFactionHeader(i)
 		end
 	end
 	for i = 1, GetNumFactions() do
-		local name, _, _, bottom, top, earned, _,	_, isHeader, _, _ = GetFactionInfo(i)
+		local name, _, _, bottom, top, earned, _, _, isHeader = GetFactionInfo(i)
 		if isHeader == nil then
-			r.reputation[name][V.player] = bottom .. "|" .. top .. "|" .. earned
+			self:UpdateReputation(name, bottom, top, earned)
 		end
 	end
-	self:UpdateQuestLog()
-	self:UpdatePVPStats()
+	-- .. and close them again, bottom up so the indices above stay valid
+	for i = GetNumFactions(), 1, -1 do
+		local name, _, _, _, _, _, _, _, isHeader = GetFactionInfo(i)
+		if isHeader and collapsed[name] then
+			CollapseFactionHeader(i)
+		end
+	end
+end
+
+-- keeps the reputations current between two logins
+function Altoholic:FACTION_STANDING_CHANGED(factionID)
+	local name, _, _, bottom, top, earned, _, _, isHeader = GetFactionInfoByID(factionID)
+	if name and not isHeader then
+		self:UpdateReputation(name, bottom, top, earned)
+	end
 end
 
 function Altoholic:UpdatePlayerSkills()
@@ -1639,21 +1664,26 @@ function Altoholic:IsGatheringNode(name)
 	return nil
 end
 
-function Altoholic:IsKnownQuest(quest)    
-	if not quest then return nil end
+-- adds the alts on the quest of a clicked quest link to its tooltip
+function Altoholic:IsKnownQuest(quest)
+	if not quest or not string.find(quest, "Hquest:", 1, true) then return nil end
+	local clicked = {
+		id = tonumber(string.match(quest, "quest:(%d+)")),
+		title = string.match(quest, "%[(.+)%]"),
+	}
+	if clicked.id == 0 then clicked.id = nil end	-- a link made before the quest ID was recorded
 	local bOtherCharsOnQuest
 	for CharacterName, c in pairs(self.db.account.data[V.faction][V.realm].char) do
 		if CharacterName ~= V.player then
 			for index, q in pairs(c.questlog) do
-				local altQuestName = q.link
-				if altQuestName == quest then
+				if self:IsSameQuest(clicked, q) then
 					if not bOtherCharsOnQuest then
 						ItemRefTooltip:AddLine(" ",1,1,1);
 						ItemRefTooltip:AddLine(GREEN .. L["Are also on this quest:"],1,1,1);
 						bOtherCharsOnQuest = true
 					end
 					ItemRefTooltip:AddLine(Altoholic:GetClassColor(c.class) .. CharacterName,1,1,1);
-                    ItemRefTooltip:Show();
+					ItemRefTooltip:Show();
 				end
 			end
 		end
@@ -2021,6 +2051,9 @@ function Altoholic:StartScanning()
 	self:RegisterEvent("GET_ITEM_INFO_RECEIVED")
 	self:RegisterEvent("QUEST_TURNED_IN")
 	self:RegisterEvent("UNIT_QUEST_LOG_CHANGED")
+	self:RegisterEvent("QUEST_ACCEPTED")
+	self:RegisterEvent("QUEST_REMOVED")
+	self:RegisterEvent("FACTION_STANDING_CHANGED")
 	self:RegisterEvent("TRADE_SKILL_SHOW")
 	self:RegisterEvent("TRADE_SKILL_CLOSE")
 	self:RegisterEvent("CRAFT_SHOW")

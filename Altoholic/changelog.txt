@@ -40,6 +40,17 @@
 	- Removed the "AutoQuery server" option and the list of items it had queried. The client
 	  now requests unknown items by itself.
 
+	- The quest log is saved with each quest's own text. Every quest used to get the text of
+	  the quest before it. Abandoning a quest now updates the saved log as well.
+
+	- Quests are saved with their ID, and "Are also on this quest" compares the IDs, so two
+	  different quests with the same name are no longer mixed up.
+
+	- Reputations are updated when they change, not only at login.
+
+	- Scanning the quest log or the reputations no longer leaves your collapsed headers open
+	  or changes the selected quest.
+
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the
 	  search results, neither ever received the mouse button.
 

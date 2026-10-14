@@ -138,13 +138,11 @@ function Altoholic:QuestLink_OnEnter(self)
 	GameTooltip:ClearLines();
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
     GameTooltip:AddLine("|cffffffff"..o.questObjectives.."|r",1,1,1,true);
-    local questTitle = title
 	local bOtherCharsOnQuest
 	for CharacterName, c in pairs(r.char) do
 		if CharacterName ~= V.CurrentAlt then
 			for index, q in pairs(c.questlog) do
-	            local altQuestTitle = q.title
-				if altQuestTitle == questTitle then
+				if Altoholic:IsSameQuest(o, q) then
 					if not bOtherCharsOnQuest then
 						GameTooltip:AddLine(" ",1,1,1);
 						GameTooltip:AddLine(GREEN .. L["Are also on this quest:"],1,1,1);
@@ -158,37 +156,61 @@ function Altoholic:QuestLink_OnEnter(self)
 	GameTooltip:Show();
 end
 
+-- true when two saved quest log entries are the same quest; entries saved before the
+-- quest ID was recorded can only be compared by title
+function Altoholic:IsSameQuest(q1, q2)
+	if q1.id and q2.id then
+		return q1.id == q2.id
+	end
+	return q1.title ~= nil and q1.title == q2.title
+end
+
 function Altoholic:UpdateQuestLog()
 	local q = {}
-    q[0] = nil
+	-- the scan moves the selection, and the indices shift while the headers are open
+	local selection = GetQuestLogSelection()
+	local selectedID = selection > 0 and C_QuestLog.GetQuestIDForLogIndex(selection) or 0
+	-- quests under a collapsed header are not in the list, so open the headers for the scan ..
+	local collapsed = {}
 	for i = GetNumQuestLogEntries(), 1, -1 do
-		local _, _, _, isHeader, isCollapsed = GetQuestLogTitle(i);
+		local title, _, _, isHeader, isCollapsed = GetQuestLogTitle(i);
 		if isHeader and isCollapsed then
+			collapsed[title] = true
 			ExpandQuestHeader(i)
 		end
 	end
+	-- the quest text and the reward can only be read for the selected quest
 	for i = 1, GetNumQuestLogEntries() do
-        q[i] = {}
+		q[i] = {}
 		local title, level, questTag, isHeader, _, isComplete = GetQuestLogTitle(i);
-        local questDescription, questObjectives = GetQuestLogQuestText();
 		if not isHeader then
+			local questID = C_QuestLog.GetQuestIDForLogIndex(i) or 0
+			SelectQuestLogEntry(i);
+			local questDescription, questObjectives = GetQuestLogQuestText();
+			q[i].id = questID > 0 and questID or nil
 			q[i].title = title
 			q[i].tag = questTag
 			q[i].isComplete = isComplete
-            q[i].link = "|cffffff00|Hquest:0:0:0:0|h["..title.."]|h|r"
-            q[i].tag = questTag
-            q[i].level = level
-            q[i].questDescription = questDescription
-            q[i].questObjectives = questObjectives
-			SelectQuestLogEntry(i);
-			q[i].money= GetQuestLogRewardMoney();
+			q[i].link = "|cffffff00|Hquest:" .. questID .. ":" .. level .. ":0:0|h["..title.."]|h|r"
+			q[i].level = level
+			q[i].questDescription = questDescription
+			q[i].questObjectives = questObjectives
+			q[i].money = GetQuestLogRewardMoney();
 		else
 			q[i].name = title
 			q[i].isHeader = true
-            q[i].isCollapsed = false
+			q[i].isCollapsed = false
 		end
 	end
-    self.db.account.data[V.faction][V.realm].char[UnitName("player")].questlog = q
+	-- .. and close them again, bottom up so the indices above stay valid
+	for i = GetNumQuestLogEntries(), 1, -1 do
+		local title, _, _, isHeader = GetQuestLogTitle(i);
+		if isHeader and collapsed[title] then
+			CollapseQuestHeader(i)
+		end
+	end
+	SelectQuestLogEntry(selectedID > 0 and C_QuestLog.GetLogIndexForQuestID(selectedID) or 0)
+	self.db.account.data[V.faction][V.realm].char[V.player].questlog = q
 end
 
 function Altoholic:SuggestGroupSize(tag, level)
@@ -208,6 +230,15 @@ end
 -- *** EVENT HANDLERS ***
 function Altoholic:UNIT_QUEST_LOG_CHANGED()		-- triggered when accepting/validating a quest .. but too soon to refresh data
 	self:RegisterEvent("QUEST_LOG_UPDATE")			-- so register for this one ..
+end
+
+-- an abandoned quest is not always announced by UNIT_QUEST_LOG_CHANGED
+function Altoholic:QUEST_ACCEPTED()
+	self:RegisterEvent("QUEST_LOG_UPDATE")
+end
+
+function Altoholic:QUEST_REMOVED()
+	self:RegisterEvent("QUEST_LOG_UPDATE")
 end
 
 function Altoholic:QUEST_LOG_UPDATE()

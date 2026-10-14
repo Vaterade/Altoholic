@@ -93,6 +93,7 @@ local defaults = {
 						questlog = {
 							['*'] = {
 								name = nil,		-- name: name of the header (usually the location)
+								id = nil,			-- the quest ID, missing in logs saved before 1.4.0
 								link = nil,		-- the quest link
 								isHeader = nil,
 								isCollapsed = false,
