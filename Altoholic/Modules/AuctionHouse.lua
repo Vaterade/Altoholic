@@ -7,11 +7,6 @@ local ORANGE	= "|cFFFF7F00"
 local RED		= "|cFFFF0000"
 local TEAL		= "|cFF00FF9A"
 
--- a helper to start looking for unknown items which can happen after the
--- WDB folder was cleared
-local Scanner = CreateFrame("GameTooltip", "Altoholic_ScannerTooltip", nil, "GameTooltipTemplate")
-Scanner:SetOwner(UIParent, "ANCHOR_NONE")
-
 function Altoholic:Auctions_Update_Auctions()
 	local c = self.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt]
 	local VisibleLines = 7
@@ -38,7 +33,6 @@ function Altoholic:Auctions_Update_Auctions()
 			local itemName, _, itemRarity = GetItemInfo(s.id)
 			if itemRarity == nil then
 				itemRarity = 0
-				Scanner:SetHyperlink("item:"..s.id)
 			end
 			if itemName == nil then
 				itemName = "Unknown " .. s.id
@@ -174,7 +168,7 @@ function Altoholic:UpdatePlayerBids()
 			
 		if itemName then
 			table.insert(c.bids, {
-				id = self:GetIDFromLink(GetAuctionItemLink("bidder", i)),
+				id = GetAuctionItemID("bidder", i),
 				count = itemCount,
 				AHLocation = AHZone,
 				bidPrice = bidAmount,
@@ -210,7 +204,7 @@ function Altoholic:UpdatePlayerAuctions()
 
 		if itemName then
 			table.insert(c.auctions, {
-				id = self:GetIDFromLink(GetAuctionItemLink("owner", i)),
+				id = GetAuctionItemID("owner", i),
 				count = itemCount,
 				AHLocation = AHZone,
 				highBidder = highBidderName,

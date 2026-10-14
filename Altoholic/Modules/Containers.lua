@@ -89,8 +89,7 @@ function Altoholic:Item_OnEnter(frame, bagID, itemID)
             GameTooltip:AddLine(L["Bank"],0.5,0.5,1);
             GameTooltip:AddLine(L["28 Slot"],1,1,1);
         else
-            local BagHyperlink = string.match(r.char[V.CurrentAlt].bag["Bag" .. bagID].link, ".*|H(.*)|h.*")
-            GameTooltip:SetHyperlink(BagHyperlink);
+            GameTooltip:SetHyperlink(self:GetItemString(r.char[V.CurrentAlt].bag["Bag" .. bagID].link));
             if (bagID >= 5) and (bagID <= 11) then
                 GameTooltip:AddLine(L["Bank bag"],0,1,0);
             end
@@ -110,7 +109,7 @@ function Altoholic:Item_OnEnter(frame, bagID, itemID)
 		if not link then
 			GameTooltip:AddLine(L["Unknown link, please relog this character"],1,1,1);
 		else
-			GameTooltip:SetHyperlink(link);
+			GameTooltip:SetHyperlink(self:GetItemString(link));
 		end
 		GameTooltip:Show();
 	end
@@ -120,21 +119,23 @@ function Altoholic:Item_OnClick(frame, button)
     local item, link
     local bagID = frame:GetParent():GetID()
     local itemID = frame:GetID()
-    local r = self.db.account.data[V.CurrentFaction][V.CurrentRealm]
-    item = r.char[V.CurrentAlt].bag["Bag" .. bagID].ids[itemID]
+    local b = self.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt].bag["Bag" .. bagID]
+    item = b.ids[itemID]
     if not item then return end
-	if type(item) == "number" then
-		_, link = GetItemInfo(item)
+	-- an enchanted or suffixed item also has its full link stored, which is what goes into chat
+	local fullLink = b.links[itemID]
+	if fullLink then
+		link = self:GetItemString(fullLink)
 	else
-		link = item
+		_, link = GetItemInfo(item)
 	end
     if ( button == "LeftButton" ) and ( IsControlKeyDown() ) then
         DressUpItemLink(link);
 	elseif ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
 		if ( ChatFrameEditBox:IsShown() ) then
-			ChatFrameEditBox:Insert(Altoholic_GetItemLink(link));
+			ChatFrameEditBox:Insert(fullLink or Altoholic_GetItemLink(link));
         elseif (WIM_EditBoxInFocus) then
-            WIM_EditBoxInFocus:Insert(Altoholic_GetItemLink(link));
+            WIM_EditBoxInFocus:Insert(fullLink or Altoholic_GetItemLink(link));
 		else
 			AltoholicFrame_SearchEditBox:SetText(GetItemInfo(link))
 		end

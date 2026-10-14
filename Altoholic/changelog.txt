@@ -28,6 +28,18 @@
 
 	- Lists redraw when the client receives data for an item it didn't know yet.
 
+	- Items in the mailbox, and items sent to an alt, are now included in the tooltip counts
+	  and in the search. They were stored without a link, so they were never found.
+
+	- Enchants and random suffixes ("of the Owl") are kept for items in bags, bank and
+	  equipment. They were always dropped, so such an item showed as its plain version.
+
+	- Item IDs for auctions, recipes and reagents are read directly instead of being cut out
+	  of the item link.
+
+	- Removed the "AutoQuery server" option and the list of items it had queried. The client
+	  now requests unknown items by itself.
+
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the
 	  search results, neither ever received the mouse button.
 

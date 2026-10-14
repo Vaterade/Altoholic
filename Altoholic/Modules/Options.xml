@@ -304,32 +304,6 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_SearchAutoQuery" inherits="UICheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
-				<Anchors> 
-					<Anchor point="TOPLEFT" relativeTo="$parentSearchInfo" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension  x="0" y="-10"/>
-						</Offset>
-					</Anchor>
-				</Anchors>      
-				<Scripts>
-					<OnLoad>
-						Altoholic:SetLabel(this, XML_TEXT_25)
-					</OnLoad>
-					<OnClick>
-						Altoholic:Options_Toggle(this, "SearchAutoQuery")
-					</OnClick>
-					<OnEnter>
-						Altoholic:Options_AutoQuery_OnEnter(this)
-					</OnEnter>
-					<OnLeave>
-						AltoTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-			</CheckButton>
 		</Frames>
 	</Frame>
 

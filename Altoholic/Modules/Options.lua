@@ -44,10 +44,3 @@ function Altoholic:Options_MatchPfUI_OnClick(button)
 	self:Options_Toggle(button, "MatchPfUI")
 	self:Skin_OnSettingChanged(button:GetChecked())
 end
-
-function Altoholic:Options_AutoQuery_OnEnter(button)
-	AltoTooltip:SetOwner(button, "ANCHOR_LEFT");
-	AltoTooltip:ClearLines();
-	AltoTooltip:AddLine(XML_TEXT_26)
-	AltoTooltip:Show();
-end

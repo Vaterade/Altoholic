@@ -700,15 +700,6 @@ XML_TEXT_21 = "Display Item Count Per Character";
 XML_TEXT_22 = "Display Total Item Count";
 XML_TEXT_23 = "Include Guild Bank Count";
 XML_TEXT_24 = "Include Already Known";
-XML_TEXT_25 = "AutoQuery server |cFFFF0000(disconnection risk)";
-XML_TEXT_26 = "|cFFFFFFFFIf an item not in the local item cache\n"
-				.. "is encountered while searching loot tables,\n"
-				.. "Altoholic will attempt to query the server for 5 new items.\n\n"
-				.. "This will gradually improve the consistency of the searches,\n"
-				.. "as more items are available in the item cache.\n\n"
-				.. "There is a risk of disconnection if the queried item\n"
-				.. "is a loot from a high level dungeon.\n\n"
-				.. "|cFF00FF00Disable|r to avoid this risk";
 XML_TEXT_27 = "Include Learnable By";
 XML_TEXT_28 = "Match pfUI's look";
 end

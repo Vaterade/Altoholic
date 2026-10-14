@@ -113,8 +113,6 @@ function Altoholic:SearchItem(searchType, searchSubType)
 	else
 		V.TotalLoots = 0
 		V.TotalUnknown = 0
-		V.MaxAutoQuery = 5
-		V.AutoQueriesDone = 0
 		V.SearchLoots = true
 		for Instance, BossList in pairs(Altoholic.LootTable) do
 			for Boss, LootList in pairs(BossList) do
@@ -129,7 +127,6 @@ function Altoholic:SearchItem(searchType, searchSubType)
 		_G["AltoOptionsLootInfo"]:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])								
 		V.TotalLoots = nil
 		V.TotalUnknown = nil
-		V.MaxAutoQuery = nil
 	end
 	if #self.SearchResults == 0 then
 		if V.SearchValue == "" then 
@@ -186,7 +183,8 @@ function Altoholic:SearchRealm()
 		V.SearchLocation = L["Equipped"]
 		for slotID=1, 19 do
 			if c.inventory[slotID] ~= nil then
-				self:VerifyItem(c.inventory[slotID], 1)
+				local item = c.inventory[slotID]	-- an ID, or a link when enchanted
+				self:VerifyItem(type(item) == "number" and item or self:GetIDFromLink(item), 1)
 			end
 		end
 		if AltoholicFrame_CheckButton1:GetChecked() then
@@ -282,17 +280,6 @@ function Altoholic:VerifyLoot(Instance, Boss, itemID)
     local itemLevel = itemMinLevel + 5
 	if (itemName == nil) and (itemRarity == nil) then
 		V.TotalUnknown = V.TotalUnknown + 1
-		if V.AutoQueriesDone < V.MaxAutoQuery then
-			if AltoOptions_SearchAutoQuery:GetChecked() then
-				if self:IsUnsafeItemKnown(itemID) then
-					return
-				end
-				GameTooltip:SetHyperlink("item:"..itemID..":0:0:0:0:0:0:0")
-				GameTooltip:ClearLines();
-				self:SaveUnsafeItem(itemID)
-			end
-			V.AutoQueriesDone = V.AutoQueriesDone + 1
-		end
 		return
 	end
 	if (V.SearchType ~= nil) and (V.SearchType ~= itemType) then
@@ -327,38 +314,6 @@ function Altoholic:VerifyLoot(Instance, Boss, itemID)
 		char = GREEN .. Boss,
 		location = WHITE .. Instance
 	} )
-end
-
-function Altoholic:SaveUnsafeItem(itemID)
-	if self:IsUnsafeItemKnown(itemID) then			-- if the unsafe item has already been saved .. exit
-		return
-	end
-	table.insert(self.db.account.data[V.faction][V.realm].unsafeItems, itemID)
-end
-
-function Altoholic:IsUnsafeItemKnown(itemID)
-	for k, v in pairs(self.db.account.data[V.faction][V.realm].unsafeItems) do 	-- browse current realm's unsafe item list
-		if v == itemID then		-- if the itemID passed as parameter is a known unsafe item .. return true to skip it
-			return true
-		end
-	end
-	return false			-- false if unknown
-end
-
-function Altoholic:BuildUnsafeItemList()
-	V.TmpUnsafe = {}		-- create a temporary table with confirmed unsafe id's
-	for k, v in pairs(self.db.account.data[V.faction][V.realm].unsafeItems) do
-		local itemName = GetItemInfo(v)
-		if not itemName then							-- if the item is really unsafe .. save it
-			table.insert(V.TmpUnsafe, v)
-		end
-	end
-    self.db.account.data[V.faction][V.realm].unsafeItems = {}
-	for k, v in pairs(V.TmpUnsafe) do
-		table.insert(self.db.account.data[V.faction][V.realm].unsafeItems, v)	-- save the confirmed unsafe ids back in the db
-	end
-    V.TmpUnsafe = {}
-	V.TmpUnsafe = nil
 end
 
 function Altoholic:VerifyUpgrade()

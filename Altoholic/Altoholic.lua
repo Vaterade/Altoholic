@@ -376,7 +376,6 @@ function Altoholic:PLAYER_LOGIN()
 	_G["AltoOptions_SortDescending"]:SetChecked(O.SortDescending)
 	_G["AltoOptions_RestXPMode"]:SetChecked(O.RestXPMode)
 	_G["AltoOptions_ScanMailBody"]:SetChecked(O.ScanMailBody)
-	_G["AltoOptions_SearchAutoQuery"]:SetChecked(O.SearchAutoQuery)
 	_G["AltoOptions_MatchPfUI"]:SetChecked(self:Skin_Enabled() and 1 or 0)
 	_G["AltoOptionsLootInfo"]:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])
 	if AltoOptions_ShowMinimap:GetChecked() then
@@ -1380,9 +1379,15 @@ function Altoholic_GetItemLink(itemID)
 end
 
 function Altoholic:GetIDFromLink(link)
-    if not link then return end
-    local itemId = string.match(link, ".*item:(%d+).*")
-    return tonumber(itemId)
+	if not link then return end
+	return tonumber(string.match(link, "item:(%d+)"))
+end
+
+-- the "item:id:enchant:suffix:unique" part of a link, which is the form SetHyperlink and
+-- GetItemInfo take; an item ID or an item string comes back as it is
+function Altoholic:GetItemString(link)
+	if type(link) ~= "string" then return link end
+	return string.match(link, "item:[%-%d:]+") or link
 end
 
 function Altoholic:GetEnchantIDFromLink(link)
@@ -1391,16 +1396,10 @@ function Altoholic:GetEnchantIDFromLink(link)
     return tostring(itemId)
 end
 
+-- true when the link carries an enchant or a random suffix, which the bare item ID would lose
 function Altoholic:GetEnchantInfo(link)
-	local _, _, itemString = Altoholic:strsplit("|", link)
-	local _, itemId, enchantId, suffixId, uniqueId = Altoholic:strsplit(":", itemString)
-	local isEnchanted = false
-	for i=1, 6 do
-		if i == enchantId or suffixId and i ~= "0" then
-			isEnchanted = true
-			break
-		end
-	end
+	local enchantId, suffixId = string.match(link, "item:%d+:(%-?%d+):(%-?%d+)")
+	local isEnchanted = (enchantId ~= nil and enchantId ~= "0") or (suffixId ~= nil and suffixId ~= "0")
 	return isEnchanted, enchantId, suffixId
 end
 
@@ -2034,7 +2033,6 @@ function Altoholic:StartScanning()
 	self:UpdatePlayerStats()
 	self:UpdateTalents()
 	self:UpdatePlayerBags()
-	self:BuildUnsafeItemList()
 	self:HookTooltip()
 end
 

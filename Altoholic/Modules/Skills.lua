@@ -238,12 +238,11 @@ function Altoholic:UpdateTradeSkill(tradeskillName)
 			r[i].isHeader = true
 		else
 			r[i].link = GetTradeSkillItemLink(i)
-			local itemLink = GetTradeSkillItemLink(i)
-			if not itemLink then
+			r[i].id = GetTradeSkillItemID(i)
+			if not r[i].link or not r[i].id then
 				bScanFailed = true
 				break
 			end
-			r[i].id = self:GetIDFromLink(itemLink)
 			local cooldown = GetTradeSkillCooldown(i)
 			if cooldown then
 				c.ProfessionCooldowns[ tradeskillName .. "-" .. r[i].id ] = cooldown .. "|" .. time()
@@ -252,9 +251,9 @@ function Altoholic:UpdateTradeSkill(tradeskillName)
 			local s = ""
 			for j=1, numReagents do
 				local _, _, reagentCount = GetTradeSkillReagentInfo(i, j);
-				local link = GetTradeSkillReagentItemLink(i, j)
-				if link then
-					s = s .. self:GetIDFromLink( link ) .. ":" .. reagentCount .. "|"
+				local reagentID = GetTradeSkillReagentItemID(i, j)
+				if reagentID then
+					s = s .. reagentID .. ":" .. reagentCount .. "|"
 				else
 					bScanFailed = true
 				end
@@ -312,9 +311,9 @@ function Altoholic:UpdateCraft(tradeskillName)
 			local s = ""
 			for j=1, numReagents do
 				local _, _, reagentCount = GetCraftReagentInfo(i, j);
-				local link = GetCraftReagentItemLink(i, j)
-				if link then
-					s = s .. self:GetIDFromLink( link ) .. ":" .. reagentCount .. "|"
+				local reagentID = GetCraftReagentItemID(i, j)
+				if reagentID then
+					s = s .. reagentID .. ":" .. reagentCount .. "|"
 				else
 					bScanFailed = true
 				end

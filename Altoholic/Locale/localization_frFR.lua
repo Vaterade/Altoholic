@@ -699,15 +699,6 @@ XML_TEXT_21 = "Afficher le décompte par personnage";
 XML_TEXT_22 = "Afficher le décompte total";
 XML_TEXT_23 = "Inclure la banque de guilde";
 XML_TEXT_24 = "Inclure Déjà Connu";
-XML_TEXT_25 = "AutoQuery server |cFFFF0000(risques de déconnexion)";
-XML_TEXT_26 = "|cFFFFFFFFSi un objet n'existant pas dans le cache local\n"
-				.. "est rencontré lors d'une recherche dans la table des loots,\n"
-				.. "Altoholic va tenter d'envoyer des requêtes au serveur pour valider 5 nouveaux objets.\n\n"
-				.. "Ceci va graduellement améliorer la consistance des recherches,\n"
-				.. "puisque plus d'objets seront disponibles dans le cache local.\n\n"
-				.. "Il existe un risque de déconnexion si l'objet\n"
-				.. "est un loot d'une instance haut niveau.\n\n"
-				.. "|cFF00FF00Désactiver|r pour éviter ce risque";
 XML_TEXT_27 = "Inclure Peut être appris par";
 XML_TEXT_28 = "Match pfUI's look";
 end

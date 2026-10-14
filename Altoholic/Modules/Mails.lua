@@ -97,6 +97,8 @@ function Altoholic:UpdatePlayerMail()
 		if name ~= nil then
 			table.insert(c.mail, {
                 icon = packageIcon,
+                -- what the item counts and the search go by
+                link = GetInboxItemLink(i),
                 count = itemCount,
                 subject = name,
                 sender = mailSender,
@@ -172,6 +174,7 @@ function SendMail(recipient, ...)
         for k, v in pairs(V.Attachments) do
             table.insert(c.mail, {
                 icon = v.icon,
+                link = v.link,
                 subject = v.subject,
                 count = v.count,
                 sender = V.player,
@@ -259,6 +262,7 @@ function Altoholic:MAIL_SEND_INFO_UPDATE()
 	if itemName then
 		table.insert(V.Attachments, {
             subject = itemName,
+			link = GetSendMailItemLink(),
 			icon = itemIcon,
 			count = itemCount
         } )

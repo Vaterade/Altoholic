@@ -62,7 +62,7 @@ function Altoholic:Equipment_Update()
 			local itemID = c.inventory[line]
 			if itemID ~= nil then
 				itemButton.CharName = CharacterName
-                local _, _, _, _, _, _, _, _, itexture = GetItemInfo(itemID)
+                local _, _, _, _, _, _, _, _, itexture = GetItemInfo(self:GetItemString(itemID))
 				itemTexture:SetTexture(itexture);
 			else
 				itemButton.CharName = nil
@@ -99,7 +99,7 @@ function Altoholic_Equipment_OnEnter(self)
         local _, link = GetItemInfo(item)
 		GameTooltip:SetHyperlink(link);
 	else
-		GameTooltip:SetHyperlink(item);
+		GameTooltip:SetHyperlink(Altoholic:GetItemString(item));
 	end
 	GameTooltip:AddLine(" ");
 	GameTooltip:AddLine(GREEN .. L["Right-Click to find an upgrade"]);
@@ -115,11 +115,13 @@ function Altoholic_Equipment_OnClick(self, button)
 	local item = r.char[self.CharName].inventory[itemID]	--  equipment slot
 	if not item then return end
 	
-	local link
+	-- an enchanted or suffixed item is stored as its full link, which is what goes into chat
+	local link, fullLink
 	if type(item) == "number" then
 		_, link = GetItemInfo(item)
 	else
-		link = item
+		link = Altoholic:GetItemString(item)
+		fullLink = item
 	end
 	if button == "RightButton" then
 		V.UpgradeItemID = Altoholic:GetIDFromLink(link)		-- item ID of the item to find an upgrade for
@@ -132,9 +134,9 @@ function Altoholic_Equipment_OnClick(self, button)
 		DressUpItemLink(link);
 	elseif ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
 		if ( ChatFrameEditBox:IsShown() ) then
-			ChatFrameEditBox:Insert(Altoholic_GetItemLink(link));
+			ChatFrameEditBox:Insert(fullLink or Altoholic_GetItemLink(link));
         elseif (WIM_EditBoxInFocus) then
-            WIM_EditBoxInFocus:Insert(Altoholic_GetItemLink(link));
+            WIM_EditBoxInFocus:Insert(fullLink or Altoholic_GetItemLink(link));
 		else
 			AltoholicFrame_SearchEditBox:SetText(GetItemInfo(link))
 		end

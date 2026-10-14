@@ -26,7 +26,6 @@ local defaults = {
 		TooltipAlreadyKnown = 0,
         TooltipLearnableBy = 1,
 		ShowMinimap = 1,
-		SearchAutoQuery = 0,
 		TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
 		UnknownLoots = 0
 	},
@@ -54,7 +53,6 @@ local defaults = {
 						}
 					}
 				},
-				unsafeItems = {},
 				char = {
 					['*'] = {					-- Character Name
 						level = 0,
@@ -256,6 +254,20 @@ local function mergeMisfiledCharacters(data)
 	end
 end
 
+-- The auto-query option and the list of items it had asked the server about are gone;
+-- without a default they would never be stripped from the stored data again.
+local function dropAutoQueryData(account)
+	if type(account.options) == "table" then
+		account.options.SearchAutoQuery = nil
+	end
+	if type(account.data) ~= "table" then return end
+	for faction, realms in pairs(account.data) do
+		for realm, r in pairs(realms) do
+			r.unsafeItems = nil
+		end
+	end
+end
+
 function Altoholic:InitDatabase()
 	if type(AltoholicDB) ~= "table" then
 		AltoholicDB = {}
@@ -264,6 +276,7 @@ function Altoholic:InitDatabase()
 		AltoholicDB.account = {}
 	end
 	mergeMisfiledCharacters(AltoholicDB.account.data)
+	dropAutoQueryData(AltoholicDB.account)
 	self.db = { account = inheritDefaults(AltoholicDB.account, defaults) }
 end
 
