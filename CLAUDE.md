@@ -17,15 +17,16 @@ addon API. There is no stock-client fallback.
 There is no build step and no test suite. The only offline checks are syntax passes:
 
 ```sh
-find Altoholic -name '*.lua' -not -path '*/private/*' -print0 | xargs -0 -n1 luac -p
-find Altoholic -name '*.xml' -print0 | xargs -0 xmllint --noout
+find . -name '*.lua' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 -n1 luac -p
+find . -name '*.xml' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 xmllint --noout
 ```
 
 `luac` here is a current Lua, so it accepts the 5.1 syntax the addon uses but will not catch
 5.0-only breakage in `ClassicAPICheck.lua` (see below).
 
-Everything else has to be tested in the game client. The client's `Interface/AddOns/Altoholic`
-is a separate copy, not a link to this repo, so changes must be deployed there by hand. Back up
+The repo root is the addon folder. For testing, link the client's
+`Interface/AddOns/Altoholic` to the repo (the folder must be named `Altoholic`); a `/reload` then
+picks up changes, and the game loads whatever branch is checked out. Back up
 `WTF/Account/<name>/SavedVariables/Altoholic.lua` before testing anything that touches the
 database.
 
@@ -45,7 +46,8 @@ database.
 - File encodings are mixed: the XML files and `Items/Suggestions_zh*.lua` carry a UTF-8 BOM,
   and `Items/Suggestions.lua` contains non-UTF-8 bytes. Scripted bulk edits must be
   byte-preserving (read and write as latin-1) or they will fail or corrupt those files.
-- `Altoholic/private/` is git-ignored.
+- `private/` is git-ignored. Files that should not reach players' downloads are marked
+  `export-ignore` in `.gitattributes`.
 
 ## Architecture
 

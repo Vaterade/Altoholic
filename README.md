@@ -177,7 +177,12 @@ The Search menu allows you to find items based on their name (even partial), lev
 How to Install the addon
 ========================
 
-Make sure you unzip the addon using "Extract Here" instead of "Extract to Altoholic v2.x.yyy", otherwise the resulting directory will contain a space that will prevent the addon from being visible in WoW's addon list.
+Install [ClassicAPI](https://github.com/brues-code/ClassicAPI) first. The addon's folder inside `Interface/AddOns` must be named `Altoholic`, or WoW won't list it.
+
+- With git, from your `Interface/AddOns` folder:
+  `git clone https://github.com/Vaterade/Altoholic.git Altoholic`
+  and `git pull` inside it to update.
+- Without git, use "Code > Download ZIP" on GitHub, extract it into `Interface/AddOns` and rename the extracted `Altoholic-<branch>` folder to `Altoholic`.
 
 Using command-line searches
 ===========================
