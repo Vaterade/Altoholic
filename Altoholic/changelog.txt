@@ -51,6 +51,10 @@
 	- Scanning the quest log or the reputations no longer leaves your collapsed headers open
 	  or changes the selected quest.
 
+	- "Find Upgrade" for a class role reads item stats from the client instead of the tooltip
+	  text. It is faster, works on every client language, takes the random suffix of the
+	  equipped item into account and skips items another class only can use.
+
 	- Fixed the right-click menu on the auctions/bids list and shift-click on a craft in the
 	  search results, neither ever received the mouse button.
 

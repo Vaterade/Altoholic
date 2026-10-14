@@ -356,56 +356,11 @@ function Altoholic:VerifyUpgradeByStats()
 	if Altoholic.InvSlots[itemEquipLoc] ~= V.SearchEquipLoc then
 		return		-- not the right slot ? .. exit
 	end
-	AltoTooltip:ClearLines();	
-	AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
-	AltoTooltip:SetHyperlink(itemLink)	-- Set the link to be able to parse item stats (set owner is done earlier, before the loop)
-    V.TooltipLines = {}
-	for i = 4, AltoTooltip:NumLines() do	-- parse all tooltip lines, one by one, start at 5 since 1= item name, 2 = binds on.., 3 = type/slot/unique, 4 = Armor value ..etc
-		local tooltipLine = _G["AltoTooltipTextLeft" .. i]:GetText()
-		if tooltipLine then
-			if string.find(tooltipLine, L["Socket"]) == nil then
-				for _, v in pairs(Altoholic.ExcludeStats[V.CharacterClass]) do
-					--if string.find(tooltipLine, v, 1, true) ~= nil then return end
-					if string.find(tooltipLine, v) ~= nil then return end
-				end
-				V.TooltipLines[i] = tooltipLine
-			end
-		end
+	local stats = Altoholic:GetUpgradeStats(V.SearchLootItemID)
+	if not stats or Altoholic:IsUpgradeExcluded(V.CharacterClass, V.SearchLootItemID, stats) then
+		return
 	end
-	local statLine = Altoholic.FormatStats[V.CharacterClass]
-	local statFound
-	for _, BaseStat in pairs(Altoholic.BaseStats[V.CharacterClass]) do
-		statFound = nil
-        local stat
-		for i, tooltipText in pairs(V.TooltipLines) do
-			if string.find(tooltipText, BaseStat) ~= nil then
-                if string.find(tooltipText, ".+(Set:).+") then
-                    stat = nil
-                else
-                    stat = tonumber(string.sub(tooltipText, string.find(tooltipText, "%d+")))
-                end
-                if stat then
-                    if stat > V.SearchItemStats[BaseStat] then
-                        statLine = string.gsub(statLine, "-s", GREEN .. stat, 1)
-                    elseif stat < V.SearchItemStats[BaseStat] then
-                        statLine = string.gsub(statLine, "-s", RED .. stat, 1)
-                    else
-                        statLine = string.gsub(statLine, "-s", WHITE .. stat, 1)
-                    end
-                    table.remove(V.TooltipLines, i)	-- remove the current entry, so it won't be parsed in the next loop cycle
-                    statFound = true
-                    break
-                end
-			end
-		end
-		if not statFound then
-			if V.SearchItemStats[BaseStat] > 0 then		-- if the stat exists in the original item ..
-				statLine = string.gsub(statLine, "-s", RED .. "0", 1)	-- .. then 0 should be in red (since its absence means its a lower value)
-			else
-				statLine = string.gsub(statLine, "-s", WHITE .. "0", 1)	-- .. whereas if it didn't, the value is equal (0 spirit on the original item vs 0 spirit on the current one)
-			end
-		end
-	end
+	local statLine = Altoholic:FormatUpgradeStats(V.CharacterClass, stats, V.SearchItemStats)
 	table.insert(Altoholic.SearchResults, {
 		id = V.SearchLootItemID,
 		iLvl = itemLevel,

@@ -125,6 +125,7 @@ function Altoholic_Equipment_OnClick(self, button)
 	end
 	if button == "RightButton" then
 		V.UpgradeItemID = Altoholic:GetIDFromLink(link)		-- item ID of the item to find an upgrade for
+		V.UpgradeItemLink = link		-- its stats depend on the random suffix, which only the link has
 		V.CharacterClass = Altoholic.Classes[ r.char[self.CharName].class ]
 		ToggleDropDownMenu(1, nil, AltoEquipmentRightClickMenu, self:GetName(), 0, -5);
 		return
@@ -211,30 +212,10 @@ function Altoholic_FindEquipmentUpgrade(self)
 	if this.value ~= -1 then
 		V.CharacterClass = this.value
 		VerifyFunc = Altoholic.VerifyUpgradeByStats
-		AltoTooltip:SetOwner(this, "ANCHOR_LEFT");
-		-- Get current item stats
-		V.SearchItemStats = {}
-		V.TooltipLines = {}
-		local statLine = Altoholic.FormatStats[V.CharacterClass]
-		AltoTooltip:SetHyperlink(itemLink)
-		for _, BaseStat in pairs(Altoholic.BaseStats[V.CharacterClass]) do
-			for i = 4, AltoTooltip:NumLines() do
-				local tooltipText = _G["AltoTooltipTextLeft" .. i]:GetText()
-				if tooltipText then
-					if string.find(tooltipText, BaseStat) ~= nil then
-						V.SearchItemStats[BaseStat] = tonumber(string.sub(tooltipText, string.find(tooltipText, "%d+")))
-						statLine = string.gsub(statLine, "-s", WHITE .. V.SearchItemStats[BaseStat], 1)
-						break
-					end
-				end
-			end
-			if not V.SearchItemStats[BaseStat] then
-				V.SearchItemStats[BaseStat] = 0 -- Set the current stat to zero if it was not found on the item
-				statLine = string.gsub(statLine, "-s", WHITE .. "0", 1)
-			end
-		end
-		AltoTooltip:ClearLines();
-		
+		-- the stats of the equipped item, which every candidate is compared with
+		V.SearchItemStats = Altoholic:GetUpgradeStats(V.UpgradeItemLink or V.UpgradeItemID) or {}
+		local statLine = Altoholic:FormatUpgradeStats(V.CharacterClass, V.SearchItemStats)
+
 		-- Save currently equipped item to the results table
 		table.insert(Altoholic.SearchResults, {
 			id = V.UpgradeItemID,
@@ -247,6 +228,7 @@ function Altoholic_FindEquipmentUpgrade(self)
 	end
 
 	V.UpgradeItemID = nil
+	V.UpgradeItemLink = nil
 	
 	for Instance, BossList in pairs(Altoholic.LootTable) do		-- parse the loot table to find an upgrade
 		for Boss, LootList in pairs(BossList) do
@@ -258,7 +240,6 @@ function Altoholic_FindEquipmentUpgrade(self)
 			end
 		end
 	end
-	AltoTooltip:Hide();
 	V.Search_iLvl = nil
 	V.SearchType = nil
 	V.SearchSubType = nil
@@ -267,10 +248,7 @@ function Altoholic_FindEquipmentUpgrade(self)
 	V.SearchInstance = nil
 	V.SearchBoss = nil
 	V.SearchLootItemID = nil
-    V.SearchItemStats = {}
-    V.SearchItemStats = nil
-    V.TooltipLines = {}
-	V.TooltipLines = nil
+	V.SearchItemStats = nil
 	if AltoOptions_SortDescending:GetChecked() then
 		table.sort(Altoholic.SearchResults, function(a,b)
 			return a.iLvl > b.iLvl

@@ -142,33 +142,26 @@ Altoholic.FactionsRefTable = {
 	BF["Zandalar Tribe"]
 }
 
--- a few constants to increase readability in the tables below, some stats are taken from WoWUI's GlobalStrings.lua, but not all of them are suitable
--- SPELL_STAT0_NAME = "Strength";
--- SPELL_STAT1_NAME = "Agility";
--- SPELL_STAT2_NAME = "Stamina";
--- SPELL_STAT3_NAME = "Intellect";
--- SPELL_STAT4_NAME = "Spirit";
-
-local ITEM_MOD_CRIT_RATING = "Improves your chance to get a critical strike by %d."
-local ITEM_MOD_CRIT_SPELL_RATING = "Improves your chance to get a critical strike with spells by %d."
-local ITEM_MOD_HIT_RATING = "Improves your chance to hit by %d."
-local ITEM_MOD_HIT_SPELL_RATING = "Improves your chance to hit with spells by %d."
-local STAT_HEALING = "Increases healing done by spells and effects by up to %d+."
-local STAT_SPELLDMG = "Increases damage and healing done by magical spells and effects by up to %d+."
-local STAT_AP = "%d+ Attack Power."
-local ITEM_MOD_DEFENSE_SKILL_RATING = "Increased Defense %+%d."
-local ITEM_MOD_DODGE_RATING = "Increases your chance to dodge an attack by %d."
-local ITEM_MOD_BLOCK_RATING = "Increases your chance to block attacks with a shield by %d."
-local STAT_MP5 = L["Restores %d+ mana per"]
-local STAT_SHAMAN_ONLY = L["Classes: Shaman"] .. "$"
-local STAT_MAGE_ONLY = L["Classes: Mage"] .. "$"
-local STAT_ROGUE_ONLY = L["Classes: Rogue"] .. "$"
-local STAT_HUNTER_ONLY = L["Classes: Hunter"] .. "$"
-local STAT_WARRIOR_ONLY = L["Classes: Warrior"] .. "$"
-local STAT_PALADIN_ONLY = L["Classes: Paladin"] .. "$"
-local STAT_WARLOCK_ONLY = L["Classes: Warlock"] .. "$"
-local STAT_PRIEST_ONLY = L["Classes: Priest"] .. "$"
-local STAT_RESIST = L["Resistance"]
+-- The stats the upgrade search looks at, by the key C_Item.GetItemStats reports them under.
+-- The crit, hit, dodge and block values are percentages.
+local STAT_STR = "ITEM_MOD_STRENGTH_SHORT"
+local STAT_AGI = "ITEM_MOD_AGILITY_SHORT"
+local STAT_STA = "ITEM_MOD_STAMINA_SHORT"
+local STAT_INT = "ITEM_MOD_INTELLECT_SHORT"
+local STAT_SPI = "ITEM_MOD_SPIRIT_SHORT"
+local STAT_CRIT = "ITEM_MOD_CRIT_MELEE_RATING"
+local STAT_SPELLCRIT = "ITEM_MOD_CRIT_SPELL_RATING"
+local STAT_HIT = "ITEM_MOD_HIT_MELEE_RATING"
+local STAT_SPELLHIT = "ITEM_MOD_HIT_SPELL_RATING"
+local STAT_HEALING = "ITEM_MOD_SPELL_HEALING_DONE_SHORT"
+local STAT_SPELLDMG = "ITEM_MOD_SPELL_DAMAGE_DONE_SHORT"
+local STAT_AP = "ITEM_MOD_ATTACK_POWER_SHORT"
+local STAT_RANGED_AP = "ITEM_MOD_RANGED_ATTACK_POWER_SHORT"
+local STAT_DEFENSE = "ITEM_MOD_DEFENSE_SKILL_RATING"
+local STAT_DODGE = "ITEM_MOD_DODGE_RATING"
+local STAT_BLOCK = "ITEM_MOD_BLOCK_RATING"
+local STAT_MP5 = "ITEM_MOD_MANA_REGENERATION"
+local STAT_RESIST = "RESIST"		-- not a key of GetItemStats: the six resistances added up, see GetUpgradeStats
 
 -- Class constants, for readability, these values match the ones in Altoholic.Classes (altoholic.lua)
 local CLASS_MAGE	= 1
@@ -181,123 +174,114 @@ local CLASS_SHAMAN	= 7
 local CLASS_PALADIN	= 8
 local CLASS_PRIEST	= 9
 
--- When processing item stats, exclude an item if one of these strings is encountered, then discard the item
+-- An item carrying one of these stats is no upgrade for the class and role
 Altoholic.ExcludeStats = {
 	[CLASS_MAGE.."DPS"] = { 
 		STAT_RESIST,
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME, 
+		STAT_STR,
+		STAT_AGI, 
 		STAT_HEALING,
 		STAT_AP,
-		ITEM_MOD_DEFENSE_SKILL_RATING,
-		ITEM_MOD_DODGE_RATING,
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_PRIEST_ONLY,
-		STAT_WARLOCK_ONLY
+		STAT_DEFENSE,
+		STAT_DODGE,
+		STAT_BLOCK
 	},
 	[CLASS_WARRIOR.."Tank"]	= { 
 		STAT_RESIST,
-		SPELL_STAT3_NAME,
-		SPELL_STAT4_NAME, 
+		STAT_INT,
+		STAT_SPI, 
 		STAT_MP5, 
 		STAT_HEALING, 
 		STAT_AP, 
-		STAT_SPELLDMG, 
-		STAT_PALADIN_ONLY
+		STAT_SPELLDMG
 	},
 	[CLASS_WARRIOR.."DPS"] = { 
 		STAT_RESIST,
-		SPELL_STAT3_NAME,
-		SPELL_STAT4_NAME, 
+		STAT_INT,
+		STAT_SPI, 
 		STAT_MP5, 
 		STAT_HEALING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		STAT_SPELLDMG, 
-		STAT_PALADIN_ONLY
+		STAT_DEFENSE, 
+		STAT_SPELLDMG
 	},
 	[CLASS_HUNTER.."DPS"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME, 
+		STAT_STR, 
 		STAT_HEALING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
+		STAT_DODGE, 
+		STAT_DEFENSE, 
 		STAT_SPELLDMG, 
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_SHAMAN_ONLY
+		STAT_BLOCK
 	},
 	[CLASS_ROGUE.."DPS"] = { 
 		STAT_RESIST, 
-		SPELL_STAT3_NAME,
-		SPELL_STAT4_NAME,
+		STAT_INT,
+		STAT_SPI,
 		STAT_MP5, 
 		STAT_HEALING, 
 		STAT_SPELLDMG, 
-		ITEM_MOD_BLOCK_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING
+		STAT_BLOCK, 
+		STAT_DEFENSE
 	},
 	[CLASS_WARLOCK.."DPS"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME, 
+		STAT_STR,
+		STAT_AGI, 
 		STAT_HEALING, 
 		STAT_AP, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_MAGE_ONLY, 
-		STAT_PRIEST_ONLY
+		STAT_DEFENSE, 
+		STAT_DODGE, 
+		STAT_BLOCK
 	},
 	[CLASS_DRUID.."Tank"] = { 
 		STAT_RESIST, 
 		STAT_HEALING, 
 		STAT_SPELLDMG,
 		STAT_AP,
-		ITEM_MOD_BLOCK_RATING,
-		ITEM_MOD_CRIT_SPELL_RATING,
-		ITEM_MOD_HIT_SPELL_RATING,
-		STAT_MP5,
-		STAT_ROGUE_ONLY
+		STAT_BLOCK,
+		STAT_SPELLCRIT,
+		STAT_SPELLHIT,
+		STAT_MP5
 	},
 
 	[CLASS_DRUID.."Heal"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME,
+		STAT_STR,
+		STAT_AGI,
 		STAT_SPELLDMG, 
 		STAT_AP,
-		ITEM_MOD_HIT_SPELL_RATING,  
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_DODGE_RATING,
-		ITEM_MOD_BLOCK_RATING
+		STAT_SPELLHIT,  
+		STAT_DEFENSE, 
+		STAT_DODGE,
+		STAT_BLOCK
 	},
 	[CLASS_DRUID.."DPS"] = { 
 		STAT_RESIST, 
-		SPELL_STAT3_NAME,
-		SPELL_STAT4_NAME, 
+		STAT_INT,
+		STAT_SPI, 
 		STAT_HEALING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_SPELLDMG, 
-		STAT_ROGUE_ONLY
+		STAT_DEFENSE, 
+		STAT_BLOCK, 
+		STAT_SPELLDMG
 	},
 	[CLASS_DRUID.."Balance"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME,
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
+		STAT_STR,
+		STAT_AGI,
+		STAT_DODGE, 
+		STAT_DEFENSE, 
 		STAT_HEALING, 
-		ITEM_MOD_BLOCK_RATING, 
+		STAT_BLOCK, 
 		STAT_AP
 	},
 	[CLASS_SHAMAN.."Heal"] = { 
 		STAT_RESIST, 
-		ITEM_MOD_CRIT_RATING, 
-        SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME,
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
+		STAT_CRIT, 
+        STAT_STR,
+		STAT_AGI,
+		STAT_DODGE, 
+		STAT_DEFENSE, 
+		STAT_BLOCK, 
 		STAT_SPELLDMG,
 		STAT_AP
 	},
@@ -305,96 +289,92 @@ Altoholic.ExcludeStats = {
 		STAT_RESIST, 
 		STAT_HEALING, 
 		STAT_SPELLDMG, 
-		ITEM_MOD_CRIT_SPELL_RATING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_HUNTER_ONLY
+		STAT_SPELLCRIT, 
+		STAT_DODGE, 
+		STAT_DEFENSE, 
+		STAT_BLOCK
 	},
 	[CLASS_SHAMAN.."Elemental"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME,
+		STAT_STR,
+		STAT_AGI,
 		STAT_HEALING, 
-		ITEM_MOD_HIT_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
+		STAT_HIT, 
+		STAT_DEFENSE, 
+		STAT_DODGE, 
+		STAT_BLOCK, 
 		STAT_AP, 
-		ITEM_MOD_CRIT_RATING
+		STAT_CRIT
 	},
 	[CLASS_PALADIN.."Tank"]	= { 
 		STAT_RESIST, 
-		SPELL_STAT1_NAME, 
+		STAT_AGI, 
 		STAT_AP, 
 		STAT_HEALING, 
-		ITEM_MOD_CRIT_RATING, 
-		STAT_WARRIOR_ONLY
+		STAT_CRIT
 	},
 	[CLASS_PALADIN.."Heal"]	= { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME, 
-		ITEM_MOD_CRIT_RATING, 
+		STAT_STR,
+		STAT_AGI, 
+		STAT_CRIT, 
 		STAT_AP, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_HIT_RATING
+		STAT_DODGE, 
+		STAT_BLOCK, 
+		STAT_DEFENSE, 
+		STAT_HIT
 	},
 	[CLASS_PALADIN.."DPS"] = { 
 		STAT_RESIST, 
 		STAT_HEALING, 
 		STAT_SPELLDMG, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		STAT_WARRIOR_ONLY },
+		STAT_DODGE, 
+		STAT_BLOCK, 
+		STAT_DEFENSE
+	},
 
 	[CLASS_PRIEST.."Heal"] = { 
 		STAT_RESIST, 
-		SPELL_STAT0_NAME,
-		SPELL_STAT1_NAME,
+		STAT_STR,
+		STAT_AGI,
 		STAT_SPELLDMG, 
 		STAT_AP,
-        ITEM_MOD_HIT_SPELL_RATING,    
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING
+        STAT_SPELLHIT,    
+		STAT_DEFENSE, 
+		STAT_DODGE, 
+		STAT_BLOCK
 	},
 	[CLASS_PRIEST.."DPS"] = { 
 		STAT_RESIST,
-		SPELL_STAT0_NAME, 
-		SPELL_STAT1_NAME,
+		STAT_STR, 
+		STAT_AGI,
 		STAT_HEALING, 
 		STAT_AP,
-		ITEM_MOD_DEFENSE_SKILL_RATING, 
-		ITEM_MOD_DODGE_RATING, 
-		ITEM_MOD_BLOCK_RATING, 
-		STAT_MAGE_ONLY, 
-		STAT_WARLOCK_ONLY
+		STAT_DEFENSE, 
+		STAT_DODGE, 
+		STAT_BLOCK
 	}
 }
 
-Altoholic.BaseStats = {	-- the order of these strings should match the "-s" in the associated entry of the FormatStats table
-	[CLASS_MAGE.."DPS"]		    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, SPELL_STAT4_NAME, ITEM_MOD_CRIT_SPELL_RATING, ITEM_MOD_HIT_SPELL_RATING, STAT_SPELLDMG },
-	[CLASS_WARRIOR.."Tank"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, ITEM_MOD_DEFENSE_SKILL_RATING, ITEM_MOD_DODGE_RATING, ITEM_MOD_HIT_RATING },
-	[CLASS_WARRIOR.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, SPELL_STAT1_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_HUNTER.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT1_NAME, SPELL_STAT3_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_ROGUE.."DPS"]		= { SPELL_STAT2_NAME, SPELL_STAT1_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_WARLOCK.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, ITEM_MOD_CRIT_SPELL_RATING, ITEM_MOD_HIT_SPELL_RATING, STAT_SPELLDMG },
-	[CLASS_DRUID.."Tank"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, SPELL_STAT1_NAME, ITEM_MOD_DEFENSE_SKILL_RATING, ITEM_MOD_DODGE_RATING, ITEM_MOD_HIT_RATING },
-	[CLASS_DRUID.."Heal"]	    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, SPELL_STAT4_NAME, ITEM_MOD_CRIT_SPELL_RATING, STAT_MP5, STAT_HEALING },
-	[CLASS_DRUID.."DPS"]		= { SPELL_STAT2_NAME, SPELL_STAT0_NAME, SPELL_STAT1_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_DRUID.."Balance"]	= { SPELL_STAT2_NAME, SPELL_STAT3_NAME, STAT_MP5, ITEM_MOD_CRIT_SPELL_RATING, ITEM_MOD_HIT_SPELL_RATING, STAT_SPELLDMG },
-	[CLASS_SHAMAN.."Heal"]	    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, ITEM_MOD_CRIT_SPELL_RATING, STAT_MP5, STAT_HEALING },
-	[CLASS_SHAMAN.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, SPELL_STAT1_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_SHAMAN.."Elemental"]	= { SPELL_STAT2_NAME, SPELL_STAT3_NAME, STAT_MP5, ITEM_MOD_CRIT_SPELL_RATING, ITEM_MOD_HIT_SPELL_RATING, STAT_SPELLDMG },
-	[CLASS_PALADIN.."Tank"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, ITEM_MOD_DEFENSE_SKILL_RATING, ITEM_MOD_DODGE_RATING, ITEM_MOD_HIT_RATING, STAT_SPELLDMG },
-	[CLASS_PALADIN.."Heal"] 	= { SPELL_STAT2_NAME, SPELL_STAT3_NAME, ITEM_MOD_CRIT_SPELL_RATING, STAT_MP5, STAT_HEALING },
-	[CLASS_PALADIN.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT0_NAME, SPELL_STAT3_NAME, ITEM_MOD_CRIT_RATING, ITEM_MOD_HIT_RATING, STAT_AP },
-	[CLASS_PRIEST.."Heal"]	    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, SPELL_STAT4_NAME, ITEM_MOD_CRIT_SPELL_RATING, STAT_MP5, STAT_HEALING },
-	[CLASS_PRIEST.."DPS"]	    = { SPELL_STAT2_NAME, SPELL_STAT3_NAME, SPELL_STAT4_NAME, ITEM_MOD_CRIT_SPELL_RATING, ITEM_MOD_HIT_SPELL_RATING, STAT_SPELLDMG },
+Altoholic.BaseStats = {	-- the order of these stats should match the "-s" in the associated entry of the FormatStats table
+	[CLASS_MAGE.."DPS"]		    = { STAT_STA, STAT_INT, STAT_SPI, STAT_SPELLCRIT, STAT_SPELLHIT, STAT_SPELLDMG },
+	[CLASS_WARRIOR.."Tank"]	    = { STAT_STA, STAT_STR, STAT_DEFENSE, STAT_DODGE, STAT_HIT },
+	[CLASS_WARRIOR.."DPS"]	    = { STAT_STA, STAT_STR, STAT_AGI, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_HUNTER.."DPS"]	    = { STAT_STA, STAT_AGI, STAT_INT, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_ROGUE.."DPS"]		= { STAT_STA, STAT_AGI, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_WARLOCK.."DPS"]	    = { STAT_STA, STAT_INT, STAT_SPELLCRIT, STAT_SPELLHIT, STAT_SPELLDMG },
+	[CLASS_DRUID.."Tank"]	    = { STAT_STA, STAT_STR, STAT_AGI, STAT_DEFENSE, STAT_DODGE, STAT_HIT },
+	[CLASS_DRUID.."Heal"]	    = { STAT_STA, STAT_INT, STAT_SPI, STAT_SPELLCRIT, STAT_MP5, STAT_HEALING },
+	[CLASS_DRUID.."DPS"]		= { STAT_STA, STAT_STR, STAT_AGI, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_DRUID.."Balance"]	= { STAT_STA, STAT_INT, STAT_MP5, STAT_SPELLCRIT, STAT_SPELLHIT, STAT_SPELLDMG },
+	[CLASS_SHAMAN.."Heal"]	    = { STAT_STA, STAT_INT, STAT_SPELLCRIT, STAT_MP5, STAT_HEALING },
+	[CLASS_SHAMAN.."DPS"]	    = { STAT_STA, STAT_STR, STAT_AGI, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_SHAMAN.."Elemental"]	= { STAT_STA, STAT_INT, STAT_MP5, STAT_SPELLCRIT, STAT_SPELLHIT, STAT_SPELLDMG },
+	[CLASS_PALADIN.."Tank"]	    = { STAT_STA, STAT_STR, STAT_DEFENSE, STAT_DODGE, STAT_HIT, STAT_SPELLDMG },
+	[CLASS_PALADIN.."Heal"] 	= { STAT_STA, STAT_INT, STAT_SPELLCRIT, STAT_MP5, STAT_HEALING },
+	[CLASS_PALADIN.."DPS"]	    = { STAT_STA, STAT_STR, STAT_INT, STAT_CRIT, STAT_HIT, STAT_AP },
+	[CLASS_PRIEST.."Heal"]	    = { STAT_STA, STAT_INT, STAT_SPI, STAT_SPELLCRIT, STAT_MP5, STAT_HEALING },
+	[CLASS_PRIEST.."DPS"]	    = { STAT_STA, STAT_INT, STAT_SPI, STAT_SPELLCRIT, STAT_SPELLHIT, STAT_SPELLDMG },
 }
 
 Altoholic.FormatStats = {
@@ -417,6 +397,72 @@ Altoholic.FormatStats = {
 	[CLASS_PRIEST.."Heal"]	    = L["Sta:-s |rInt:-s |rSpi:-s\n|rCrit:-s |rMP5:-s |rHeal:-s"],
 	[CLASS_PRIEST.."DPS"]	    = L["Sta:-s |rInt:-s |rSpi:-s\n|rCrit:-s |rHit:-s |rDmg:-s"],
 }
+
+-- the bit of each class (Altoholic.Classes numbering) in an item's allowableClass mask
+local ClassMask = {
+	[CLASS_MAGE] = 128, [CLASS_WARRIOR] = 1, [CLASS_HUNTER] = 4, [CLASS_ROGUE] = 8, [CLASS_WARLOCK] = 256,
+	[CLASS_DRUID] = 1024, [CLASS_SHAMAN] = 64, [CLASS_PALADIN] = 2, [CLASS_PRIEST] = 16,
+}
+
+-- The stats of an item (ID or link, a link includes its random suffix) for the upgrade search,
+-- nil while the client doesn't have the item.
+function Altoholic:GetUpgradeStats(item)
+	local itemStats = C_Item.GetItemStats(item)
+	if not itemStats then return nil end
+	local stats = {}
+	for k, v in pairs(itemStats) do
+		stats[k] = v
+	end
+	local resist = 0
+	for i = 1, 6 do
+		resist = resist + (stats["RESISTANCE" .. i .. "_NAME"] or 0)
+	end
+	stats[STAT_RESIST] = resist
+	-- ranged-only attack power (bows, scopes) is reported apart from the general one
+	stats[STAT_AP] = (stats[STAT_AP] or 0) + (stats[STAT_RANGED_AP] or 0)
+	return stats
+end
+
+-- true when an item with these stats is of no use to the class and role ("7Heal")
+function Altoholic:IsUpgradeExcluded(classRole, itemID, stats)
+	local data = C_Item.GetItemDataByID(itemID)
+	local mask = data and data.allowableClass
+	local class = ClassMask[tonumber(string.sub(classRole, 1, 1))]
+	if mask and mask > 0 and class and bit.band(mask, class) == 0 then
+		return true		-- for other classes only
+	end
+	for _, stat in ipairs(self.ExcludeStats[classRole]) do
+		local value = stats[stat] or 0
+		if stat == STAT_HEALING then
+			-- "damage and healing" carries a healing bonus as well, only pure healing gear counts
+			value = value - (stats[STAT_SPELLDMG] or 0)
+		end
+		if value > 0 then
+			return true
+		end
+	end
+	return false
+end
+
+-- The class and role's stat line with its "-s" filled in; with the stats of the equipped item
+-- as 'reference', each value is coloured by how it compares.
+function Altoholic:FormatUpgradeStats(classRole, stats, reference)
+	local statLine = self.FormatStats[classRole]
+	for _, stat in ipairs(self.BaseStats[classRole]) do
+		local value = stats[stat] or 0
+		local color = "|cFFFFFFFF"
+		if reference then
+			local current = reference[stat] or 0
+			if value > current then
+				color = "|cFF00FF00"
+			elseif value < current then
+				color = "|cFFFF0000"
+			end
+		end
+		statLine = string.gsub(statLine, "-s", color .. value, 1)
+	end
+	return statLine
+end
 
 -- Add herb/ore possession info to Plants/Mines, thanks to Tempus on wowace for gathering this.
 Altoholic.Gathering = {
