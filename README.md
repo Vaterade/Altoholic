@@ -1,6 +1,13 @@
-# Altoholic_Vanilla
+# Altoholic for OctoWoW
 
-This is my version for Turtle WOW. See the original README below.
+Altoholic records the bags, bank, mail, equipment, professions, quests, reputations and
+raid lockouts of all your characters and shows them in one window.
+
+This is Vaterade's fork of [Giselbaer's Turtle WoW version](https://github.com/gbl/Altoholic_Vanilla),
+which in turn is based on [Dyaxler's Altoholic for Vanilla WoW](https://github.com/Dyaxler/Altoholic_Vanilla).
+Thanks to both for the work this builds on. Their notes follow below.
+
+Vaterade's updates are made for OctoWoW.
 
 ## Requirements
 
@@ -8,6 +15,7 @@ Since 1.4.0 this addon requires [ClassicAPI](https://github.com/brues-code/Class
 a client mod that brings Lua 5.1 and parts of the modern addon API to the 1.12 client.
 Without it Altoholic only shows a notice at login and leaves your saved data untouched.
 
+## Giselbaer's changes
 
 This version fixes several bugs, improves some things, and adds a menu tab to show
 Raid lockouts and reset times.
