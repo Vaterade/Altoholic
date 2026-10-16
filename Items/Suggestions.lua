@@ -1,7 +1,6 @@
 local L = Altoholic.L
 local Professions = Altoholic.Professions
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"

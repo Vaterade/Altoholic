@@ -1,7 +1,7 @@
 local L = Altoholic.L
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
+local Factions = Altoholic.Factions
 local Professions = Altoholic.Professions
 -- Armor subclass names from ItemSubClass.dbc, in the client's language
 local CLOTH = (GetItemSubClassInfo(Enum.ItemClass.Armor, 1))
@@ -956,7 +956,7 @@ Altoholic.LootTable = {
 	-- FACTION_STANDING_LABEL8 = "Exalted"
 	
 	-- ** Wow **
-	[BF["Argent Dawn"]] = {	
+	[Factions["Argent Dawn"]] = {	
 		[L["Token Hand-Ins"]] = { 22689, 22690, 22681, 22680, 22688, 22679, 22638, 22523, 22667, 22668, 
 								22657, 22659, 22678, 22656, 22636, 22524 },
 		[FACTION_STANDING_LABEL5] = { 13724 },
@@ -964,18 +964,18 @@ Altoholic.LootTable = {
 		[FACTION_STANDING_LABEL7] = { 18171, 18169, 18170, 18172, 18173, 19205, 19447, 19329, 19217, 13810, 13813 },
 		[FACTION_STANDING_LABEL8] = { 18182 }
 	},	
-	[BF["Brood of Nozdormu"]] = {	
+	[Factions["Brood of Nozdormu"]] = {	
 		[FACTION_STANDING_LABEL4] = { 21201, 21206, 21196 },
 		[FACTION_STANDING_LABEL5] = { 21202, 21207, 21197 },
 		[FACTION_STANDING_LABEL6] = { 21203, 21208, 21198	},
 		[FACTION_STANDING_LABEL7] = { 21204, 21209, 21199	},
 		[FACTION_STANDING_LABEL8] = { 21205, 21210, 21200	}
 	},	
-	[BF["Bloodsail Buccaneers"]] = {	
+	[Factions["Bloodsail Buccaneers"]] = {	
 		[FACTION_STANDING_LABEL4] = { 22742, 22743, 22745, 22744 },
 		[FACTION_STANDING_LABEL5] = { 12185 }
 	},	
-	[BF["Cenarion Circle"]] = {	
+	[Factions["Cenarion Circle"]] = {	
 		[FACTION_STANDING_LABEL5] = { 22209, 22768, 20732, 22769, 20509, 20506, 22772, 22310, 20802, 20800, 
 								21515, 21187, 21178, 21179, 20801, 21508 },
 		[FACTION_STANDING_LABEL6] = { 22767, 22214, 20733, 22770, 20510, 20507, 22773, 21183, 21182, 21181 },
@@ -983,7 +983,7 @@ Altoholic.LootTable = {
 								21189, 21185 },
 		[FACTION_STANDING_LABEL8] = { 22221, 20382, 21190, 21180, 21188 }
 	},	
-	[BF["Darkmoon Faire"]] = {	
+	[Factions["Darkmoon Faire"]] = {	
 		[L["Items"]] = { 19491, 19426, 19296, 19297, 19298, 19291, 19293, 22729, 19292, 19295, 
 								19182, 19303, 19302, 11026, 11027, 19450 },
 		[L["Beasts Deck"]] = { 19288 },
@@ -995,10 +995,10 @@ Altoholic.LootTable = {
 		[L["Blessings Deck"]] = { 31856 },
 		[L["Lunacy Deck"]] = { 31859 }
 	},	
-	[BF["The Defilers"]] = {	
+	[Factions["The Defilers"]] = {	
 		[FACTION_STANDING_LABEL8] = { 20131 }
 	},	
-	[BF["Frostwolf Clan"]] = {	
+	[Factions["Frostwolf Clan"]] = {	
 		[L["Quest rewards"]] = { 20648, 19106, 19108, 19107 },
 		[FACTION_STANDING_LABEL4] = { 17690 },
 		[FACTION_STANDING_LABEL5] = { 17905 },
@@ -1006,16 +1006,16 @@ Altoholic.LootTable = {
 		[FACTION_STANDING_LABEL7] = { 17907 },
 		[FACTION_STANDING_LABEL8] = { 17908, 17909 }
 	},	
-	[BF["Gelkis Clan Centaur"]] = {	
+	[Factions["Gelkis Clan Centaur"]] = {	
 		[L["Quest rewards"]] = { 6773, 6774 }
 	},	
-	[BF["The League of Arathor"]] = {	
+	[Factions["The League of Arathor"]] = {	
 		[FACTION_STANDING_LABEL8] = { 20132 }
 	},	
-	[BF["Magram Clan Centaur"]] = {	
+	[Factions["Magram Clan Centaur"]] = {	
 		[FACTION_STANDING_LABEL5] = { 6789, 6788 }
 	},
-	[BF["Stormpike Guard"]] = {	
+	[Factions["Stormpike Guard"]] = {	
 		[L["Quest rewards"]] = { 20648, 19106, 19108, 19107 },
 		[FACTION_STANDING_LABEL4] = { 17691 },
 		[FACTION_STANDING_LABEL5] = { 17900 },
@@ -1023,26 +1023,26 @@ Altoholic.LootTable = {
 		[FACTION_STANDING_LABEL7] = { 17902 },
 		[FACTION_STANDING_LABEL8] = { 17903, 17904 }
 	},
-	[BF["Thorium Brotherhood"]] = {	
+	[Factions["Thorium Brotherhood"]] = {	
 		[FACTION_STANDING_LABEL5] = { 17051, 20761, 19444, 17023, 17022, 17018 },
 		[FACTION_STANDING_LABEL6] = { 17060, 17059, 17049, 19206, 19448, 17025, 19330, 17017, 19219 },
 		[FACTION_STANDING_LABEL7] = { 18592, 17052, 17053, 19209, 19208, 19207, 19449, 19331, 19332, 19333, 19220 },
 		[FACTION_STANDING_LABEL8] = { 19211, 20040, 19210, 19212 }
 	},
-	[BF["Timbermaw Hold"]] = {	
+	[Factions["Timbermaw Hold"]] = {	
 		[FACTION_STANDING_LABEL5] = { 13484, 22392, 20254, 20253 },
 		[FACTION_STANDING_LABEL6] = { 16768, 16769, 19202, 19445, 19326, 19215 },
 		[FACTION_STANDING_LABEL7] = { 19204, 19327, 19218 },
 		[FACTION_STANDING_LABEL8] = { 21326 }
 	},
-	[BF["Hydraxian Waterlords"]] = {	
+	[Factions["Hydraxian Waterlords"]] = {	
 		[FACTION_STANDING_LABEL6] = { 18399, 18398, 17333 },
 		[FACTION_STANDING_LABEL7] = { 22754 }
 	},
-	[BF["Wintersaber Trainers"]] = {	
+	[Factions["Wintersaber Trainers"]] = {	
 		[FACTION_STANDING_LABEL8] = { 13086 }
 	},
-	[BF["Zandalar Tribe"]] = {	
+	[Factions["Zandalar Tribe"]] = {	
 		[FACTION_STANDING_LABEL5] = { 20012, 19778, 19781, 20757, 20001, 19771, 19766 },
 		[FACTION_STANDING_LABEL6] = { 20014, 19777, 19780, 20756, 20000, 19773, 19770, 19765, 20031 },
 		[FACTION_STANDING_LABEL7] = { 20080, 20079, 20081, 20011, 19776, 19779, 19772, 19769, 19764 },
@@ -1050,75 +1050,75 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** BC **
-	[BF["The Aldor"]] = {	
+	[Factions["The Aldor"]] = {	
 		[FACTION_STANDING_LABEL5] = { 23149, 23601, 30842 },
 		[FACTION_STANDING_LABEL6] = { 29129, 28881, 28878, 28885, 28882, 23145, 23603, 29704, 29693, 30843, 24293 },
 		[FACTION_STANDING_LABEL7] = { 29127, 29128, 29130, 24177, 23604, 29703, 29691, 25721 },
 		[FACTION_STANDING_LABEL8] = { 29123, 29124, 28886, 28887, 28888, 28889, 23602, 29702, 29689, 24295, 
 								30844, 31779 }
 	},
-	[BF["Ashtongue Deathsworn"]] = {	
+	[Factions["Ashtongue Deathsworn"]] = {	
 		[FACTION_STANDING_LABEL5] = { 32444, 32442, 32436, 32435, 32430, 32429, 32440, 32438 },
 		[FACTION_STANDING_LABEL6] = { 32443, 32441, 32433, 32434, 32431, 32432, 32447, 32439, 32437	},
 		[FACTION_STANDING_LABEL8] = { 32486, 32487, 32488, 32489, 32490, 32492, 32491, 32493, 32485 }
 	},	
-	[BF["Cenarion Expedition"]] = {	
+	[Factions["Cenarion Expedition"]] = {	
 		[FACTION_STANDING_LABEL5] = { 25737, 24417, 23814, 24429 },
 		[FACTION_STANDING_LABEL6] = { 25838, 25836, 25835, 25735, 25736, 29194, 25869, 32070, 23618, 28632, 
 								25526, 29720, 30623 },
 		[FACTION_STANDING_LABEL7] = { 31392, 31391, 29174, 29173, 31949, 24183, 29192, 22918, 28271	},
 		[FACTION_STANDING_LABEL8] = { 33999, 29170, 29172, 29171, 31390, 31402, 33149, 31356, 22922, 29721, 31804 }
 	},	
-	[BF["The Consortium"]] = {	
+	[Factions["The Consortium"]] = {	
 		[FACTION_STANDING_LABEL5] = { 25732, 28274, 23146, 23136 },
 		[FACTION_STANDING_LABEL6] = { 29457, 29456, 29118, 25733, 23134, 23155, 23150, 22552, 25908, 25902, 24314 },
 		[FACTION_STANDING_LABEL7] = { 29117, 29116, 29115, 24178, 25734, 22535, 23874, 25903, 33156, 33305 },
 		[FACTION_STANDING_LABEL8] = { 29122, 29119, 29121, 33622, 31776 }
 	},	
-	[BF["Honor Hold"]] = {	
+	[Factions["Honor Hold"]] = {	
 		[FACTION_STANDING_LABEL5] = { 29213, 23142, 22531, 24007, 24008 },
 		[FACTION_STANDING_LABEL6] = { 25826, 25825, 29214, 29215, 29196, 25870, 22905, 29719, 30622	},
 		[FACTION_STANDING_LABEL7] = { 29169, 29166, 32883, 24180, 29189, 22547, 34218 },
 		[FACTION_STANDING_LABEL8] = { 29153, 29156, 29151, 33150, 23619, 29722, 23999 }
 	},	
-	[BF["Keepers of Time"]] = {	
+	[Factions["Keepers of Time"]] = {	
 		[FACTION_STANDING_LABEL6] = { 29198, 28272, 22536, 25910, 33160, 29713, 30635 },
 		[FACTION_STANDING_LABEL7] = { 29184, 29185, 24181, 24174, 29186, 33158	},
 		[FACTION_STANDING_LABEL8] = { 29183, 29181, 29182, 33152, 31355, 31777 }
 	},	
-	[BF["Kurenai"]] = {	
+	[Factions["Kurenai"]] = {	
 		[FACTION_STANDING_LABEL5] = { 29217 },
 		[FACTION_STANDING_LABEL6] = { 29144, 29219, 34175, 34173, 30444 },
 		[FACTION_STANDING_LABEL7] = { 29148, 29142, 29146, 29218, 30443 },
 		[FACTION_STANDING_LABEL8] = { 29227, 29229, 29230, 29231, 31830, 31832, 31834, 31836, 29140, 29136, 
 								29138, 31774 }
 	},	
-	[BF["Lower City"]] = {	
+	[Factions["Lower City"]] = {	
 		[FACTION_STANDING_LABEL5] = { 23138},
 		[FACTION_STANDING_LABEL6] = { 29199, 22538, 30833, 30633 },
 		[FACTION_STANDING_LABEL7] = { 30836, 30835, 30841, 24179, 24175, 30846, 22910, 33157, 34200	},
 		[FACTION_STANDING_LABEL8] = { 30834, 30832, 30830, 33148, 31357, 31778	}
 	},	
-	[BF["The Mag'har"]] = {	
+	[Factions["The Mag'har"]] = {	
 		[FACTION_STANDING_LABEL5] = { 25741 },
 		[FACTION_STANDING_LABEL6] = { 29143, 25742, 34174, 34172, 29664 },
 		[FACTION_STANDING_LABEL7] = { 29147, 29141, 29145, 25743, 22917 },
 		[FACTION_STANDING_LABEL8] = { 29102, 29104, 29105, 29103, 31829, 31831, 31833, 31835, 29139, 29135, 
 							29137, 31773 }
 	},
-	[BF["Netherwing"]] = {	
+	[Factions["Netherwing"]] = {	
 		[FACTION_STANDING_LABEL5] = { 32694 },
 		[FACTION_STANDING_LABEL6] = { 32695, 32863 },
 		[FACTION_STANDING_LABEL7] = { 32864 },
 		[FACTION_STANDING_LABEL8] = { 32858, 32859, 32857, 32860, 32861, 32862 }
 	},
-	[BF["Ogri'la"]] = {	
+	[Factions["Ogri'la"]] = {	
 		[FACTION_STANDING_LABEL5] = { 32910, 32909 },
 		[FACTION_STANDING_LABEL6] = { 32784, 32783 },
 		[FACTION_STANDING_LABEL7] = { 32653, 32654, 32652, 32650 },
 		[FACTION_STANDING_LABEL8] = { 32647, 32648, 32651, 32645, 32828 }
 	},
-	[BF["The Scale of the Sands"]] = {	
+	[Factions["The Scale of the Sands"]] = {	
 		[FACTION_STANDING_LABEL5] = { 29298, 29294, 29302, 29307, 32274, 32283, 32277, 32282, 32284, 32281,
 							32288, 32286, 32287, 32290, 32293, 32291, 32294 },
 		[FACTION_STANDING_LABEL6] = { 29299, 29295, 29303, 29306, 35763, 32306, 32305, 32304, 35762, 32299, 
@@ -1126,13 +1126,13 @@ Altoholic.LootTable = {
 		[FACTION_STANDING_LABEL7] = { 29300, 29296, 29304, 29308, 32292, 32308, 32309, 32302 },
 		[FACTION_STANDING_LABEL8] = { 29301, 29297, 29305, 29309 }
 	},
-	[BF["The Scryers"]] = {	
+	[Factions["The Scryers"]] = {	
 		[FACTION_STANDING_LABEL5] = { 23133, 23597 },
 		[FACTION_STANDING_LABEL6] = { 28907, 28908, 28904, 28903, 23143, 23598, 29701, 29682, 24292 },
 		[FACTION_STANDING_LABEL7] = { 29131, 29134, 29132, 29133, 24176, 22908, 23599, 29700, 29684, 25722 },
 		[FACTION_STANDING_LABEL8] = { 29126, 29125, 28910, 28911, 28912, 28909, 23600, 29698, 29677, 24294, 31780 }
 	},
-	[BF["The Sha'tar"]] = {
+	[Factions["The Sha'tar"]] = {
 		[FACTION_STANDING_LABEL5] =  { 25904 },
 		[FACTION_STANDING_LABEL6] = { 30826, 29195, 28273, 33155, 29717, 30634 },
 		[FACTION_STANDING_LABEL7] = { 29180, 29179, 24182, 29191, 22915, 28281, 13517, 22537, 33159	},
@@ -1141,31 +1141,31 @@ Altoholic.LootTable = {
 	[L["Shattrath"]] = {	
 		["Flasks"] = { 32898, 32899, 32901, 32900 }
 	},
-	[BF["Sha'tari Skyguard"]] = {	
+	[Factions["Sha'tari Skyguard"]] = {	
 		[FACTION_STANDING_LABEL5] = { 32722 },
 		[FACTION_STANDING_LABEL6] = { 32721 },
 		[FACTION_STANDING_LABEL7] = { 32539, 32538 },
 		[FACTION_STANDING_LABEL8] = { 32770, 32771, 32319, 32314, 32317, 32316, 32318, 32445 }
 	},
-	[BF["Sporeggar"]] = {	
+	[Factions["Sporeggar"]] = {	
 		[FACTION_STANDING_LABEL5] = { 27689, 30156, 25548, 24539 },
 		[FACTION_STANDING_LABEL6] = { 25827, 25828, 25550 },
 		[FACTION_STANDING_LABEL7] = { 29150, 29149, 22916 },
 		[FACTION_STANDING_LABEL8] = { 34478, 22906, 31775 }
 	},
-	[BF["Thrallmar"]] = {	
+	[Factions["Thrallmar"]] = {	
 		[FACTION_STANDING_LABEL5] = { 25738, 31359, 24000, 24006, 24009 },
 		[FACTION_STANDING_LABEL6] = { 25824, 25823, 25739, 25740, 29197, 29232, 24001, 31361, 30637 },
 		[FACTION_STANDING_LABEL7] = { 29168, 29167, 32882, 31358, 29190, 24003, 34201 },
 		[FACTION_STANDING_LABEL8] = { 29155, 29165, 29152, 33151, 24002, 31362, 24004 }
 	},
-	[BF["Tranquillien"]] = {	
+	[Factions["Tranquillien"]] = {	
 		[FACTION_STANDING_LABEL5] = { 22991, 22992, 22993, 28164 },
 		[FACTION_STANDING_LABEL6] = { 28155, 28158, 28162 },
 		[FACTION_STANDING_LABEL7] = { 22986, 22987, 22985 },
 		[FACTION_STANDING_LABEL8] = { 22990 }
 	},
-	[BF["The Violet Eye"]] = {	
+	[Factions["The Violet Eye"]] = {	
 		[L["Quest rewards"]] = { 31113 },
 		[FACTION_STANDING_LABEL5] = { 29280, 29284, 29288, 29276 },
 		[FACTION_STANDING_LABEL6] = { 31395, 31393, 31401, 29187, 33209, 29281, 29285, 29289, 29277 },
@@ -1174,7 +1174,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** 2.4: sun offensive **
-	[BF["Shattered Sun Offensive"]] = {
+	[Factions["Shattered Sun Offensive"]] = {
 		[FACTION_STANDING_LABEL5] = { 35244, 35254, 35255, 35246, 35256, 35262, 35248, 35260, 35263, 35264, 
 								35249, 35250, 35261, 34780 },
 		[FACTION_STANDING_LABEL6] = { 35238, 35251, 35266, 35239, 35240, 35253, 35268, 35269, 35254, 35500, 34872 },

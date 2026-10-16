@@ -4,7 +4,6 @@ Altoholic.BagIndices = {}
 Altoholic.MenuCache = {}
 local L = Altoholic.L
 local V = Altoholic.vars
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
 -- Profession names as the client spells them, read from SkillLine.dbc by ID.
@@ -27,6 +26,37 @@ Altoholic.Professions = {}
 for name, skillLineID in pairs(PROFESSION_SKILL_LINES) do
 	Altoholic.Professions[name] = C_SpellBook.GetSkillLineName(skillLineID) or name
 end
+
+-- Faction names as the client spells them, read from Faction.dbc by ID, so they
+-- match the names in the reputation list. Factions not listed here, such as the
+-- Burning Crusade ones, keep their English names: this client has no rows for
+-- them, and Turtle reuses some of their IDs for its own factions.
+local FACTION_IDS = {
+	["Argent Dawn"] = 529,
+	["Bloodsail Buccaneers"] = 87,
+	["Brood of Nozdormu"] = 910,
+	["Cenarion Circle"] = 609,
+	["Darkmoon Faire"] = 909,
+	["Frostwolf Clan"] = 729,
+	["Gelkis Clan Centaur"] = 92,
+	["Hydraxian Waterlords"] = 749,
+	["Magram Clan Centaur"] = 93,
+	["Silverwing Sentinels"] = 890,
+	["Stormpike Guard"] = 730,
+	["The Defilers"] = 510,
+	["The League of Arathor"] = 509,
+	["Thorium Brotherhood"] = 59,
+	["Timbermaw Hold"] = 576,
+	["Warsong Outriders"] = 889,
+	["Wintersaber Trainers"] = 589,
+	["Zandalar Tribe"] = 270,
+}
+
+Altoholic.Factions = setmetatable({}, { __index = function(self, name) return name end })
+for name, factionID in pairs(FACTION_IDS) do
+	Altoholic.Factions[name] = (GetFactionInfoByID(factionID)) or name
+end
+local Factions = Altoholic.Factions
 
 Altoholic.Categories = {
 	"AltoSummary", 
@@ -102,14 +132,14 @@ Altoholic.FactionsRefTable = {
 	L["Durotar Labor Union"],
 
 	{ L["Alliance Forces"] },
-	BF["The League of Arathor"],
-	BF["Silverwing Sentinels"],
-	BF["Stormpike Guard"],
+	Factions["The League of Arathor"],
+	Factions["Silverwing Sentinels"],
+	Factions["Stormpike Guard"],
 
 	{ L["Horde Forces"] },
-	BF["The Defilers"],
-	BF["Warsong Outriders"],
-	BF["Frostwolf Clan"],
+	Factions["The Defilers"],
+	Factions["Warsong Outriders"],
+	Factions["Frostwolf Clan"],
 
 	{ L["Steamwheedle Cartel"] },
 	BZ["Booty Bay"],
@@ -118,49 +148,49 @@ Altoholic.FactionsRefTable = {
 	BZ["Ratchet"],
 
 	{ BZ["Outland"] },
-	BF["Ashtongue Deathsworn"],
-	BF["Cenarion Expedition"],
-	BF["The Consortium"],
-	BF["Honor Hold"],
-	BF["Kurenai"],
-	BF["The Mag'har"],
-	BF["Netherwing"],
-	BF["Ogri'la"],
-	BF["Sporeggar"],
-	BF["Thrallmar"],
+	Factions["Ashtongue Deathsworn"],
+	Factions["Cenarion Expedition"],
+	Factions["The Consortium"],
+	Factions["Honor Hold"],
+	Factions["Kurenai"],
+	Factions["The Mag'har"],
+	Factions["Netherwing"],
+	Factions["Ogri'la"],
+	Factions["Sporeggar"],
+	Factions["Thrallmar"],
 
 	{ BZ["Shattrath City"] },
-	BF["Lower City"],
-	BF["Sha'tari Skyguard"],
-	BF["Shattered Sun Offensive"],
-	BF["The Aldor"],
-	BF["The Scryers"],
-	BF["The Sha'tar"],
+	Factions["Lower City"],
+	Factions["Sha'tari Skyguard"],
+	Factions["Shattered Sun Offensive"],
+	Factions["The Aldor"],
+	Factions["The Scryers"],
+	Factions["The Sha'tar"],
 
 	{ L["Other"] },
-	BF["Argent Dawn"],
-	BF["Bloodsail Buccaneers"],
-	BF["Brood of Nozdormu"],
-	BF["Cenarion Circle"],
-	BF["Darkmoon Faire"],
-	BF["Gelkis Clan Centaur"],
-	BF["Hydraxian Waterlords"],
+	Factions["Argent Dawn"],
+	Factions["Bloodsail Buccaneers"],
+	Factions["Brood of Nozdormu"],
+	Factions["Cenarion Circle"],
+	Factions["Darkmoon Faire"],
+	Factions["Gelkis Clan Centaur"],
+	Factions["Hydraxian Waterlords"],
 	L["Kul Tiras"],
-	BF["Keepers of Time"],
-	BF["Magram Clan Centaur"],
+	Factions["Keepers of Time"],
+	Factions["Magram Clan Centaur"],
 	L["Ravenholdt"],
-	BF["The Scale of the Sands"],
+	Factions["The Scale of the Sands"],
 	L["Shen'dralar"],
 	L["Syndicate"],
 	L["Theramore"],
-	BF["Thorium Brotherhood"],
-	BF["Timbermaw Hold"],
-	BF["Tranquillien"],
+	Factions["Thorium Brotherhood"],
+	Factions["Timbermaw Hold"],
+	Factions["Tranquillien"],
 	L["Wardens of Time"],
 	L["Wildhammer Clan"],
-	BF["Wintersaber Trainers"],
-	BF["The Violet Eye"],
-	BF["Zandalar Tribe"]
+	Factions["Wintersaber Trainers"],
+	Factions["The Violet Eye"],
+	Factions["Zandalar Tribe"]
 }
 
 -- The stats the upgrade search looks at, by the key C_Item.GetItemStats reports them under.

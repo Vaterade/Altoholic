@@ -7,14 +7,13 @@
 ## Author: Dyaxler, with some additions by Giselbaer and Vaterade
 ## Version: 1.4.0
 ## Dependencies: !!!ClassicAPI
-## OptionalDeps: LibBabble-Zone-3.0, LibBabble-Boss-3.0, LibBabble-Faction-3.0
+## OptionalDeps: LibBabble-Zone-3.0, LibBabble-Boss-3.0
 ## SavedVariables: AltoholicDB
 ## X-Category: Interface Enhancements
 
 Libs\LibStub\LibStub.lua
 Libs\LibBabble-Boss-3.0\LibBabble-Boss-3.0.lua
 Libs\LibBabble-Zone-3.0\LibBabble-Zone-3.0.lua
-Libs\LibBabble-Faction-3.0\LibBabble-Faction-3.0.lua
 
 ClassicAPICheck.lua
 Init.lua

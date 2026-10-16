@@ -1,4 +1,3 @@
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
