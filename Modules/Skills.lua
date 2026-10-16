@@ -1,4 +1,4 @@
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local Professions = Altoholic.Professions
 local L = Altoholic.L
 local V = Altoholic.vars
 local INFO_REALM_LINE = 1
@@ -62,9 +62,9 @@ function Altoholic:Skills_Update()
 				_G[entry..i.."Level"]:SetWidth(10)
 				_G[entry..i.."Skill1NormalText"]:SetText(WHITE .. L["Prof. 1"])
 				_G[entry..i.."Skill2NormalText"]:SetText(WHITE .. L["Prof. 2"])
-				_G[entry..i.."CookingNormalText"]:SetText(WHITE .. BI["Cooking"])
-				_G[entry..i.."FirstAidNormalText"]:SetText(WHITE .. BI["First Aid"])
-				_G[entry..i.."FishingNormalText"]:SetText(WHITE .. BI["Fishing"])
+				_G[entry..i.."CookingNormalText"]:SetText(WHITE .. Professions["Cooking"])
+				_G[entry..i.."FirstAidNormalText"]:SetText(WHITE .. Professions["First Aid"])
+				_G[entry..i.."FishingNormalText"]:SetText(WHITE .. Professions["Fishing"])
 				_G[entry..i.."RidingNormalText"]:SetText(WHITE .. L["Riding"])
 				_G[entry..i.."SurvivalNormalText"]:SetText(WHITE .. L["Survival"])
 				_G[entry..i]:SetID(line)
@@ -144,14 +144,14 @@ function Altoholic_Skill_OnEnter(self)
 		skill = s.skillName2
 		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Professions"]][skill] )
 	elseif id == 3 then
-		skill = BI["Cooking"]
-		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["Cooking"]] )
+		skill = Professions["Cooking"]
+		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["Cooking"]] )
 	elseif id == 4 then
-		skill = BI["First Aid"]
-		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["First Aid"]] )
+		skill = Professions["First Aid"]
+		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["First Aid"]] )
 	elseif id == 5 then
-		skill = BI["Fishing"]
-		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["Fishing"]] )
+		skill = Professions["Fishing"]
+		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["Fishing"]] )
 	elseif id == 6 then
 		skill = L["Riding"]
 		curRank, maxRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Riding"]] )

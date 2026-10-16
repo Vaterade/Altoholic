@@ -1,5 +1,5 @@
 local L = Altoholic.L
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local Professions = Altoholic.Professions
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local WHITE		= "|cFFFFFFFF"
@@ -19,7 +19,7 @@ Altoholic.Suggestions = {
 	
 	-- source : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[Professions["Tailoring"]] = {
 		{ 50, "Up to 50: Bolt of Linen Cloth" },
 		{ 70, "Up to 70: Linen Bag" },
 		{ 75, "Up to 75: Reinforced Linen Cape" },
@@ -41,7 +41,7 @@ Altoholic.Suggestions = {
 		{ 280, "Up to 280: Runecloth Bag" },
 		{ 300, "Up to 300: Runecloth Gloves" }
 	},
-	[BI["Leatherworking"]] = {
+	[Professions["Leatherworking"]] = {
 		{ 35, "Up to 35: Light Armour Kit" },
 		{ 55, "Up to 55: Cured Light Hide" },
 		{ 85, "Up to 85: Embossed Leather Gloves" },
@@ -62,7 +62,7 @@ Altoholic.Suggestions = {
 		{ 285, "Up to 285: Wicked Leather Bracers" },
 		{ 300, "Up to 300: Wicked Leather Headband" }
 	},
-	[BI["Engineering"]] = {
+	[Professions["Engineering"]] = {
 		{ 40, "Up to 40: Rough Blasting Powder" },
 		{ 50, "Up to 50: Handful of Copper Bolt" },
 		{ 51, "Craft one Arclight Spanner" },
@@ -88,7 +88,7 @@ Altoholic.Suggestions = {
 		{ 290, "Up to 290: Thorium Widget" },
 		{ 300, "Up to 300: Thorium Tubes\nor Thorium Shells (cheaper)" }
 	},
-	[BI["Enchanting"]] = {
+	[Professions["Enchanting"]] = {
 		{ 2, "Up to 2: Runed Copper Rod" },
 		{ 75, "Up to 75: Enchant Bracer - Minor Health" },
 		{ 85, "Up to 85: Enchant Bracer - Minor Deflection" },
@@ -114,7 +114,7 @@ Altoholic.Suggestions = {
 		{ 291, "Craft one Runed Arcanite Rod" },
 		{ 300, "Up to 300: Enchant Cloak - Superior Defense" }
 	},
-	[BI["Blacksmithing"]] = {	
+	[Professions["Blacksmithing"]] = {	
 		{ 25, "Up to 25: Rough Sharpening Stones" },
 		{ 45, "Up to 45: Rough Grinding Stones" },
 		{ 75, "Up to 75: Copper Chain Belt" },
@@ -136,7 +136,7 @@ Altoholic.Suggestions = {
 		{ 295, "Up to 295: Imperial Plate Bracers" },
 		{ 300, "Up to 300: Imperial Plate Boots" }
 	},
-	[BI["Alchemy"]] = {	
+	[Professions["Alchemy"]] = {	
 		{ 60, "Up to 60: Minor Healing Potion" },
 		{ 110, "Up to 110: Lesser Healing Potion" },
 		{ 140, "Up to 140: Healing Potion" },
@@ -187,7 +187,7 @@ Altoholic.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[Professions["First Aid"]] = {
 		{ 40, "Up to 40: Linen Bandages" },
 		{ 80, "Up to 80: Heavy Linen Bandages\nBecome Journeyman at 50" },
 		{ 115, "Up to 115: Wool Bandages" },
@@ -199,7 +199,7 @@ Altoholic.Suggestions = {
 		{ 290, "Up to 290: Runecloth Bandages" },
 		{ 300, "Up to 300: Heavy Runecloth Bandages" }
 	},
-	[BI["Cooking"]] = {
+	[Professions["Cooking"]] = {
 		{ 40, "Up to 40: Spice Bread"	},
 		{ 85, "Up to 85: Smoked Bear Meat, Crab Cake" },
 		{ 100, "Up to 100: Cooked Crab Claw (A)\nDig Rat Stew (H)" },
@@ -212,7 +212,7 @@ Altoholic.Suggestions = {
 		{ 300, "Up to 300: Smoked Desert Dumplings\nQuest in Silithus" }
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[Professions["Fishing"]] = {
 		{ 50, "Up to 50: Any starting zone" },
 		{ 75, "Up to 75:\nThe Canals in Stormwind\nThe Pond in Orgrimmar" },
 		{ 150, "Up to 150: Hillsbrad Foothills' river" },

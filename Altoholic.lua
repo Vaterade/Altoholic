@@ -7,8 +7,8 @@
 
 -- .Libs
 local L = Altoholic.L
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local V = Altoholic.vars
+local Professions = Altoholic.Professions
 local WHITE		= "|cFFFFFFFF"
 local RED		= "|cFFFF0000"
 local GREEN		= "|cFF00FF00"
@@ -29,6 +29,32 @@ local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
 local INFO_TOTAL_LINE = 3
 local LEVEL_CAP = 60
+
+-- Item class and subclass names from ItemClass.dbc / ItemSubClass.dbc, in the
+-- client's language. They are the itemType / itemSubType strings GetItemInfo
+-- returns, which the search compares against.
+local WEAPON = Enum.ItemClass.Weapon
+local ARMOR = Enum.ItemClass.Armor
+local RECIPE = Enum.ItemClass.Recipe
+
+local function ItemClassName(classID)
+	return GetItemClassInfo(classID)
+end
+
+local function ItemSubClassName(classID, subClassID)
+	return (GetItemSubClassInfo(classID, subClassID))
+end
+
+-- A search menu entry for an item class, or one of its subclasses. Without a
+-- name the entry is labelled with the subclass name.
+local function SearchEntry(name, classID, subClassID)
+	local itemType = ItemClassName(classID)
+	local itemSubType = subClassID and ItemSubClassName(classID, subClassID)
+	return {
+		name = name or itemSubType,
+		OnClick = function() Altoholic:SearchItem(itemType, itemSubType) end
+	}
+end
 
 Altoholic.Menu = {
 	{	name = L["Account Summary"], isCollapsed = false,
@@ -52,64 +78,64 @@ Altoholic.Menu = {
 	},
 	{	name = L["Search"], isCollapsed = true,
         subMenu = {
-			{ name = BI["Weapon"], isCollapsed = true,
+			{ name = ItemClassName(WEAPON), isCollapsed = true,
 				subMenu = {
-					{ name = L["Any"], OnClick = function() Altoholic:SearchItem(BI["Weapon"]) end },
-					{ name = L["1H Axes"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["One-Handed Axes"]) end },
-					{ name = L["2H Axes"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Two-Handed Axes"]) end },
-					{ name = L["1H Maces"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["One-Handed Maces"]) end },
-					{ name = L["2H Maces"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Two-Handed Maces"]) end },
-					{ name = L["1H Swords"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["One-Handed Swords"]) end },
-					{ name = L["2H Swords"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Two-Handed Swords"]) end },
-					{ name = BI["Bows"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Bows"]) end },
-					{ name = BI["Guns"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Guns"]) end },
-					{ name = BI["Crossbows"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Crossbows"]) end },
-					{ name = BI["Staves"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Staves"]) end },
-					{ name = BI["Wands"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Wands"]) end },
-					{ name = BI["Polearms"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Polearms"]) end },
-					{ name = BI["Daggers"],	OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Daggers"]) end },
-					{ name = BI["Fist Weapons"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Fist Weapons"]) end },
-					{ name = BI["Thrown"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], BI["Thrown"]) end },
-					{ name = L["Miscellaneous"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], L["Miscellaneous"]) end },
-					{ name = L["Fishing Poles"], OnClick = function() Altoholic:SearchItem(BI["Weapon"], L["Fishing Poles"]) end }
+					SearchEntry(L["Any"], WEAPON),
+					SearchEntry(L["1H Axes"], WEAPON, 0),
+					SearchEntry(L["2H Axes"], WEAPON, 1),
+					SearchEntry(L["1H Maces"], WEAPON, 4),
+					SearchEntry(L["2H Maces"], WEAPON, 5),
+					SearchEntry(L["1H Swords"], WEAPON, 7),
+					SearchEntry(L["2H Swords"], WEAPON, 8),
+					SearchEntry(nil, WEAPON, 2),		-- Bows
+					SearchEntry(nil, WEAPON, 3),		-- Guns
+					SearchEntry(nil, WEAPON, 18),		-- Crossbows
+					SearchEntry(nil, WEAPON, 10),		-- Staves
+					SearchEntry(nil, WEAPON, 19),		-- Wands
+					SearchEntry(nil, WEAPON, 6),		-- Polearms
+					SearchEntry(nil, WEAPON, 15),		-- Daggers
+					SearchEntry(nil, WEAPON, 13),		-- Fist Weapons
+					SearchEntry(nil, WEAPON, 16),		-- Thrown
+					SearchEntry(nil, WEAPON, 14),		-- Miscellaneous
+					SearchEntry(nil, WEAPON, 20)		-- Fishing Poles
 				},
 				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 1 )	end
 			},
-			{ name = BI["Armor"], isCollapsed = true,
+			{ name = ItemClassName(ARMOR), isCollapsed = true,
 				subMenu = {
-					{ name = L["Any"], OnClick = function() Altoholic:SearchItem(BI["Armor"]) end },
-					{ name = L["Miscellaneous"], OnClick = function() Altoholic:SearchItem(BI["Armor"], L["Miscellaneous"]) end },
-					{ name = BI["Cloth"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Cloth"])	end },
-					{ name = BI["Leather"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Leather"])	end },
-					{ name = BI["Mail"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Mail"]) end },
-					{ name = BI["Plate"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Plate"])	end },
-					{ name = BI["Shields"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Shields"])	end },
-					{ name = BI["Librams"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Librams"])	end },
-					{ name = BI["Idols"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Idols"]) end },
-					{ name = BI["Totems"], OnClick = function() Altoholic:SearchItem(BI["Armor"], BI["Totems"]) end }
+					SearchEntry(L["Any"], ARMOR),
+					SearchEntry(nil, ARMOR, 0),		-- Miscellaneous
+					SearchEntry(nil, ARMOR, 1),		-- Cloth
+					SearchEntry(nil, ARMOR, 2),		-- Leather
+					SearchEntry(nil, ARMOR, 3),		-- Mail
+					SearchEntry(nil, ARMOR, 4),		-- Plate
+					SearchEntry(nil, ARMOR, 6),		-- Shields
+					SearchEntry(nil, ARMOR, 7),		-- Librams
+					SearchEntry(nil, ARMOR, 8),		-- Idols
+					SearchEntry(nil, ARMOR, 9)		-- Totems
 				},
 				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 2 )	end
 			},
-			{ name = BI["Consumable"],	isCollapsed = true,
+			{ name = ItemClassName(Enum.ItemClass.Consumable),	isCollapsed = true,
 				subMenu = {},
-				OnClick = function() Altoholic:SearchItem(BI["Consumable"])	end
+				OnClick = function() Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Consumable))	end
 			},
-			{ name = BI["Trade Goods"],	isCollapsed = true,
+			{ name = ItemClassName(Enum.ItemClass.Tradegoods),	isCollapsed = true,
 				subMenu = {},
-				OnClick = function()	Altoholic:SearchItem(BI["Trade Goods"])	end
+				OnClick = function()	Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Tradegoods))	end
 			},
-			{ name = BI["Recipe"], isCollapsed = true,
+			{ name = ItemClassName(RECIPE), isCollapsed = true,
 				subMenu = {
-					{ name = L["Any"], OnClick = function() Altoholic:SearchItem(BI["Recipe"]) end },
-					{ name = BI["Alchemy"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Alchemy"]) end },
-					{ name = BI["Blacksmithing"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Blacksmithing"]) end },
-					{ name = BI["Enchanting"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Enchanting"]) end },
-					{ name = BI["Engineering"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Engineering"]) end },
-					{ name = BI["Leatherworking"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Leatherworking"]) end },
-					{ name = BI["Tailoring"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Tailoring"]) end },
-					{ name = BI["Book"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Book"]) end },
-					{ name = BI["Cooking"], OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["Cooking"]) end },
-					{ name = BI["First Aid"],	OnClick = function() Altoholic:SearchItem(BI["Recipe"], BI["First Aid"]) end }
+					SearchEntry(L["Any"], RECIPE),
+					SearchEntry(nil, RECIPE, 6),		-- Alchemy
+					SearchEntry(nil, RECIPE, 4),		-- Blacksmithing
+					SearchEntry(nil, RECIPE, 8),		-- Enchanting
+					SearchEntry(nil, RECIPE, 3),		-- Engineering
+					SearchEntry(nil, RECIPE, 1),		-- Leatherworking
+					SearchEntry(nil, RECIPE, 2),		-- Tailoring
+					SearchEntry(nil, RECIPE, 0),		-- Book
+					SearchEntry(nil, RECIPE, 5),		-- Cooking
+					SearchEntry(nil, RECIPE, 7)		-- First Aid
 				},
 				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 5 )	end
 			}
@@ -166,23 +192,23 @@ Altoholic.InvSlots = {
 }
 
 Altoholic.EquipmentSlots = {
-	[1] = BI["Head"],			-- "INVTYPE_HEAD"
-	[2] = BI["Shoulder"],	-- "INVTYPE_SHOULDER"
-	[3] = BI["Chest"],		-- "INVTYPE_CHEST",  "INVTYPE_ROBE"
-	[4] = BI["Wrist"],		-- "INVTYPE_WRIST"
-	[5] = BI["Hands"],		-- "INVTYPE_HAND"
-	[6] = BI["Waist"],		-- "INVTYPE_WAIST"
-	[7] = BI["Legs"],			-- "INVTYPE_LEGS"
-	[8] = BI["Feet"],			-- "INVTYPE_FEET"
-	[9] = BI["Neck"],			-- "INVTYPE_NECK"
-	[10] = BI["Back"],		-- "INVTYPE_CLOAK"
-	[11] = BI["Ring"],		-- "INVTYPE_FINGER"
-	[12] = BI["Trinket"],	-- "INVTYPE_TRINKET"
-	[13] = BI["One-Hand"],	-- "INVTYPE_WEAPON"
-	[14] = BI["Two-Hand"],	-- "INVTYPE_2HWEAPON"
-	[15] = BI["Main Hand"],	-- "INVTYPE_WEAPONMAINHAND"
-	[16] = BI["Off Hand"],	-- "INVTYPE_WEAPONOFFHAND", "INVTYPE_HOLDABLE"
-	[17] = BI["Shield"],		-- "INVTYPE_SHIELD"
+	[1] = INVTYPE_HEAD,
+	[2] = INVTYPE_SHOULDER,
+	[3] = INVTYPE_CHEST,		-- also "INVTYPE_ROBE"
+	[4] = INVTYPE_WRIST,
+	[5] = INVTYPE_HAND,
+	[6] = INVTYPE_WAIST,
+	[7] = INVTYPE_LEGS,
+	[8] = INVTYPE_FEET,
+	[9] = INVTYPE_NECK,
+	[10] = INVTYPE_CLOAK,
+	[11] = INVTYPE_FINGER,
+	[12] = INVTYPE_TRINKET,
+	[13] = INVTYPE_WEAPON,
+	[14] = INVTYPE_2HWEAPON,
+	[15] = INVTYPE_WEAPONMAINHAND,
+	[16] = INVTYPE_WEAPONOFFHAND,	-- also "INVTYPE_HOLDABLE"
+	[17] = ItemSubClassName(ARMOR, 6),		-- "INVTYPE_SHIELD"
 	[18] = L["Ranged"]		-- "INVTYPE_RANGED",  "INVTYPE_THROWN", "INVTYPE_RANGEDRIGHT", "INVTYPE_RELIC"
 }
 
@@ -242,25 +268,25 @@ Altoholic.Books = {
 }
 
 Altoholic.equipment = {
-	{ color = "|cFF69CCF0", name = BI["Head"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Head"},
-	{ color = "|cFFABD473", name = BI["Neck"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Neck"},
-	{ color = "|cFF69CCF0", name = BI["Shoulder"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Shoulder"},
-	{ color = WHITE, name = BI["Shirt"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Shirt"},
-	{ color = "|cFF69CCF0", name = BI["Chest"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Chest"},
-	{ color = "|cFF69CCF0", name = BI["Waist"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Waist"},
-	{ color = "|cFF69CCF0", name = BI["Legs"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Legs"},
-	{ color = "|cFF69CCF0", name = BI["Feet"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Feet"},
-	{ color = "|cFF69CCF0", name = BI["Wrist"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Wrists"},
-	{ color = "|cFF69CCF0", name = BI["Hands"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Hands"},
-	{ color = ORANGE, name = BI["Ring"] .. " 1", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Finger"},
-	{ color = ORANGE, name = BI["Ring"] .. " 2", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Finger"},
-	{ color = ORANGE, name = BI["Trinket"] .. " 1", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Trinket"},
-	{ color = ORANGE, name = BI["Trinket"] .. " 2", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Trinket"},
-	{ color = "|cFFABD473", name = BI["Back"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Chest"},
-	{ color = "|cFFFFFF00", name = BI["Main Hand"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-MainHand"},
-	{ color = "|cFFFFFF00", name = BI["Off Hand"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-SecondaryHand"},
+	{ color = "|cFF69CCF0", name = HEADSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Head"},
+	{ color = "|cFFABD473", name = NECKSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Neck"},
+	{ color = "|cFF69CCF0", name = SHOULDERSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Shoulder"},
+	{ color = WHITE, name = SHIRTSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Shirt"},
+	{ color = "|cFF69CCF0", name = CHESTSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Chest"},
+	{ color = "|cFF69CCF0", name = WAISTSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Waist"},
+	{ color = "|cFF69CCF0", name = LEGSSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Legs"},
+	{ color = "|cFF69CCF0", name = FEETSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Feet"},
+	{ color = "|cFF69CCF0", name = WRISTSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Wrists"},
+	{ color = "|cFF69CCF0", name = HANDSSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Hands"},
+	{ color = ORANGE, name = FINGER0SLOT .. " 1", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Finger"},
+	{ color = ORANGE, name = FINGER1SLOT .. " 2", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Finger"},
+	{ color = ORANGE, name = TRINKET0SLOT .. " 1", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Trinket"},
+	{ color = ORANGE, name = TRINKET1SLOT .. " 2", icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Trinket"},
+	{ color = "|cFFABD473", name = BACKSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Chest"},
+	{ color = "|cFFFFFF00", name = MAINHANDSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-MainHand"},
+	{ color = "|cFFFFFF00", name = SECONDARYHANDSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-SecondaryHand"},
 	{ color = "|cFFABD473", name = L["Ranged"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Ranged"},
-	{ color = WHITE, name = BI["Tabard"], icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Tabard"}
+	{ color = WHITE, name = TABARDSLOT, icon = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Tabard"}
 }
 
 function Altoholic:PLAYER_LOGIN()
@@ -487,9 +513,9 @@ function Altoholic:BuildCharacterInfoTable()
 					V.Skills[i] = SkillName
 					i = i + 1
 				end
-				V.SkillsCache[3] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["Cooking"]] )
-				V.SkillsCache[4] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["First Aid"]] )
-				V.SkillsCache[5] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][BI["Fishing"]] )
+				V.SkillsCache[3] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["Cooking"]] )
+				V.SkillsCache[4] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["First Aid"]] )
+				V.SkillsCache[5] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][Professions["Fishing"]] )
 				V.SkillsCache[6] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Riding"]] )
 				V.SkillsCache[7] = self:GetSkillInfo( c.skill[L["Secondary Skills"]][L["Survival"]] )
 				local color = self:GetClassColor(c.class)
@@ -1288,16 +1314,16 @@ end
 
 function Altoholic:GetProfessionID(skill)
     local Profs = {
-    [1] = BI["Tailoring"],
-    [2] = BI["Leatherworking"],
-    [3] = BI["Engineering"],
-    [4] = BI["Enchanting"],
-    [5] = BI["Blacksmithing"],
-    [6] = BI["Alchemy"],
+    [1] = Professions["Tailoring"],
+    [2] = Professions["Leatherworking"],
+    [3] = Professions["Engineering"],
+    [4] = Professions["Enchanting"],
+    [5] = Professions["Blacksmithing"],
+    [6] = Professions["Alchemy"],
     [7] = L["Mining"],
-    [8] = BI["First Aid"],
-    [9] = BI["Cooking"],
-    [10] = BI["Fishing"],
+    [8] = Professions["First Aid"],
+    [9] = Professions["Cooking"],
+    [10] = Professions["Fishing"],
     [11] = L["Riding"],
     [12] = L["Poisons"],
     [13] = L["Lockpicking"],
@@ -1314,16 +1340,16 @@ end
 
 function Altoholic:SelectProfession(id)
     local Profs = {
-    [1] = BI["Tailoring"],
-    [2] = BI["Leatherworking"],
-    [3] = BI["Engineering"],
-    [4] = BI["Enchanting"],
-    [5] = BI["Blacksmithing"],
-    [6] = BI["Alchemy"],
+    [1] = Professions["Tailoring"],
+    [2] = Professions["Leatherworking"],
+    [3] = Professions["Engineering"],
+    [4] = Professions["Enchanting"],
+    [5] = Professions["Blacksmithing"],
+    [6] = Professions["Alchemy"],
     [7] = L["Mining"],
-    [8] = BI["First Aid"],
-    [9] = BI["Cooking"],
-    [10] = BI["Fishing"],
+    [8] = Professions["First Aid"],
+    [9] = Professions["Cooking"],
+    [10] = Professions["Fishing"],
     [11] = L["Riding"],
     [12] = L["Poisons"],
     [13] = L["Lockpicking"],
@@ -1883,9 +1909,9 @@ function Altoholic:WhoKnowsRecipe(tooltip)
                     else
                         if AltoOptions_TooltipLearnableBy:GetChecked() then 
                             local curRank
-                            if (ProfessionName == BI["Cooking"]) or
-                                (ProfessionName == BI["First Aid"]) or
-                                (ProfessionName == BI["Fishing"]) or
+                            if (ProfessionName == Professions["Cooking"]) or
+                                (ProfessionName == Professions["First Aid"]) or
+                                (ProfessionName == Professions["Fishing"]) or
                                 (ProfessionName == L["Survival"]) then
                                 curRank = Altoholic:GetSkillInfo( c.skill[L["Secondary Skills"]][ProfessionName] )
                             else

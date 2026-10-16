@@ -160,7 +160,6 @@ local defaults = {
 								link = nil,				-- bag's itemlink
 								size = 0,
 								freeslots = 0,
-								bagtype = 0,
 								ids = { ['*'] = nil },
 								links = { ['*'] = nil },
 								counts = { ['*'] = nil }

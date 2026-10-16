@@ -1,5 +1,5 @@
 ﻿local L = Altoholic.L
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local Professions = Altoholic.Professions
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local WHITE		= "|cFFFFFFFF"
@@ -17,7 +17,7 @@ Altoholic.Suggestions = {
 	
 	-- 來源 : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1（英文）
 	-- ** 主專業技能 **
-	[BI["Tailoring"]] = {
+	[Professions["Tailoring"]] = {
 		{ 50, "1-50: 亞麻布卷\n(2x亞麻布)x80" },
 		{ 70, "51-70: 亞麻包\n(3x亞麻布卷/3x粗線)x20" },
 		{ 75, "71-75: 強化亞麻斗篷\n(2x亞麻布卷/3x粗線)x5" },
@@ -39,7 +39,7 @@ Altoholic.Suggestions = {
 		{ 280, "276-280: 符文布背包\n(5x符文布卷/2x硬甲皮/1x符文線)x5" },
 		{ 300, "281-300: 符文布手套\n(4x符文布卷/4x硬甲皮/1x符文線)x20" }
 	},
-	[BI["Leatherworking"]] = {
+	[Professions["Leatherworking"]] = {
 		{ 35, "1-35: 輕型護甲片\n(1x輕皮)x35" },
 		{ 55, "36-55: 熟化輕毛皮\n(1x輕毛皮/1x鹽)x20" },
 		{ 80, "56-80: 雕花皮靴\n(8x輕皮/5x粗線)x15" },
@@ -62,7 +62,7 @@ Altoholic.Suggestions = {
 		{ 285, "271-285: 邪惡皮甲護腕\n(8x硬甲皮/1x黑色染料/1x符文線)x10" },
 		{ 300, "286-300: 邪惡皮甲頭環\n(12x硬甲皮/1x黑色染料/1x符文線)x15" }
 	},
-	[BI["Engineering"]] = {
+	[Professions["Engineering"]] = {
 		{ 40, "1-40: 劣質火藥\n(1x劣質的石頭)x40" },
 		{ 50, "41-50: 一把螺栓\n(1x銅錠)x10" },
 		{ 51, "51: 扳手\n(6x銅錠)x1" },
@@ -88,7 +88,7 @@ Altoholic.Suggestions = {
 		{ 290, "261-290: 瑟銀零件\n(3x瑟銀錠/1x符文布)x30" },
 		{ 300, "291-300: 瑟銀管\n(3x瑟銀錠)x10\n瑟銀彈\n(2x瑟銀錠/1x緻密炸藥粉)x10" }
 	},
-	[BI["Enchanting"]] = {
+	[Professions["Enchanting"]] = {
 		{ 2, "1-2: 符文銅棒\n(1x銅棒/1x奇異之塵/1x次級魔法精華)x1" },
 		{ 75, "3-75: 附魔護腕 - 初級生命\n(1x奇異之塵)x73" },
 		{ 85, "76-85: 附魔護腕 - 初級偏斜\n(1x次級魔法精華/1x奇異之塵)x20" },
@@ -114,7 +114,7 @@ Altoholic.Suggestions = {
 		{ 291, "291: 符文奧金棒\n(1x奧金棒/1x金珍珠/10x幻影之塵/4x強效不滅精華/1x符文真銀棒/2x大塊魔光碎片)x1" },
 		{ 300, "292-300: 附魔披風 - 超強防禦\n(8x幻影之塵)x9" }
 	},
-	[BI["Blacksmithing"]] = {	
+	[Professions["Blacksmithing"]] = {	
 		{ 25, "1-25: 劣質磨刀石\n(1x劣質的石頭)x25" },
 		{ 45, "26-45: 劣質砂輪\n(2x劣質的石頭)x20" },
 		{ 75, "46-75: 銅質鎖甲腰帶\n(6x銅錠)x30" },
@@ -136,7 +136,7 @@ Altoholic.Suggestions = {
 		{ 295, "271-295: 君王鎧甲護腕\n(12x瑟銀錠)x25\n配方任務取得" },
 		{ 300, "296-300: 君王鎧甲戰靴\n(18x瑟銀錠)x5\n配方任務取得" }
 	},
-	[BI["Alchemy"]] = {	
+	[Professions["Alchemy"]] = {	
 		{ 60, "1-60: 初級治療藥水\n(1x寧神花/1x銀葉草/1x空瓶)x60" },
 		{ 110, "61-110: 次級治療藥水\n(1x初級治療藥水/1x石南草)x50" },
 		{ 140, "111-140: 治療藥水\n(1x跌打草/1x石南草/1x鉛瓶)x30" },
@@ -187,7 +187,7 @@ Altoholic.Suggestions = {
 	},
 	
 	-- ** 輔助技能 **
-	[BI["First Aid"]] = {
+	[Professions["First Aid"]] = {
 		{ 40, "1-40: 亞麻繃帶" },
 		{ 80, "41-80: 厚亞麻繃帶\n50的時候學急救(中級)" },
 		{ 115, "81-115: 絨線繃帶" },
@@ -199,7 +199,7 @@ Altoholic.Suggestions = {
 		{ 290, "261-290: 符文布繃帶" },
 		{ 300, "291-300: 厚符文布繃帶\n300的時候去買教材<大師級急救手冊 - 私人醫生>\n配方購於:\n阿蕾瑟拉:地獄火半島,塔哈瑪特神殿<26,62>\n布林庫:地獄火半島,獵鷹崗哨<22,39>" }
 	},
-	[BI["Cooking"]] = {
+	[Professions["Cooking"]] = {
 		{ 40, "1-40: 香料麵包\n(1x麵粉/1x甜香料)x70" },
 		{ 75, "41-75: 熏熊肉\n(1x熊肉)x30\n配方購於:\n德拉克卷刃:洛克莫丹<35,49>\n安德魯希爾伯特:銀松森林<43,40>" },
 		{ 85, "76-85: 蟹肉蛋糕(聯盟)\n(1x蟹肉, 1x甜香料)x10\n熏熊肉(部落)\n(1x熊肉)x20\n配方購於:\n德拉克卷刃:洛克莫丹<35,49>\n安德魯希爾伯特:銀松森林<43,40>" },
@@ -215,7 +215,7 @@ Altoholic.Suggestions = {
 		{ 300, "286-300: 沙漠肉丸子\n(1x沙蟲的肉/1x舒心草)x20\n希利蘇斯任務(旅店老闆)" }
 	},	
 	-- 來源: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[Professions["Fishing"]] = {
 		{ 50, "1-50: 任何起始地點" },
 		{ 75, "51-75:\n暴風城的河裏\n奧格瑞瑪的池塘裏" },
 		{ 150, "76-150: 希爾斯布萊德丘陵的河裏" },

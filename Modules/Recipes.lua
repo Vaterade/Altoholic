@@ -1,4 +1,3 @@
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local L = Altoholic.L
 local V = Altoholic.vars
 local TEAL		= "|cFF00FF9A"

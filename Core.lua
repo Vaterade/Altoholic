@@ -7,6 +7,27 @@ local V = Altoholic.vars
 local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
+-- Profession names as the client spells them, read from SkillLine.dbc by ID.
+-- They are what GetSkillLineInfo returns, so they are also the keys of the
+-- saved skill tables. A skill line the client lacks keeps its English name.
+local PROFESSION_SKILL_LINES = {
+	["Alchemy"] = 171,
+	["Blacksmithing"] = 164,
+	["Cooking"] = 185,
+	["Enchanting"] = 333,
+	["Engineering"] = 202,
+	["First Aid"] = 129,
+	["Fishing"] = 356,
+	["Jewelcrafting"] = 755,
+	["Leatherworking"] = 165,
+	["Tailoring"] = 197,
+}
+
+Altoholic.Professions = {}
+for name, skillLineID in pairs(PROFESSION_SKILL_LINES) do
+	Altoholic.Professions[name] = C_SpellBook.GetSkillLineName(skillLineID) or name
+end
+
 Altoholic.Categories = {
 	"AltoSummary", 
 	"AltoBags",

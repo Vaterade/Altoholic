@@ -71,8 +71,11 @@ Load order matters:
   registering it and defining that method.
 - `Locale.lua` provides `Altoholic.L`. Keys are the English strings; a missing key returns
   itself. Only enUS and the client's locale are built. Every file starts with
-  `local L = Altoholic.L`. Zone, boss, faction and item-type names come from the bundled
-  LibBabble libraries (via LibStub) instead.
+  `local L = Altoholic.L`. Zone, boss and faction names come from the bundled LibBabble
+  libraries (via LibStub) instead. Names the client already translates are read from its
+  data by ID: profession names from `Altoholic.Professions` (Core.lua, by skill line),
+  item types with `GetItemClassInfo`/`GetItemSubClassInfo`, slot names from the
+  `INVTYPE_*` and `*SLOT` global strings.
 - `Database.lua` owns the saved data. `Altoholic:InitDatabase()` runs at `PLAYER_LOGIN` and
   sets `self.db.account` to `AltoholicDB.account`, giving `self.db.account.options` and
   `self.db.account.data[faction][realm].{char,guild,reputation}[name]`. The layout is the one

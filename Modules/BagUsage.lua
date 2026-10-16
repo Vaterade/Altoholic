@@ -1,5 +1,4 @@
 local L = Altoholic.L
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local V = Altoholic.vars
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
@@ -139,12 +138,8 @@ function Altoholic_BagUsage_OnEnter(self)
 		for i = 1, 4 do
 			local b = c.bag["Bag"..i]
 			if b.link ~= nil then
-				local bag
-				if (b.bagtype == 0) then
-					bag = ""
-				else
-					bag = YELLOW .. "(" .. Altoholic:GetBagTypeString(b.bagtype) .. ")"
-				end
+				local bagType = Altoholic:GetBagTypeString(b.link)
+				local bag = bagType and (YELLOW .. "(" .. bagType .. ")") or ""
 
 				AltoTooltip:AddLine(GOLD .. b.size .. " |r" .. L["slots"] .. " ("  .. GREEN
 						.. b.freeslots ..  "|r " ..L["free"] .. ") " .. b.link .. " " .. bag ,1,1,1);
@@ -164,12 +159,8 @@ function Altoholic_BagUsage_OnEnter(self)
 		for i = 5, 11 do
 			local b = c.bag["Bag"..i]
 			if b.link ~= nil then
-				local bag
-				if (b.bagtype == 0) then
-					bag = ""
-				else
-					bag = YELLOW .. "(" .. Altoholic:GetBagTypeString(b.bagtype) .. ")"
-				end
+				local bagType = Altoholic:GetBagTypeString(b.link)
+				local bag = bagType and (YELLOW .. "(" .. bagType .. ")") or ""
 			
 				AltoTooltip:AddLine(GOLD .. b.size .. " |r" .. L["slots"] .. " ("  .. GREEN
 						.. b.freeslots ..  "|r " ..L["free"] .. ") " .. b.link .. " " .. bag ,1,1,1);
@@ -184,27 +175,12 @@ function Altoholic_BagUsage_OnEnter(self)
 	AltoTooltip:Show();	
 end
 
-function Altoholic:GetBagTypeString(bagType)
-	if bagType == 0 then
-		return ""
-	elseif bagType == 1 then
-		return BI["Quiver"]
-	elseif bagType == 2 then
-		return BI["Ammo Pouch"]
-	elseif bagType == 4 then
-		return BI["Soul Bag"]
-	elseif bagType == 8 then
-		return BI["Leatherworking Bag"]
-	elseif bagType == 32 then
-		return BI["Herb Bag"]
-	elseif bagType == 64 then
-		return BI["Enchanting Bag"]
-	elseif bagType == 128 then
-		return BI["Engineering Bag"]
-	elseif bagType == 512 then
-		return BI["Gem Bag"]
-	elseif bagType == 1024 then
-		return BI["Mining Bag"]
+-- The kind of a specialty bag ("Soul Bag", "Quiver"...) from the bag item's own
+-- subclass, so Turtle's custom bag types are named too. nil for a plain bag or
+-- one the client has not cached.
+function Altoholic:GetBagTypeString(link)
+	local _, _, subType, _, _, classID, subClassID = C_Item.GetItemInfoInstant(link)
+	if classID == Enum.ItemClass.Quiver or (classID == Enum.ItemClass.Container and subClassID ~= 0) then
+		return subType
 	end
-	return L["Unknown"]
 end
