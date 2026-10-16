@@ -1,5 +1,5 @@
 ## Interface: 11200
-## Title: Altoholic for Vanilla WoW
+## Title: Altoholic for OctoWoW
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 ## Notes: Provides information about your alts
 ## Notes-zhTW: 讓你即時撿閱你所有角色的資料
