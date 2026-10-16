@@ -4,7 +4,7 @@
 ## Notes: Provides information about your alts
 ## Notes-zhTW: 讓你即時撿閱你所有角色的資料
 ## Notes-zhCN: 能让你全面掌握你的所有角色的信息。
-## Author: Dyaxler, with some additions by Giselbaer
+## Author: Dyaxler, with some additions by Giselbaer and Vaterade
 ## Version: 1.4.0
 ## SavedVariables: AltoholicDB
 ## X-Category: Interface Enhancements
