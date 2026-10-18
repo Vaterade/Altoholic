@@ -77,69 +77,7 @@ Altoholic.Menu = {
 		OnClick = function() Altoholic:Menu_Update(MENU_MAIL) end
 	},
 	{	name = L["Search"], isCollapsed = true,
-        subMenu = {
-			{ name = ItemClassName(WEAPON), isCollapsed = true,
-				subMenu = {
-					SearchEntry(L["Any"], WEAPON),
-					SearchEntry(L["1H Axes"], WEAPON, 0),
-					SearchEntry(L["2H Axes"], WEAPON, 1),
-					SearchEntry(L["1H Maces"], WEAPON, 4),
-					SearchEntry(L["2H Maces"], WEAPON, 5),
-					SearchEntry(L["1H Swords"], WEAPON, 7),
-					SearchEntry(L["2H Swords"], WEAPON, 8),
-					SearchEntry(nil, WEAPON, 2),		-- Bows
-					SearchEntry(nil, WEAPON, 3),		-- Guns
-					SearchEntry(nil, WEAPON, 18),		-- Crossbows
-					SearchEntry(nil, WEAPON, 10),		-- Staves
-					SearchEntry(nil, WEAPON, 19),		-- Wands
-					SearchEntry(nil, WEAPON, 6),		-- Polearms
-					SearchEntry(nil, WEAPON, 15),		-- Daggers
-					SearchEntry(nil, WEAPON, 13),		-- Fist Weapons
-					SearchEntry(nil, WEAPON, 16),		-- Thrown
-					SearchEntry(nil, WEAPON, 14),		-- Miscellaneous
-					SearchEntry(nil, WEAPON, 20)		-- Fishing Poles
-				},
-				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 1 )	end
-			},
-			{ name = ItemClassName(ARMOR), isCollapsed = true,
-				subMenu = {
-					SearchEntry(L["Any"], ARMOR),
-					SearchEntry(nil, ARMOR, 0),		-- Miscellaneous
-					SearchEntry(nil, ARMOR, 1),		-- Cloth
-					SearchEntry(nil, ARMOR, 2),		-- Leather
-					SearchEntry(nil, ARMOR, 3),		-- Mail
-					SearchEntry(nil, ARMOR, 4),		-- Plate
-					SearchEntry(nil, ARMOR, 6),		-- Shields
-					SearchEntry(nil, ARMOR, 7),		-- Librams
-					SearchEntry(nil, ARMOR, 8),		-- Idols
-					SearchEntry(nil, ARMOR, 9)		-- Totems
-				},
-				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 2 )	end
-			},
-			{ name = ItemClassName(Enum.ItemClass.Consumable),	isCollapsed = true,
-				subMenu = {},
-				OnClick = function() Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Consumable))	end
-			},
-			{ name = ItemClassName(Enum.ItemClass.Tradegoods),	isCollapsed = true,
-				subMenu = {},
-				OnClick = function()	Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Tradegoods))	end
-			},
-			{ name = ItemClassName(RECIPE), isCollapsed = true,
-				subMenu = {
-					SearchEntry(L["Any"], RECIPE),
-					SearchEntry(nil, RECIPE, 6),		-- Alchemy
-					SearchEntry(nil, RECIPE, 4),		-- Blacksmithing
-					SearchEntry(nil, RECIPE, 8),		-- Enchanting
-					SearchEntry(nil, RECIPE, 3),		-- Engineering
-					SearchEntry(nil, RECIPE, 1),		-- Leatherworking
-					SearchEntry(nil, RECIPE, 2),		-- Tailoring
-					SearchEntry(nil, RECIPE, 0),		-- Book
-					SearchEntry(nil, RECIPE, 5),		-- Cooking
-					SearchEntry(nil, RECIPE, 7)		-- First Aid
-				},
-				OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 5 )	end
-			}
-		},
+        subMenu = {},		-- filled by BuildSearchSubMenu
 		OnClick = function() Altoholic:Menu_Update(MENU_SEARCH) end
 	},
 	{ name = L["Equipment"], isCollapsed = true,
@@ -208,7 +146,7 @@ Altoholic.EquipmentSlots = {
 	[14] = INVTYPE_2HWEAPON,
 	[15] = INVTYPE_WEAPONMAINHAND,
 	[16] = INVTYPE_WEAPONOFFHAND,	-- also "INVTYPE_HOLDABLE"
-	[17] = ItemSubClassName(ARMOR, 6),		-- "INVTYPE_SHIELD"
+	-- [17] "INVTYPE_SHIELD" is set by BuildSearchSubMenu
 	[18] = L["Ranged"]		-- "INVTYPE_RANGED",  "INVTYPE_THROWN", "INVTYPE_RANGEDRIGHT", "INVTYPE_RELIC"
 }
 
@@ -290,6 +228,10 @@ Altoholic.equipment = {
 }
 
 function Altoholic:PLAYER_LOGIN()
+	self:ReadClientNames()
+	self:BuildFactionsRefTable()
+	self:BuildLootTable()
+	self:BuildSuggestions()
 	self:InitDatabase()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_ALIVE")
@@ -382,6 +324,7 @@ function Altoholic:PLAYER_LOGIN()
 	self:CreateScrollLines("AltoRecipes", "RecipesEntryTemplate", 14);
 	self:CreateScrollLines("AltoAuctions", "AuctionEntryTemplate", 7);
 	self:CheckExpiredMail()
+	self:BuildSearchSubMenu()
 	self:BuildContainersSubMenu()
 	self:BuildMailSubMenu()
 	self:BuildEquipmentSubMenu()
@@ -1003,6 +946,75 @@ function Altoholic:Menu_Update(MenuLevel1, MenuLevel2, MenuLevel3)
         end
 	end
 	FauxScrollFrame_Update(_G["AltoholicMenuScrollFrame"], #self.MenuCache, VisibleLines, 20);
+end
+
+-- The Search menu and the slot filter are labelled with the client's item class
+-- names, which can only be read once the player is in the world (see Core.lua).
+function Altoholic:BuildSearchSubMenu()
+	self.EquipmentSlots[17] = ItemSubClassName(ARMOR, 6)
+	self.Menu[MENU_SEARCH].subMenu = {
+		{ name = ItemClassName(WEAPON), isCollapsed = true,
+			subMenu = {
+				SearchEntry(L["Any"], WEAPON),
+				SearchEntry(L["1H Axes"], WEAPON, 0),
+				SearchEntry(L["2H Axes"], WEAPON, 1),
+				SearchEntry(L["1H Maces"], WEAPON, 4),
+				SearchEntry(L["2H Maces"], WEAPON, 5),
+				SearchEntry(L["1H Swords"], WEAPON, 7),
+				SearchEntry(L["2H Swords"], WEAPON, 8),
+				SearchEntry(nil, WEAPON, 2),		-- Bows
+				SearchEntry(nil, WEAPON, 3),		-- Guns
+				SearchEntry(nil, WEAPON, 18),		-- Crossbows
+				SearchEntry(nil, WEAPON, 10),		-- Staves
+				SearchEntry(nil, WEAPON, 19),		-- Wands
+				SearchEntry(nil, WEAPON, 6),		-- Polearms
+				SearchEntry(nil, WEAPON, 15),		-- Daggers
+				SearchEntry(nil, WEAPON, 13),		-- Fist Weapons
+				SearchEntry(nil, WEAPON, 16),		-- Thrown
+				SearchEntry(nil, WEAPON, 14),		-- Miscellaneous
+				SearchEntry(nil, WEAPON, 20)		-- Fishing Poles
+			},
+			OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 1 )	end
+		},
+		{ name = ItemClassName(ARMOR), isCollapsed = true,
+			subMenu = {
+				SearchEntry(L["Any"], ARMOR),
+				SearchEntry(nil, ARMOR, 0),		-- Miscellaneous
+				SearchEntry(nil, ARMOR, 1),		-- Cloth
+				SearchEntry(nil, ARMOR, 2),		-- Leather
+				SearchEntry(nil, ARMOR, 3),		-- Mail
+				SearchEntry(nil, ARMOR, 4),		-- Plate
+				SearchEntry(nil, ARMOR, 6),		-- Shields
+				SearchEntry(nil, ARMOR, 7),		-- Librams
+				SearchEntry(nil, ARMOR, 8),		-- Idols
+				SearchEntry(nil, ARMOR, 9)		-- Totems
+			},
+			OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 2 )	end
+		},
+		{ name = ItemClassName(Enum.ItemClass.Consumable),	isCollapsed = true,
+			subMenu = {},
+			OnClick = function() Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Consumable))	end
+		},
+		{ name = ItemClassName(Enum.ItemClass.Tradegoods),	isCollapsed = true,
+			subMenu = {},
+			OnClick = function()	Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Tradegoods))	end
+		},
+		{ name = ItemClassName(RECIPE), isCollapsed = true,
+			subMenu = {
+				SearchEntry(L["Any"], RECIPE),
+				SearchEntry(nil, RECIPE, 6),		-- Alchemy
+				SearchEntry(nil, RECIPE, 4),		-- Blacksmithing
+				SearchEntry(nil, RECIPE, 8),		-- Enchanting
+				SearchEntry(nil, RECIPE, 3),		-- Engineering
+				SearchEntry(nil, RECIPE, 1),		-- Leatherworking
+				SearchEntry(nil, RECIPE, 2),		-- Tailoring
+				SearchEntry(nil, RECIPE, 0),		-- Book
+				SearchEntry(nil, RECIPE, 5),		-- Cooking
+				SearchEntry(nil, RECIPE, 7)		-- First Aid
+			},
+			OnClick = function() Altoholic:Menu_Update(MENU_SEARCH, 5 )	end
+		}
+	}
 end
 
 -- *** Menu Management ***

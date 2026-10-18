@@ -3,13 +3,16 @@ local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local Factions = Altoholic.Factions
 local Professions = Altoholic.Professions
+
+-- Simplified loot table containing item ID's only, based on AtlasLoot v4.05.00 
+-- Built at PLAYER_LOGIN, once the client's names can be read (see Core.lua).
+function Altoholic:BuildLootTable()
 -- Armor subclass names from ItemSubClass.dbc, in the client's language
 local CLOTH = (GetItemSubClassInfo(Enum.ItemClass.Armor, 1))
 local LEATHER = (GetItemSubClassInfo(Enum.ItemClass.Armor, 2))
 local MAIL = (GetItemSubClassInfo(Enum.ItemClass.Armor, 3))
 local PLATE = (GetItemSubClassInfo(Enum.ItemClass.Armor, 4))
 
--- Simplified loot table containing item ID's only, based on AtlasLoot v4.05.00 
 Altoholic.LootTable = {
 			
 	-- to do: manually find the item id's of lv70 reputation pvp for honor hold items.
@@ -1990,3 +1993,4 @@ Altoholic.LootTable = {
 								31322, 31334, 34622, 31323 }
 	}
 }
+end

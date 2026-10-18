@@ -8,6 +8,8 @@ local YELLOW	= "|cFFFFFF00"
 if GetLocale() ~= "zhCN" then return end
 
 -- 以下为声望值、等级、技能等的建议
+-- Built at PLAYER_LOGIN, once the client's names can be read (see Core.lua).
+function Altoholic:BuildSuggestions()
 Altoholic.Suggestions = {
 	[L["Riding"]] = {
 		{ 75, "初级骑术(40级): |cFFFFFFFF90g\n|cFFFFD700主城附近的的普通坐骑：|cFFFFFFFF10g" },
@@ -251,3 +253,4 @@ Altoholic.Suggestions = {
 		{ 60, "59~60级: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] }
 	}
 }
+end

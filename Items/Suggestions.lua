@@ -10,6 +10,8 @@ if (GetLocale() == "zhCN") or
 	(GetLocale() == "zhTW") then return end				-- exit to use zhCN or zhTW instead of enUS
 
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
+-- Built at PLAYER_LOGIN, once the client's names can be read (see Core.lua).
+function Altoholic:BuildSuggestions()
 Altoholic.Suggestions = {
 	[L["Riding"]] = {
 		{ 75, "Apprentice riding skill (Lv 40): |cFFFFFFFF90g\n|cFFFFD700Standard mount in/near a capital city: |cFFFFFFFF10g" },
@@ -248,3 +250,4 @@ Altoholic.Suggestions = {
 		{ 60, "Up to 60: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
 	}
 }
+end

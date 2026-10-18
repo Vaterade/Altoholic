@@ -6,9 +6,16 @@ local L = Altoholic.L
 local V = Altoholic.vars
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
+-- The client's own names for these are only readable once the player is in the
+-- world: while the addon's files load, the lookups below return nil. So the
+-- tables are filled by ReadClientNames() at PLAYER_LOGIN, and every table that
+-- uses them is built after it (BuildFactionsRefTable, BuildLootTable,
+-- BuildSuggestions, BuildSearchSubMenu). Until then, and for anything the
+-- client has no name for, a lookup returns the English name it was asked for.
+
 -- Profession names as the client spells them, read from SkillLine.dbc by ID.
 -- They are what GetSkillLineInfo returns, so they are also the keys of the
--- saved skill tables. A skill line the client lacks keeps its English name.
+-- saved skill tables.
 local PROFESSION_SKILL_LINES = {
 	["Alchemy"] = 171,
 	["Blacksmithing"] = 164,
@@ -21,11 +28,6 @@ local PROFESSION_SKILL_LINES = {
 	["Leatherworking"] = 165,
 	["Tailoring"] = 197,
 }
-
-Altoholic.Professions = {}
-for name, skillLineID in pairs(PROFESSION_SKILL_LINES) do
-	Altoholic.Professions[name] = C_SpellBook.GetSkillLineName(skillLineID) or name
-end
 
 -- Faction names as the client spells them, read from Faction.dbc by ID, so they
 -- match the names in the reputation list. Factions not listed here, such as the
@@ -52,11 +54,22 @@ local FACTION_IDS = {
 	["Zandalar Tribe"] = 270,
 }
 
-Altoholic.Factions = setmetatable({}, { __index = function(self, name) return name end })
-for name, factionID in pairs(FACTION_IDS) do
-	Altoholic.Factions[name] = (GetFactionInfoByID(factionID)) or name
+local function EnglishName(self, name)
+	return name
 end
+
+Altoholic.Professions = setmetatable({}, { __index = EnglishName })
+Altoholic.Factions = setmetatable({}, { __index = EnglishName })
 local Factions = Altoholic.Factions
+
+function Altoholic:ReadClientNames()
+	for name, skillLineID in pairs(PROFESSION_SKILL_LINES) do
+		self.Professions[name] = C_SpellBook.GetSkillLineName(skillLineID)
+	end
+	for name, factionID in pairs(FACTION_IDS) do
+		self.Factions[name] = (GetFactionInfoByID(factionID))
+	end
+end
 
 Altoholic.Categories = {
 	"AltoSummary", 
@@ -113,6 +126,7 @@ tinsert(UISpecialFrames, "AltoholicFrame");
 
 -- Factions reference table, based on http://www.wowwiki.com/Factions
 -- a table with a similar structure (but only with required lines) will be build to make the reputations frame
+function Altoholic:BuildFactionsRefTable()
 Altoholic.FactionsRefTable = {
 
 	{ FACTION_ALLIANCE },
@@ -192,6 +206,7 @@ Altoholic.FactionsRefTable = {
 	Factions["The Violet Eye"],
 	Factions["Zandalar Tribe"]
 }
+end
 
 -- The stats the upgrade search looks at, by the key C_Item.GetItemStats reports them under.
 -- The crit, hit, dodge and block values are percentages.
