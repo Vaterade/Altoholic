@@ -1,4 +1,4 @@
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
+local Zones = Altoholic.Zones
 local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
@@ -149,9 +149,9 @@ function Altoholic:UpdatePlayerBids()
 
 	local AHZone
 	local zone = GetRealZoneText()
-	if (zone == BZ["Stranglethorn Vale"]) or		-- if it's a goblin AH .. save the value 1
-		(zone == BZ["Tanaris"]) or
-		(zone == BZ["Winterspring"]) then
+	if (zone == Zones["Stranglethorn Vale"]) or		-- if it's a goblin AH .. save the value 1
+		(zone == Zones["Tanaris"]) or
+		(zone == Zones["Winterspring"]) then
 		AHZone = 1
 	end
 
@@ -185,9 +185,9 @@ function Altoholic:UpdatePlayerAuctions()
 
 	local AHZone
 	local zone = GetRealZoneText()
-	if (zone == BZ["Stranglethorn Vale"]) or		-- if it's a goblin AH .. save the value 1
-		(zone == BZ["Tanaris"]) or
-		(zone == BZ["Winterspring"]) then
+	if (zone == Zones["Stranglethorn Vale"]) or		-- if it's a goblin AH .. save the value 1
+		(zone == Zones["Tanaris"]) or
+		(zone == Zones["Winterspring"]) then
 		AHZone = 1
 	end	
 

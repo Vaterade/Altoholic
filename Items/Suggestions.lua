@@ -1,6 +1,6 @@
 local L = Altoholic.L
 local Professions = Altoholic.Professions
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
+local Zones = Altoholic.Zones
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
@@ -226,28 +226,28 @@ Altoholic.Suggestions = {
 	-- suggested leveling zones, compiled by Thaoky, based on too many sources to list + my own leveling experience on Alliance side
 	["Leveling"] = {
 		{ 10, "Up to 10: Any starting zone" },
-		{ 20, "Up to 20: "  .. BZ["Loch Modan"] .. "\n" .. BZ["Westfall"] .. "\n" .. BZ["Darkshore"] 
-						.. "\n" .. BZ["Silverpine Forest"] .. "\n" .. BZ["The Barrens"]},
-		{ 25, "Up to 25: " .. BZ["Wetlands"] .. "\n" .. BZ["Redridge Mountains"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Hillsbrad Foothills"] },
-		{ 28, "Up to 28: " .. BZ["Duskwood"] .. "\n" .. BZ["Wetlands"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Thousand Needles"] },
-		{ 31, "Up to 31: " .. BZ["Duskwood"] .. "\n" .. BZ["Thousand Needles"] .. "\n" .. BZ["Ashenvale"] },
-		{ 35, "Up to 35: " .. BZ["Thousand Needles"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Alterac Mountains"] 
-						.. "\n" .. BZ["Arathi Highlands"] .. "\n" .. BZ["Desolace"] },
-		{ 40, "Up to 40: " .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Desolace"] .. "\n" .. BZ["Badlands"]
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 43, "Up to 43: " .. BZ["Tanaris"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Badlands"] 
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 45, "Up to 45: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] },
-		{ 48, "Up to 48: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] .. "\n" .. BZ["Searing Gorge"] },
-		{ 51, "Up to 51: " .. BZ["Tanaris"] .. "\n" .. BZ["Azshara"] .. "\n" .. BZ["Blasted Lands"] 
-						.. "\n" .. BZ["Searing Gorge"] .. "\n" .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] },
-		{ 55, "Up to 55: " .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] .. "\n" .. BZ["Burning Steppes"]
-						.. "\n" .. BZ["Blasted Lands"] .. "\n" .. BZ["Western Plaguelands"] },
-		{ 58, "Up to 58: " .. BZ["Winterspring"] .. "\n" .. BZ["Burning Steppes"] .. "\n" .. BZ["Western Plaguelands"] 
-						.. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 60, "Up to 60: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
+		{ 20, "Up to 20: "  .. Zones["Loch Modan"] .. "\n" .. Zones["Westfall"] .. "\n" .. Zones["Darkshore"] 
+						.. "\n" .. Zones["Silverpine Forest"] .. "\n" .. Zones["The Barrens"]},
+		{ 25, "Up to 25: " .. Zones["Wetlands"] .. "\n" .. Zones["Redridge Mountains"] .. "\n" .. Zones["Ashenvale"] 
+						.. "\n" .. Zones["The Barrens"] .. "\n" .. Zones["Stonetalon Mountains"] .. "\n" .. Zones["Hillsbrad Foothills"] },
+		{ 28, "Up to 28: " .. Zones["Duskwood"] .. "\n" .. Zones["Wetlands"] .. "\n" .. Zones["Ashenvale"] 
+						.. "\n" .. Zones["Stonetalon Mountains"] .. "\n" .. Zones["Thousand Needles"] },
+		{ 31, "Up to 31: " .. Zones["Duskwood"] .. "\n" .. Zones["Thousand Needles"] .. "\n" .. Zones["Ashenvale"] },
+		{ 35, "Up to 35: " .. Zones["Thousand Needles"] .. "\n" .. Zones["Stranglethorn Vale"] .. "\n" .. Zones["Alterac Mountains"] 
+						.. "\n" .. Zones["Arathi Highlands"] .. "\n" .. Zones["Desolace"] },
+		{ 40, "Up to 40: " .. Zones["Stranglethorn Vale"] .. "\n" .. Zones["Desolace"] .. "\n" .. Zones["Badlands"]
+						.. "\n" .. Zones["Dustwallow Marsh"] .. "\n" .. Zones["Swamp of Sorrows"] },
+		{ 43, "Up to 43: " .. Zones["Tanaris"] .. "\n" .. Zones["Stranglethorn Vale"] .. "\n" .. Zones["Badlands"] 
+						.. "\n" .. Zones["Dustwallow Marsh"] .. "\n" .. Zones["Swamp of Sorrows"] },
+		{ 45, "Up to 45: " .. Zones["Tanaris"] .. "\n" .. Zones["Feralas"] .. "\n" .. Zones["The Hinterlands"] },
+		{ 48, "Up to 48: " .. Zones["Tanaris"] .. "\n" .. Zones["Feralas"] .. "\n" .. Zones["The Hinterlands"] .. "\n" .. Zones["Searing Gorge"] },
+		{ 51, "Up to 51: " .. Zones["Tanaris"] .. "\n" .. Zones["Azshara"] .. "\n" .. Zones["Blasted Lands"] 
+						.. "\n" .. Zones["Searing Gorge"] .. "\n" .. Zones["Un'Goro Crater"] .. "\n" .. Zones["Felwood"] },
+		{ 55, "Up to 55: " .. Zones["Un'Goro Crater"] .. "\n" .. Zones["Felwood"] .. "\n" .. Zones["Burning Steppes"]
+						.. "\n" .. Zones["Blasted Lands"] .. "\n" .. Zones["Western Plaguelands"] },
+		{ 58, "Up to 58: " .. Zones["Winterspring"] .. "\n" .. Zones["Burning Steppes"] .. "\n" .. Zones["Western Plaguelands"] 
+						.. "\n" .. Zones["Eastern Plaguelands"] .. "\n" .. Zones["Silithus"] },
+		{ 60, "Up to 60: " .. Zones["Winterspring"] .. "\n" .. Zones["Eastern Plaguelands"] .. "\n" .. Zones["Silithus"] },
 	}
 }
 end

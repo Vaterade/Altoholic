@@ -1,6 +1,6 @@
 local L = Altoholic.L
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
+local Zones = Altoholic.Zones
 local Factions = Altoholic.Factions
 local Professions = Altoholic.Professions
 
@@ -18,7 +18,7 @@ Altoholic.LootTable = {
 	-- to do: manually find the item id's of lv70 reputation pvp for honor hold items.
 
 	-- Vanilla WoW Raid 40
-	[BZ["Molten Core"]] = {
+	[Zones["Molten Core"]] = {
 		[BB["Lucifron"]] = {	16800, 16805, 16829, 16837, 16863, 16859, 17329, 18872, 19145, 19146,
 								18875, 18870, 18861, 17109, 18879, 19147, 18878, 17077, 16665 },
 		[BB["Magmadar"]] = {	16796, 16814, 16810, 16822, 16847, 16835, 16843, 16855, 16867, 19136,
@@ -49,7 +49,7 @@ Altoholic.LootTable = {
 		[L["Random Boss"]] = { 18264, 18262, 18292, 18282, 18291, 18168, 18290, 18283, 18259, 18252, 
 								18251, 18265, 18263, 21371, 21342, 18257, 18253, 18260 }
 	},
-	[BZ["Blackwing Lair"]] = {
+	[Zones["Blackwing Lair"]] = {
 		[BB["Razorgore the Untamed"]] = { 16918, 16926, 16934, 16911, 16904, 16935, 16943, 16959, 16951, 19337, 
 								19336, 19370, 19369, 19334, 19335 },
 		[BB["Vaelastrasz the Corrupt"]] = { 16818, 16925, 16933, 16936, 16903, 16910, 16944, 16960, 16952, 19339, 
@@ -73,12 +73,12 @@ Altoholic.LootTable = {
 								19379, 19364, 19363, 19360, 19356, 21138 },
 		[L["Trash Mobs"]] = { 19436, 19437, 19438, 19439, 19434, 19362, 19354, 19358, 19435, 18562 }
 	},
-	[BZ["Onyxia's Lair"]] = { 
+	[Zones["Onyxia's Lair"]] = { 
 		[BB["Onyxia"]] = { 16914, 16921, 16929, 16900, 16908, 16939, 16947, 16963, 16955, 18705, 
 								18713, 15410, 17078, 18205, 18813, 17064, 17067, 17075, 17068, 17966, 
 								18423, 18404, 18403, 18406	}
 	},
-	[BZ["Temple of Ahn'Qiraj"] .. " (AQ40)"] = { 
+	[Zones["Temple of Ahn'Qiraj"] .. " (AQ40)"] = { 
 		[BB["The Prophet Skeram"]] = { 21708, 21698, 21699, 21705, 21814, 21704, 21706, 21701, 21702, 21700, 
 								21707, 21703, 21128, 21237, 21273, 21275, 21268, 21232, 21242, 21272, 
 								21244, 21269, 22222, 22196	},
@@ -118,7 +118,7 @@ Altoholic.LootTable = {
 		[L["Warrior Set"]] = { 21331, 21329, 21332, 21330, 21333 },
 		[L["Legendary Mount"]] = { 21176 }
 	},
-	[BZ["Naxxramas"]] = { 
+	[Zones["Naxxramas"]] = { 
 		[BB["Patchwerk"]] = { 22726, 22727, 22368, 22361, 22354, 22960, 22815, 22820, 22818, 22961 },
 		[BB["Grobbulus"]] = { 22726, 22727, 22368, 22361, 22354, 22968, 22967, 22803, 22988, 22810 },
 		[BB["Gluth"]] = { 22726, 22727, 22983, 22813, 23075, 22994, 22981, 22368, 22361, 22354, 
@@ -145,7 +145,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- Vanilla WoW Raid 20
-	[BZ["Zul'Gurub"]] = { 
+	[Zones["Zul'Gurub"]] = { 
 		[BB["High Priestess Jeklik"]] = { 19717, 19716, 19718, 19721, 19720, 19719, 19724, 19723, 19722, 19943, 
 								19881, 19918, 19928, 20262, 20265, 19923, 19920, 19915 },
 		[BB["High Priest Venoxis"]] = { 19716, 19718, 19717, 19720, 19721, 19719, 19722, 19723, 19724, 19943, 
@@ -187,7 +187,7 @@ Altoholic.LootTable = {
 		[L["Warlock Set"]] = { 19957, 19605, 20033, 19849, 19848 },
 		[L["Warrior Set"]] = { 19951, 19577, 19822, 19823, 19824 }
 	},
-	[BZ["Ruins of Ahn'Qiraj"] .. " (AQ20)"] = { 
+	[Zones["Ruins of Ahn'Qiraj"] .. " (AQ20)"] = { 
 		[BB["Kurinnaxx"]] = { 21499, 21498, 21500, 21501, 21502, 21503, 22217, 20889, 20885, 20884, 20888 },
 		[L["Rajaxx's Captains"]] = { 21810, 21809, 21806 },
 		[BB["General Rajaxx"]] = { 21493, 21492, 21496, 21494, 21497, 21495, 20889, 20885, 20884, 20888 },
@@ -218,7 +218,7 @@ Altoholic.LootTable = {
 	},
 
 	-- Vanilla WoW 5-men
-	[BZ["Gnomeregan"]] = { 
+	[Zones["Gnomeregan"]] = { 
 		["Namdo Bizzfizzle"] = { 14639 },
 		[BB["Techbot"]] = { 9444, 9277 },
 		[BB["Grubbis"]] = { 9445 },
@@ -229,7 +229,7 @@ Altoholic.LootTable = {
 		[BB["Mekgineer Thermaplugg"]] = { 9492, 9461, 9459, 9458, 9299, 4415, 4413, 4411, 7742 },
 		[L["Trash Mobs"]] = { 9508, 9491, 9509, 9510, 9327, 9326, 9362, 9538, 9490, 9485, 9486, 9488, 9487 }
 	},
-	[BZ["The Stockade"]] = { 
+	[Zones["The Stockade"]] = { 
 		[BB["Targorr the Dread"]] = { 3630 },
 		[BB["Kam Deepfury"]] = { 2280, 3640 },
 		[BB["Bazil Thredd"]] = { 2926 },
@@ -237,7 +237,7 @@ Altoholic.LootTable = {
 		[BB["Bruegal Ironknuckle"]] = { 3228, 2942, 2941 },
 		[L["Trash Mobs"]] = { 2909 }
 	},
-	[BZ["Blackfathom Deeps"]] = { 
+	[Zones["Blackfathom Deeps"]] = { 
 		[BB["Ghamoo-ra"]] = { 6908, 6907 },
 		[BB["Lady Sarevess"]] = { 888, 11121, 3078 },
 		[BB["Gelihast"]] = { 6906, 6905, 1470 },
@@ -248,7 +248,7 @@ Altoholic.LootTable = {
 		[L["Trash Mobs"]] = { 1486, 3416, 1491, 2567, 3413, 3417, 1454, 1481, 3414, 3415, 2271 },
 		[L["Quest Items"]] = { 5359, 16762 }
 	},
-	[BZ["Wailing Caverns"]] = {
+	[Zones["Wailing Caverns"]] = {
 		["Kalldan Felmoon"] = { 6474, 6475 },
 		[BB["Mad Magglish"]] = { 5334 },
 		[BB["Trigore the Lasher"]] = { 5425, 5426 },
@@ -264,7 +264,7 @@ Altoholic.LootTable = {
 		[BB["Deviate Faerie Dragon"]] = { 6632, 5243 },
 		[L["Druid of the Fang (Trash Mob)"]] = { 10413	}
 	},
-	[BZ["The Deadmines"]] = {
+	[Zones["The Deadmines"]] = {
 		[BB["Marisa du'Paige"]] = { 3019, 4660 },
 		[BB["Brainwashed Noble"]] = { 5967, 3902 },
 		[BB["Foreman Thistlenettle"]] = { 1875 },
@@ -279,7 +279,7 @@ Altoholic.LootTable = {
 		[BB["Cookie"]] = { 5197, 5198, 8490 },
 		[L["Trash Mobs"]] = { 10400, 10401, 10402 }
 	},
-	[BZ["The Temple of Atal'Hakkar"]] = {
+	[Zones["The Temple of Atal'Hakkar"]] = {
 		[L["Spawn Of Hakkar"]] = {	10802, 10801 },
 		[L["Troll Mini bosses"]] = { 10787, 10783, 10785, 10784, 10786, 10788, 20606, 20607, 20608 },
 		[BB["Atal'alarion"]] = {	10800, 10798, 10799 },
@@ -294,7 +294,7 @@ Altoholic.LootTable = {
 		[L["Trash Mobs"]] = { 10630, 10629, 10632, 10631, 10633, 10634, 15733, 16216, 11318, 6181,
 								10625, 10628, 10623, 10626, 10627, 10624 }
 	},	
-	[BZ["Maraudon"]] = {
+	[Zones["Maraudon"]] = {
 		[BB["Kolk"] .. " (1st Khan)"] = { 17761 },
 		[BB["Gelk"] .. " (2nd Khan)"] = { 17762 },
 		[BB["Magra"] .. " (3rd Khan)"] = { 17763 },
@@ -310,7 +310,7 @@ Altoholic.LootTable = {
 		[BB["Rotgrip"]] = { 17732, 17728, 17730 },
 		[BB["Princess Theradras"]] = {	17780, 17715, 17714, 17711, 17707, 17713, 17766, 17710 }
 	},
-	[BZ["Zul'Farrak"]] = {	
+	[Zones["Zul'Farrak"]] = {	
 		[BB["Antu'sul"]] = { 9640, 9641, 9639, 9379, 9372 },
 		[BB["Theka the Martyr"]] = { 10660	},
 		[BB["Witch Doctor Zum'rah"]] = { 18083, 18082	},
@@ -326,7 +326,7 @@ Altoholic.LootTable = {
 		[L["Trash Mobs"]] = { 9512, 9484,  862, 6440, 9243, 9523, 9238, 5616, 9511, 9481, 
 								9480, 9482, 9483, 2040, }
 	},
-	[BZ["Razorfen Downs"]] = {	
+	[Zones["Razorfen Downs"]] = {	
 		[BB["Tuten'kash"]] = { 10775, 10776, 10777 },
 		[L["Henry Stern"]] = { 3831, 10841 },
 		[BB["Mordresh Fire Eye"]] = { 10769, 10770, 10771 },
@@ -336,7 +336,7 @@ Altoholic.LootTable = {
 		[BB["Plaguemaw the Rotting"]] = {	10760, 10766 },
 		[L["Trash Mobs"]] = { 10574, 10581, 10578, 10583, 10582, 10584, 10571, 10573, 10570, 10567, 10572 }
 	},
-	[BZ["Uldaman"]] = {
+	[Zones["Uldaman"]] = {
 		[L["Magregan Deepshadow"]] = { 4635 },
 		[L["Tablet of Ryuneh"]] = { 4631	},
 		[L["Krom Stoutarm Chest"]] = { 8027	},
@@ -360,7 +360,7 @@ Altoholic.LootTable = {
 								7666, 7673, 9384, 9392, 9424, 9465, 9383, 9425, 9386, 9427, 
 								9423, 9391, 9381, 9426, 9422	}
 	},
-	[BZ["Scarlet Monastery"]] = {
+	[Zones["Scarlet Monastery"]] = {
 		[BB["Houndmaster Loksey"]] = { 7756, 7710, 3456 },
 		[BB["Arcanist Doan"]] = { 34227, 7712, 7711, 7714, 7713, 7146	},
 		[BB["Herod"]] = { 7719, 7718, 10330, 7717, 23192 },
@@ -377,7 +377,7 @@ Altoholic.LootTable = {
 								7752, 7736, 7730, 7758, 7757, 7787, 7729}
 	},
 	
-	[BZ["Razorfen Kraul"]] = {	
+	[Zones["Razorfen Kraul"]] = {	
 		[L["Roogug"]] = {	6841 },
 		[L["Aggem Thorncurse"]] = { 6681	},
 		[BB["Death Speaker Jargba"]] = { 6682, 6685, 2816 },
@@ -389,7 +389,7 @@ Altoholic.LootTable = {
 		[BB["Earthcaller Halmgar"]] = { 6688, 6689	},
 		[L["Trash Mobs"]] = { 2264, 1978, 1488, 4438, 2039,  776, 1727, 1975, 1976, 2549 },
 	},
-	[BZ["Blackrock Depths"]] = {	
+	[Zones["Blackrock Depths"]] = {	
 		[L["Pyron"]] = { 14486 },
 		[BB["Lord Roccor"]] = { 22234, 11632, 22397, 11631, 11630, 11813, 11811 },
 		[BB["High Interrogator Gerstahn"]] = { 11626, 11624, 22240, 11625, 11140 },
@@ -424,12 +424,12 @@ Altoholic.LootTable = {
 								11754, 11078, 18945, 11468, 11446	},
 		[L["Plans"]] = { 11614, 11615	}
 	},
-	[BZ["Ragefire Chasm"]] = {	
+	[Zones["Ragefire Chasm"]] = {	
 		[BB["Taragaman the Hungerer"]] = { 14148, 14149, 14145, 14540 },
 		[BB["Jergosh the Invoker"]] = { 14150, 14147, 14151	},
 		[L["Zelemar the Wrathful"]] = { 24225 }
 	},
-	[BZ["Shadowfang Keep"]] = {	
+	[Zones["Shadowfang Keep"]] = {	
 		[BB["Deathsworn Captain"]] = {	6641, 6642 },
 		[L["Rethilgore"]] = { 5254	},
 		[L["Fel Steed"]] = {	6341, 932 },
@@ -444,7 +444,7 @@ Altoholic.LootTable = {
 		[L["Quest Items"]] = { 24224, 6895, 6283 },
 		[L["Trash Mobs"]] = { 2292, 1974, 1489, 1935, 1482, 2205, 1318, 2807, 1483, 3194, 1484 }
 	},
-	[BZ["Dire Maul (East)"]] = {
+	[Zones["Dire Maul (East)"]] = {
 		[BB["Pusillin"]] = { 18267, 18261, 18249 },
 		[BB["Zevrim Thornhoof"]] = { 18319, 18313, 18323, 18306, 18308 },
 		[BB["Lethtendris"]] = { 18325, 18311, 18302, 18301, 18426 },
@@ -454,7 +454,7 @@ Altoholic.LootTable = {
 		[BB["Isalien"]] = { 22304, 22472, 22401, 22345, 22315, 22314, 21984, 22046 },
 		[L["Trash Mobs"]] = { 18295, 18298, 18296, 18289 }
 	},
-	[BZ["Dire Maul (North)"]] = {
+	[Zones["Dire Maul (North)"]] = {
 		[BB["Guard Mol'dar"]] = { 18496, 18497, 18494, 18493, 18498, 18268, 18450, 18451, 18458, 18459, 
 									18464, 18462, 18463, 18460	},
 		[BB["Stomper Kreeg"]] = { 18425, 18269, 18284	},
@@ -471,7 +471,7 @@ Altoholic.LootTable = {
 									18534, 18499, 18475, 18478, 18477, 18476, 18479, 18480, 18481, 18482, 
 									18655}
 	},
-	[BZ["Dire Maul (West)"]] = {
+	[Zones["Dire Maul (West)"]] = {
 		[BB["Tendris Warpwood"]] = { 18390, 18393, 18353, 18352 },
 		[BB["Illyanna Ravenoak"]] = { 18386, 18383, 18349, 18347 },
 		[BB["Magister Kalendris"]] = { 18374, 18397, 18371, 18350, 18351, 22309 },
@@ -483,11 +483,11 @@ Altoholic.LootTable = {
 		[L["Shen'dralar Provisioner"]] = { 18487 },
 		[L["Trash Mobs"]] = { 18344, 18340, 18338 }
 	},
-	[BZ["Dire Maul"]] = {
+	[Zones["Dire Maul"]] = {
 		[L["Books"]] = { 18364, 18361, 18358, 18359, 18362, 18356, 18363, 18360, 18357, 18333, 18334, 18332, 18401 },
 		[L["Trinkets"]] = { 18470, 18473, 18468, 18472, 18469, 18465, 18471, 18467, 18466, 18348 },
 	},
-	[BZ["Upper Blackrock Spire"]] = {	
+	[Zones["Upper Blackrock Spire"]] = {	
 		[BB["Pyroguard Emberseer"]] = { 12905, 12927, 12929, 12926, 17322, 21988, 16672 },
 		[BB["Solakar Flamewreath"]] = { 12609, 12589, 12603, 12606, 18657, 18638, 16695 },
 		[BB["Jed Runewatcher"]] = { 12604, 12930, 12605 },
@@ -504,7 +504,7 @@ Altoholic.LootTable = {
 						16726, 16663},
 		[L["Trash Mobs"]] = { 13260, 24102, 16247, 12607, 12219 }
 	},
-	[BZ["Stratholme"]] = {
+	[Zones["Stratholme"]] = {
 		[BB["Skul"]] = { 13395, 13394, 13396 },
 		[BB["Fras Siabi"]] = { 13171, 13172 },
 		[BB["Hearthsinger Forresten"]] = { 13378, 13383, 13384, 13379, 16682 },
@@ -534,7 +534,7 @@ Altoholic.LootTable = {
 									16052, 15777, 15768, 14495, 16697, 16702, 16685, 16714, 16681, 16671, 
 									16736, 16723, 12811, 12735	}
 	},
-	[BZ["Lower Blackrock Spire"]] = {
+	[Zones["Lower Blackrock Spire"]] = {
 		["Roughshod Pike"] = { 12812, 12631, 12699, 12533, 12740, 12741, 12345 },
 		[BB["Highlord Omokk"]] = { 13170, 13169, 13168, 13166, 13167, 12336, 12534, 16670 },
 		[BB["Spirestone Battle Lord"]] = { 13284, 13285 },
@@ -555,7 +555,7 @@ Altoholic.LootTable = {
 		[BB["Burning Felguard"]] = { 13181, 13182 },
 		[L["Trash Mobs"]] = { 14513, 14152, 13494, 16250, 16244, 15749, 15775, 12219, 21982	}
 	},
-	[BZ["Scholomance"]] = {
+	[Zones["Scholomance"]] = {
 		[BB["Kirtonos the Herald"]] = { 13956, 13957, 13969, 13967, 13955, 13960, 14024, 13983, 16734 },
 		[BB["Jandice Barov"]] = { 18689, 14543, 14545, 14548, 18690, 14541, 22394, 13725, 13523, 16701 },
 		[BB["Rattlegore"]] = { 14538, 14539, 18686, 14537, 14531, 14528, 13873, 16711, 18782, 12726 },
@@ -592,7 +592,7 @@ Altoholic.LootTable = {
 	
 	-- BC 5-men
 	-- ** Hellfire Peninsula: Hellfire Citadel **
-	[BZ["Hellfire Ramparts"]] = {
+	[Zones["Hellfire Ramparts"]] = {
 		[BB["Watchkeeper Gargolmar"]] = {	24024, 24023, 24022, 24021, 24020, 23881 },
 		[BB["Watchkeeper Gargolmar"] .. L[" (Heroic)"]] = { 29434, 30593, 30594, 30592, 27448, 27451, 27450, 27447, 27449, 23881	},
 		[BB["Omor the Unscarred"]] = { 24090, 24091, 24073, 24096, 24094, 24069, 23886	},
@@ -602,7 +602,7 @@ Altoholic.LootTable = {
 		[L["Fel Iron Chest"] .. L[" (Heroic)"]] = { 29434, 29264, 32077, 29238, 29346, 27452, 27461, 27456, 27454, 27458, 
 											27455, 27459, 27457, 30593, 30594, 30592, 27453, 27460 }
 	},
-	[BZ["The Blood Furnace"]] = {
+	[Zones["The Blood Furnace"]] = {
 		[BB["The Maker"]] = {	24388, 24387, 24385, 24386, 24384 },
 		[BB["The Maker"] .. L[" (Heroic)"]] = { 29434, 30601, 30600, 30602, 27485, 27488, 27483, 27487, 27484 },
 		[BB["Broggok"]] = { 24392, 24393, 24391, 24390, 24389 },
@@ -611,7 +611,7 @@ Altoholic.LootTable = {
 		[BB["Keli'dan the Breaker"] .. L[" (Heroic)"]] = { 29434, 32080, 29245, 29239, 29347, 27506, 27514, 27522, 27494, 27505, 
 								27788, 27495, 28121, 30601, 30600, 30602, 28264, 27497, 27512, 27507, 33814 }
 	},
-	[BZ["The Shattered Halls"]] = {	
+	[Zones["The Shattered Halls"]] = {	
 		[BB["Grand Warlock Nethekurse"]] = { 24312, 27519, 27517, 27521, 27520, 27518, 21525, 23735 },
 		[BB["Grand Warlock Nethekurse"] .. L[" (Heroic)"]] = { 29434, 24312, 30548, 30547, 30546, 27519, 27517, 27521,
 									27520, 27518, 23735, 25462, 21525	},
@@ -626,7 +626,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** Zangarmarsh: Coiffang Reservoir **
-	[BZ["The Slave Pens"]] = {	
+	[Zones["The Slave Pens"]] = {	
 		[BB["Mennu the Betrayer"]] = { 24359, 24357, 24360, 24356, 24361, 29674 },
 		[BB["Mennu the Betrayer"] .. L[" (Heroic)"]] = {	29434, 30604, 30605, 30603, 27542, 27545, 27541, 27546, 27544, 27543, 29674 },
 		[BB["Rokmar the Crackler"]] = { 24379, 24376, 24378, 24380, 24381 },
@@ -635,7 +635,7 @@ Altoholic.LootTable = {
 		[BB["Quagmirran"] .. L[" (Heroic)"]] = { 29434, 29242, 30538, 32078, 29349, 27712, 27800, 28337, 27672, 27742, 
 							33821, 30604, 30605, 30603, 27796, 27713, 27740, 27683, 27714, 27673, 27741 }
 	},
-	[BZ["The Underbog"]] = {
+	[Zones["The Underbog"]] = {
 		[BB["Hungarfen"]] = { 24450, 24452, 24451, 24413, 27631 },
 		[BB["Hungarfen"] .. L[" (Heroic)"]] = { 29434, 30606, 30607, 30608, 27746, 27745, 27743, 27748, 27744, 27747	},
 		[BB["Ghaz'an"]] = { 24459, 24458, 24460, 24462, 24461 },
@@ -646,7 +646,7 @@ Altoholic.LootTable = {
 		[BB["The Black Stalker"] .. L[" (Heroic)"]] = { 29434, 29265, 30541, 32081, 29350, 27781, 27768, 27938, 27773, 27779, 
 						27780, 27896, 27770, 30606, 30607, 30608, 27907, 27771, 27769, 27772, 24248, 33826 }
 	},
-	[BZ["The Steamvault"]] = {
+	[Zones["The Steamvault"]] = {
 		[BB["Hydromancer Thespia"]] = { 27789, 27787, 27783, 27784, 29673, 30828, 27508 },
 		[BB["Hydromancer Thespia"] .. L[" (Heroic)"]] = { 29434, 30550, 30551, 30549, 27789, 27787, 27783, 27784, 29673, 30828, 27508 },
 		[BB["Mekgineer Steamrigger"]] = { 27793, 27790, 27792, 27791, 27794, 23887	},
@@ -660,7 +660,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** Terrokar Forest: Aunchindoun **
-	[BZ["Mana-Tombs"]] = {	
+	[Zones["Mana-Tombs"]] = {	
 		[BB["Pandemonius"]] = { 25941, 25942, 25940, 25943, 28166, 25939 },
 		[BB["Pandemonius"] .. L[" (Heroic)"]] = { 29434, 30584, 30585, 30583, 27816, 27818, 27813, 27815, 27814, 27817 },
 		[BB["Tavarok"]] = { 25945, 25946, 25947, 25952, 25944, 25950 },
@@ -673,7 +673,7 @@ Altoholic.LootTable = {
 								31578, 30584, 30585, 30583	},
 		[L["Trash Mobs"]] = { 23615, 22543 },
 	},
-	[BZ["Auchenai Crypts"]] = {
+	[Zones["Auchenai Crypts"]] = {
 		[BB["Shirrak the Dead Watcher"]] = {	27410, 27409, 27408, 26055, 25964 },
 		[BB["Shirrak the Dead Watcher"] .. L[" (Heroic)"]] = {	29434, 30587, 30588, 30586, 27866, 27493, 27865, 27845, 27847, 27846 },
 		[BB["Exarch Maladaar"]] = {	27411, 27415, 27414, 27413, 27416, 27412, 21525 },
@@ -682,7 +682,7 @@ Altoholic.LootTable = {
 		[L["Avatar of the Martyred"]] = { 27878, 28268, 27876, 27937, 27877, 27797 },
 		[L["Trash Mobs"]] = { 23605, 22544 }
 	},
-	[BZ["Sethekk Halls"]] = {	
+	[Zones["Sethekk Halls"]] = {	
 		[BB["Darkweaver Syth"]] = {	27919, 27914, 27915, 27918, 27917, 27916, 24160, 27633 },
 		[BB["Darkweaver Syth"] .. L[" (Heroic)"]] = {	29434, 30553, 30554, 30552, 27919, 27914, 27915, 27918, 27917, 27916, 
 										24160, 27633, 25461 },
@@ -694,7 +694,7 @@ Altoholic.LootTable = {
 		[L["Anzu the Raven God (Heroic Summon)"]] = { 29434, 32768, 30553, 30554, 30552, 32769, 32778, 32779, 32781, 32780 },
 		[L["Trash Mobs"]] = { 25731, 29669 }
 	},
-	[BZ["Shadow Labyrinth"]] = {	
+	[Zones["Shadow Labyrinth"]] = {	
 		[BB["Ambassador Hellmaw"]] = { 27889, 27888, 27884, 27886, 27887, 27885 },
 		[BB["Ambassador Hellmaw"] .. L[" (Heroic)"]] = { 29434, 30563, 30559, 30560, 27889, 27888, 27884, 27886, 27887, 27885 },
 		[BB["Blackheart the Inciter"]] = { 27892, 27893, 28134, 27891, 27890, 25728, 30808, 27468 },
@@ -711,7 +711,7 @@ Altoholic.LootTable = {
 	},
 	   
 	-- ** Tanaris: Caverns of Time **
-	[BZ["Old Hillsbrad Foothills"]] = {	
+	[Zones["Old Hillsbrad Foothills"]] = {	
 		[BB["Lieutenant Drake"]] = { 27423, 27418, 27417, 27420, 27436 },
 		[BB["Lieutenant Drake"] .. L[" (Heroic)"]] = { 29434, 30589, 30591, 30590, 28212, 28214, 28215, 28211, 28213, 28210 },
 		[BB["Captain Skarloc"]] = {	27428, 27430, 27427, 27424, 27426, 21524, 22927 },
@@ -725,7 +725,7 @@ Altoholic.LootTable = {
 		[L["Thomas Yance"]] = { 25725 },
 		[L["Aged Dalaran Wizard"]] = { 22539 }
 	},
-	[BZ["The Black Morass"]] = {	
+	[Zones["The Black Morass"]] = {	
 		[BB["Chrono Lord Deja"]] = { 27988, 27994, 27995, 27993, 27996, 27987, 29675 },
 		[BB["Chrono Lord Deja"] .. L[" (Heroic)"]] = { 29434, 30558, 30556, 30555, 27988, 27994, 27995, 27993, 27996, 27987, 29675 },
 		[BB["Temporus"]] = { 28185, 28186, 28034, 28187, 28184, 28033 },
@@ -738,7 +738,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** Netherstorm: Tempest Keep **
-	[BZ["The Mechanar"]] = {	
+	[Zones["The Mechanar"]] = {	
 		[L["Cache of the Legion"]] = { 29434, 28249, 28250, 28252, 28251, 28248	},
 		[BB["Mechano-Lord Capacitus"]] = { 28256, 28255, 28254, 28257, 28253, 35582 },
 		[BB["Mechano-Lord Capacitus"] .. L[" (Heroic)"]] = { 29434, 30565, 30566, 30564, 28256, 28255, 28254, 28257, 28253, 35582 },
@@ -751,7 +751,7 @@ Altoholic.LootTable = {
 													28285, 33860, 31086 },
 		[L["Trash Mobs"]] = { 22920, 21906 }
 	},
-	[BZ["The Botanica"]] = {	
+	[Zones["The Botanica"]] = {	
 		[BB["Commander Sarannis"]] = { 28301, 28304, 28306, 28296, 28311, 28769 },
 		[BB["Commander Sarannis"] .. L[" (Heroic)"]] = {	29434, 30574, 30572, 30573, 28301, 28304, 28306, 28296, 28311 },
 		[BB["High Botanist Freywinn"]] = { 28317, 28318, 28321, 28315, 28316, 23617, 21524, 31744 },
@@ -768,7 +768,7 @@ Altoholic.LootTable = {
 									28228, 28350, 31085, 33859	},
 		[L["Trash Mobs"]] = { 24172 }
 	},
-	[BZ["The Arcatraz"]] = {	
+	[Zones["The Arcatraz"]] = {	
 		[BB["Zereketh the Unbound"]] = { 28373, 28374, 28384, 28375, 28372	},
 		[BB["Zereketh the Unbound"] .. L[" (Heroic)"]] = { 29434, 30582, 30575, 30581, 28373, 28374, 28384, 28375, 28372 },
 		[BB["Wrath-Scryer Soccothrates"]] = { 28396, 28398, 28394, 28393, 28397 },
@@ -783,7 +783,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** Isle of Quel'Danas **
-	[BZ["Magisters' Terrace"]] = {
+	[Zones["Magisters' Terrace"]] = {
 		[BB["Selin Fireheart"]] = { 34702, 34697, 34698, 34701, 34700, 34699, 35275 },
 		[BB["Selin Fireheart"] .. L[" (Heroic)"]] = { 29434, 34602, 34601, 34604, 34603, 34702, 34697, 34698, 34701, 34700, 
 									34699, 35275 },
@@ -801,7 +801,7 @@ Altoholic.LootTable = {
 	},
 
 	-- ** BC 10-men **
-	[BZ["Karazhan"]] = {
+	[Zones["Karazhan"]] = {
 		[BB["Attumen the Huntsman"]] = {	28477, 28507, 28508, 28453, 28506, 28503, 28454, 28502, 28505, 29434,
 								28509, 28510, 28504, 30480, 23809	},
 		[BB["Moroes"]] = {		28529, 28570, 28565, 28545, 28567, 28566, 28569, 29434, 28530, 28528,
@@ -831,7 +831,7 @@ Altoholic.LootTable = {
 		[L["Trash Mobs"]] = { 30642, 30668, 30673, 30644, 30674, 30643, 30641, 23857, 23864, 23862, 
 								23865, 21882, 30666, 30667, 21903, 21904, 22545	}
 	},
-	[BZ["Zul'Aman"]] = {	
+	[Zones["Zul'Aman"]] = {	
 		[BB["Nalorakk"]] = { 29434, 33203, 33285, 33211, 33206, 33327, 33191, 33640, 33307 },
 		[BB["Akil'zon"]] = { 29434, 33286, 33215, 33216, 33281, 33293, 33214, 33283, 33307 },
 		[BB["Jan'alai"]] = { 29434, 33357, 33356, 33329, 33328, 33354, 33326, 33332, 33307 },
@@ -847,18 +847,18 @@ Altoholic.LootTable = {
 
 	-- ** BC 25-men **
 	-- ** T4 raid dungeons **
-	[BZ["Gruul's Lair"]] = {	
+	[Zones["Gruul's Lair"]] = {	
 		[BB["High King Maulgar"]] = { 28797, 28799, 28796, 28801, 28795, 28800, 29763, 29764, 29762 },
 		[BB["Gruul the Dragonkiller"]] = { 28804, 28803, 28828, 28827, 28810, 28824, 28822, 28823, 28830, 31750, 
 								29766, 29767, 29765, 28802, 28794, 28825, 28826	}
 	},
-	[BZ["Magtheridon's Lair"]] = {	
+	[Zones["Magtheridon's Lair"]] = {	
 		[BB["Magtheridon"]] = { 28777, 28780, 28776, 28778, 28775, 28779, 28789, 28781, 28774, 28782, 
 								29458, 28783, 29754, 29753, 29755, 32385, 28791, 28790, 28793, 28792, 34845, 34846 }
 	},
 	
 	-- ** T5 raid dungeons **
-	[BZ["Serpentshrine Cavern"]] = {	
+	[Zones["Serpentshrine Cavern"]] = {	
 		[BB["Hydross the Unstable"]] = { 30056, 32516, 30050, 30055, 30047, 30054, 30048, 30053, 30052, 33055, 
 								30664, 30629, 30049, 30051	},
 		[BB["The Lurker Below"]] = { 30064, 30067, 30062, 30060, 30066, 30065, 30057, 30059, 30061, 33054, 
@@ -873,7 +873,7 @@ Altoholic.LootTable = {
 								30280, 30282, 30283, 30281, 30308, 30304, 30305, 30307, 30306, 30301, 
 								30303, 30302, 30183, 32897 }
 	},
-	[BZ["The Eye"]] = {	
+	[Zones["The Eye"]] = {	
 		[BB["Al'ar"]] = { 29925, 29918, 29947, 29921, 29922, 29920, 30448, 30447, 29923, 32944, 
 								29948, 29924, 29949 },
 		[BB["Void Reaver"]] = { 29986, 29984, 29985, 29983, 32515, 30619, 30450, 30248, 30249, 30250 },
@@ -889,7 +889,7 @@ Altoholic.LootTable = {
 	},
 	
 	-- ** T6 raid dungeons **
-	[BZ["Hyjal Summit"]] = {
+	[Zones["Hyjal Summit"]] = {
 		[BB["Rage Winterchill"]] = { 30871, 30870, 30863, 30868, 30864, 30869, 30873, 30866, 30862, 30861, 
 								30865, 30872, 32459 },
 		[BB["Anetheron"]] = { 30884, 30888, 30885, 30879, 30886, 30887, 30880, 30878, 30874, 30881, 
@@ -902,7 +902,7 @@ Altoholic.LootTable = {
 		[L["Trash Mobs"]] = { 32590, 34010, 32609, 32592, 32591, 32589, 34009, 32946, 32945, 32428, 
 								32897, 32285, 32296, 32303, 32295, 32298, 32297, 32289, 32307 } 
 	},
-	[BZ["Black Temple"]] = {	
+	[Zones["Black Temple"]] = {	
 		[BB["High Warlord Naj'entus"]] = { 32239, 32240, 32377, 32241, 32234, 32242, 32232, 32243, 32245, 32238, 
 								32247, 32237, 32236, 32248	},
 		[BB["Supremus"]] = { 32256, 32252, 32259, 32251, 32258, 32250, 32260, 32261, 32257, 32254, 
@@ -925,7 +925,7 @@ Altoholic.LootTable = {
 		[L["Patterns"]] = { 32738, 32739, 32736, 32737, 32748, 32744, 32750, 32751, 32749, 32745, 
 								32746, 32747, 32754, 32755, 32753, 32752 }
 	},
-	[BZ["Sunwell Plateau"]] = {
+	[Zones["Sunwell Plateau"]] = {
 		[BB["Kalecgos"]] = { 34170, 34386, 34169, 34384, 34168, 34167, 34382, 34166, 34165, 34164, 
 								34848, 34851, 34852 },
 		[BB["Brutallus"]] = { 34181, 34180, 34381, 34178, 34177, 34179, 34176, 34853, 34854, 34855 },
@@ -1226,7 +1226,7 @@ Altoholic.LootTable = {
 		[L["Porfus the Gem Gorger"]] = { 31557, 31939, 31938, 31936, 31935, 31937, 31957, 31928, 31929, 31925, 31926, 31927 },
 		[L["Wrathbringer Laz-tarash"]] = { 32520, 31939, 31938, 31936, 31935, 31937, 31957, 31928, 31929, 31925, 31926, 31927 }
 	},
-	[L["Abyssal Council"] .. " (" .. BZ["Silithus"] .. ")"] = {	
+	[L["Abyssal Council"] .. " (" .. Zones["Silithus"] .. ")"] = {	
 		[L["Crimson Templar (Fire)"]] = { 20657, 20655, 20656	},
 		[L["Azure Templar (Water)"]] = { 20654, 20652, 20653 },
 		[L["Hoary Templar (Wind)"]] = { 20658, 20659, 20660 },
@@ -1241,10 +1241,10 @@ Altoholic.LootTable = {
 		[BB["Baron Kazum"] .. " (Earth)"] = { 20688, 20515, 20686, 20687 }
 	},
 	[L["Elemental Invasion"]] = {	
-		[BB["Baron Charr"] .. " (" .. BZ["Un'Goro Crater"] .. ")"] = {	18671, 19268, 18672 },
-		[BB["Princess Tempestria"] .. " (" .. BZ["Winterspring"] .. ")"] = { 18678, 19268, 21548, 18679 },
-		[BB["Avalanchion"] .. " (" .. BZ["Azshara"] .. ")"] = { 18673, 19268, 18674 },
-		[BB["The Windreaver"] .. " (" .. BZ["Silithus"] .. ")"] = { 18676, 19268, 21548, 18677 }
+		[BB["Baron Charr"] .. " (" .. Zones["Un'Goro Crater"] .. ")"] = {	18671, 19268, 18672 },
+		[BB["Princess Tempestria"] .. " (" .. Zones["Winterspring"] .. ")"] = { 18678, 19268, 21548, 18679 },
+		[BB["Avalanchion"] .. " (" .. Zones["Azshara"] .. ")"] = { 18673, 19268, 18674 },
+		[BB["The Windreaver"] .. " (" .. Zones["Silithus"] .. ")"] = { 18676, 19268, 21548, 18677 }
 	},
 	[L["Gurubashi Arena"]] = {	
 		[L["Booty Run"]] = { 18709, 18710, 18711, 18712, 18706, 19024 }
@@ -1255,8 +1255,8 @@ Altoholic.LootTable = {
 		[L["Rare Fish Rewards"]] = { 19972, 19969, 19971 }
 	},
 	[L["Children's Week"]] = {	
-		[BZ["Azeroth"]] = { 23007, 23015, 23002, 23022 },
-		[BZ["Outland"]] = { 32616, 32622, 32617	}
+		[Zones["Azeroth"]] = { 23007, 23015, 23002, 23022 },
+		[Zones["Outland"]] = { 32616, 32622, 32617	}
 	},
 	[L["Love is in the air"]] = {	
 		[L["Gift of Adoration"]] = { 34480, 22279, 22235, 22200, 22261, 22218, 21813, 34258 },
@@ -1648,7 +1648,7 @@ Altoholic.LootTable = {
 	},	
 	
 	-- ** Sets & PVP ***
-	[BZ["Alterac Valley"]] = {	
+	[Zones["Alterac Valley"]] = {	
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = { 19045, 19032 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	19046, 19031 },
 		[L["Miscellaneous"]] = { 19316, 17348, 17349, 19301, 19307, 19317, 17351, 17352, 19318	},
@@ -1660,7 +1660,7 @@ Altoholic.LootTable = {
 		[L["Epic Rewards"].." (" .. FACTION_HORDE .. ")"] = { 19029 },
 		[L["Epic Rewards"]] = {	19325, 19312, 19308, 19309, 19324, 19321, 21563, 19315, 19311, 19310, 19323 }
 	},
-	[BZ["Arathi Basin"]] = {
+	[Zones["Arathi Basin"]] = {
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = {	17349, 17352, 20225, 20227, 20226, 20243, 20237, 20244 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	17349, 17352, 20222, 20224, 20223, 20234, 20232, 20235 },
 		[L["Lv 20-29 Rewards"].." (" .. FACTION_ALLIANCE .. ")"] = {	20099, 20096, 20117, 20105, 20120, 20090, 20114, 20102, 20123, 20093, 
@@ -1690,7 +1690,7 @@ Altoholic.LootTable = {
 		[L["PVP Plate Sets"].." (" .. FACTION_ALLIANCE .. ")"] = { 20057, 20041, 20048, 20058, 20042, 20049 },
 		[L["PVP Plate Sets"].." (" .. FACTION_HORDE .. ")"] = { 20212, 20204, 20208 }
 	},
-	[BZ["Warsong Gulch"]] = {	
+	[Zones["Warsong Gulch"]] = {	
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = {	19506 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	19505 },
 		[L["Miscellaneous"]] = { 17348, 17349, 19060, 19062, 19067, 17351, 17352, 19061, 19066, 19068 },
@@ -1900,45 +1900,45 @@ Altoholic.LootTable = {
 		[L["Warrior Set"]] = { 22418, 22419, 22416, 22423, 22421, 22422, 22417, 22420, 23059 }
 	},
 	[L["Tier 4 Tokens"]] = {
-		[BB["Prince Malchezaar"] .. " (" .. BZ["Karazhan"] .. ")"] = { 29098, 29086, 29093, 29081, 29076, 29068, 29073, 
+		[BB["Prince Malchezaar"] .. " (" .. Zones["Karazhan"] .. ")"] = { 29098, 29086, 29093, 29081, 29076, 29068, 29073, 
 						29061, 29049, 29058, 29044, 29040, 29028, 29035, 28963, 29011, 29021 },		-- T4 helm
-		[BB["High King Maulgar"] .. " (" .. BZ["Gruul's Lair"] .. ")"] = { 29100, 29089, 29095, 29084, 29079, 29070, 29075, 
+		[BB["High King Maulgar"] .. " (" .. Zones["Gruul's Lair"] .. ")"] = { 29100, 29089, 29095, 29084, 29079, 29070, 29075, 
 						29064, 29054, 29060, 29047, 29043, 29031, 29037, 28967, 29016, 29023 },		-- T4 shoulder
-		[BB["Magtheridon"] .. " (" .. BZ["Magtheridon's Lair"] .. ")"] = { 29096, 29087, 29091, 29082, 29077, 29066, 29071, 
+		[BB["Magtheridon"] .. " (" .. Zones["Magtheridon's Lair"] .. ")"] = { 29096, 29087, 29091, 29082, 29077, 29066, 29071, 
 						29062, 29050, 29056, 29045, 29038, 29029, 29033, 28964, 29012, 29019 },		-- T4 chest
-		[BB["The Curator"] .. " (" .. BZ["Karazhan"] .. ")"] = { 29097, 29090, 29092, 29085, 29080, 29067, 29072, 
+		[BB["The Curator"] .. " (" .. Zones["Karazhan"] .. ")"] = { 29097, 29090, 29092, 29085, 29080, 29067, 29072, 
 						29065, 29055, 29057, 29048, 29039, 29032, 29034, 28968, 29017, 29020 },		-- T4 gloves
-		[BB["Gruul the Dragonkiller"] .. " (" .. BZ["Gruul's Lair"] .. ")"] = { 29099, 29088, 29094, 29083, 29078, 29069, 29074, 
+		[BB["Gruul the Dragonkiller"] .. " (" .. Zones["Gruul's Lair"] .. ")"] = { 29099, 29088, 29094, 29083, 29078, 29069, 29074, 
 						29063, 29053, 29059, 29046, 29042, 29030, 29036, 28966, 29015, 29022 }		-- T4 leggings
 	},
 	[L["Tier 5 Tokens"]] = {
-		[BB["Lady Vashj"] .. " (" .. BZ["Serpentshrine Cavern"] .. ")"] = { 30228, 30219, 30233, 30141, 30206, 30125, 30131,
+		[BB["Lady Vashj"] .. " (" .. Zones["Serpentshrine Cavern"] .. ")"] = { 30228, 30219, 30233, 30141, 30206, 30125, 30131,
 						30136, 30152, 30161, 30146, 30190, 30166, 30171, 30212, 30115, 30120 },		-- T5 helm
-		[BB["Void Reaver"] .. " (" .. BZ["The Eye"] .. ")"] = { 30230, 30221, 30235, 30143, 30210, 30127, 30133, 
+		[BB["Void Reaver"] .. " (" .. Zones["The Eye"] .. ")"] = { 30230, 30221, 30235, 30143, 30210, 30127, 30133, 
 						30138, 30154, 30163, 30149, 30194, 30168, 30173, 30215, 30117, 30122 },		-- T5 shoulders
-		[BB["Kael'thas Sunstrider"] .. " (" .. BZ["The Eye"] .. ")"] = { 30222, 30216, 30231, 30139, 30196, 30123, 30129, 
+		[BB["Kael'thas Sunstrider"] .. " (" .. Zones["The Eye"] .. ")"] = { 30222, 30216, 30231, 30139, 30196, 30123, 30129, 
 						30134, 30150, 30159, 30144, 30185, 30164, 30169, 30214, 30113, 30118 }, 	-- T5 chest
-		[BB["Leotheras the Blind"] .. " (" .. BZ["Serpentshrine Cavern"] .. ")"] = { 30223, 30217, 30232, 30140, 30205, 30124, 30130, 
+		[BB["Leotheras the Blind"] .. " (" .. Zones["Serpentshrine Cavern"] .. ")"] = { 30223, 30217, 30232, 30140, 30205, 30124, 30130, 
 						30135, 30151, 30160, 30145, 30189, 30165, 30170, 30211, 30114, 30119 },		-- T5 gloves
-		[BB["Fathom-Lord Karathress"] .. " (" .. BZ["Serpentshrine Cavern"] .. ")"] = { 30229, 30220, 30234, 30142, 30207, 30126, 30132, 
+		[BB["Fathom-Lord Karathress"] .. " (" .. Zones["Serpentshrine Cavern"] .. ")"] = { 30229, 30220, 30234, 30142, 30207, 30126, 30132, 
 						30137, 30153, 30162, 30148, 30192, 30167, 30172, 30213, 30116, 30121 }		-- T5 leggings
 	},
 	[L["Tier 6 Tokens"]] = {
-		[BB["Azgalor"] .. " (" .. BZ["Hyjal Summit"] .. ")"] = { 31034, 31032, 31035, 31001, 31055, 30985, 30982, 
+		[BB["Azgalor"] .. " (" .. Zones["Hyjal Summit"] .. ")"] = { 31034, 31032, 31035, 31001, 31055, 30985, 30982, 
 						30983, 31060, 31061, 31026, 31011, 31007, 31008, 31050, 30970, 30969 },		-- T6 gloves
-		[BB["Archimonde"] .. " (" .. BZ["Hyjal Summit"] .. ")"] = { 31039, 31037, 31040, 31003, 31056, 30987, 30989,
+		[BB["Archimonde"] .. " (" .. Zones["Hyjal Summit"] .. ")"] = { 31039, 31037, 31040, 31003, 31056, 30987, 30989,
 						30988, 31063, 31064, 31027, 31015, 31012, 31014, 31051, 30974, 30972 },		-- T6 helm
-		[BB["Mother Shahraz"] .. " (" .. BZ["Black Temple"] .. ")"] = { 31048, 31047, 31049, 31006, 31059, 30997, 30998,
+		[BB["Mother Shahraz"] .. " (" .. Zones["Black Temple"] .. ")"] = { 31048, 31047, 31049, 31006, 31059, 30997, 30998,
 						30996, 31069, 31070, 31030, 31024, 31022, 31023, 31054, 30980, 30979 },		-- T6 shoulders
-		[BB["Illidari Council"] .. " (" .. BZ["Black Temple"] .. ")"] = { 31044, 31045, 31046, 31005, 31058, 30995, 30993, 
+		[BB["Illidari Council"] .. " (" .. Zones["Black Temple"] .. ")"] = { 31044, 31045, 31046, 31005, 31058, 30995, 30993, 
 						30994, 31068, 31067, 31029, 31021, 31019, 31020, 31053, 30978, 30977 },		-- T6 leggings
-		[BB["Illidan Stormrage"] .. " (" .. BZ["Black Temple"] .. ")"] = { 31042, 31041, 31043, 31004, 31057, 30991, 30990, 
+		[BB["Illidan Stormrage"] .. " (" .. Zones["Black Temple"] .. ")"] = { 31042, 31041, 31043, 31004, 31057, 30991, 30990, 
 						30992, 31066, 31065, 31028, 31018, 31016, 31017, 31052, 30976, 30975 },		-- T6 chest
-		[BB["Kalecgos"] .. " (" .. BZ["Sunwell Plateau"] .. ")"] = { 34444, 34445, 34446, 34443, 34447, 34433, 34431, 
+		[BB["Kalecgos"] .. " (" .. Zones["Sunwell Plateau"] .. ")"] = { 34444, 34445, 34446, 34443, 34447, 34433, 34431, 
 						34432, 34435, 34434, 34448, 34439, 34438, 34437, 34436, 34442, 34441 },		-- T6 bracers
-		[BB["Brutallus"] .. " (" .. BZ["Sunwell Plateau"] .. ")"] = { 34556, 34554, 34555, 34549, 34557, 34488, 34485, 
+		[BB["Brutallus"] .. " (" .. Zones["Sunwell Plateau"] .. ")"] = { 34556, 34554, 34555, 34549, 34557, 34488, 34485, 
 						34487, 34527, 34528, 34558, 34545, 34543, 34542, 34541, 34547, 34546 },		-- T6 belt
-		[BB["Felmyst"] .. " (" .. BZ["Sunwell Plateau"] .. ")"] = { 34573, 34571, 34572, 34570, 34574, 34560, 34561, 
+		[BB["Felmyst"] .. " (" .. Zones["Sunwell Plateau"] .. ")"] = { 34573, 34571, 34572, 34570, 34574, 34560, 34561, 
 						34559, 34562, 34563, 34575, 34567, 34565, 34566, 34564, 34568, 34569 }		-- T6 boots
 	},
 	
@@ -1957,29 +1957,29 @@ Altoholic.LootTable = {
 	[L["Heroic Mode Tokens"]] = {	
 		[L["Fire Resistance Gear"]] = { 30762, 30764, 30761, 30763, 30776, 30780, 30778, 30779, 30773, 30774, 
 								30772, 30770, 30769, 30767, 30766, 30768 },
-		[CLOTH .. " (" .. BZ["Shattrath City"] ..  ")"] = { 32090, 32089, 33588, 33589, 33587, 33586, 33291, 33584, 33585 },
-		[CLOTH .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = { 34924, 34917, 34936, 34938, 34925, 34937, 34918, 34919, 34926	},
-		[LEATHER .. " (" .. BZ["Shattrath City"] ..  ")"] = { 32088, 33972, 32087, 33287, 33973, 33566, 33579, 33578, 33580, 33557, 
+		[CLOTH .. " (" .. Zones["Shattrath City"] ..  ")"] = { 32090, 32089, 33588, 33589, 33587, 33586, 33291, 33584, 33585 },
+		[CLOTH .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = { 34924, 34917, 34936, 34938, 34925, 34937, 34918, 34919, 34926	},
+		[LEATHER .. " (" .. Zones["Shattrath City"] ..  ")"] = { 32088, 33972, 32087, 33287, 33973, 33566, 33579, 33578, 33580, 33557, 
 								33540, 33974, 33539, 33559, 33583, 33552, 33538, 33582, 33222, 33577 },
-		[LEATHER .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = { 34906, 34903, 34900, 34927, 34904, 34902, 34901,
+		[LEATHER .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = { 34906, 34903, 34900, 34927, 34904, 34902, 34901,
 								34911, 34929, 34905, 34910, 34928 },
-		[MAIL .. " (" .. BZ["Shattrath City"] ..  ")"] = { 32086, 32085, 33970, 33965, 33535, 33532, 33529, 33528, 33534, 33531, 
+		[MAIL .. " (" .. Zones["Shattrath City"] ..  ")"] = { 32086, 32085, 33970, 33965, 33535, 33532, 33529, 33528, 33534, 33531, 
 								33386, 33536, 33280, 33530, 33527, 33537, 33324 },
-		[MAIL .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = { 34912, 34933, 34930, 34916, 34935, 34932, 34914, 34931, 34934 },
-		[PLATE .. " (" .. BZ["Shattrath City"] ..  ")"] = {	33810, 32083, 32084, 33514, 33522, 33516, 33513, 33520, 33517, 33512, 
+		[MAIL .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = { 34912, 34933, 34930, 34916, 34935, 34932, 34914, 34931, 34934 },
+		[PLATE .. " (" .. Zones["Shattrath City"] ..  ")"] = {	33810, 32083, 32084, 33514, 33522, 33516, 33513, 33520, 33517, 33512, 
 								33519, 33331, 33524, 33279, 33501, 33518, 33515, 33207, 33523 },
-		[PLATE .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = { 34942, 34939, 34921, 34945, 34944, 34941, 34923, 34922, 34946, 34943, 
+		[PLATE .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = { 34942, 34939, 34921, 34945, 34944, 34941, 34923, 34922, 34946, 34943, 
 								34940, 34947 },
-		[L["Cloaks"] .. " (" .. BZ["Shattrath City"] ..  ")"] = { 29375, 29382, 35321, 33304, 33484, 29385, 33333, 29369, 33593	},
-		[L["Relics"] .. " (" .. BZ["Shattrath City"] ..  ")"] = { 29390, 33508, 33509, 33510, 33506, 33507, 33505, 29389, 33503, 33504, 
+		[L["Cloaks"] .. " (" .. Zones["Shattrath City"] ..  ")"] = { 29375, 29382, 35321, 33304, 33484, 29385, 33333, 29369, 33593	},
+		[L["Relics"] .. " (" .. Zones["Shattrath City"] ..  ")"] = { 29390, 33508, 33509, 33510, 33506, 33507, 33505, 29389, 33503, 33504, 
 								33502, 29388 },
-		[L["Accessories"] .. " (" .. BZ["Shattrath City"] ..  ")"] = {	33296, 29381, 29374, 29386, 29368, 29373, 29379, 29367, 29384, 23572, 
+		[L["Accessories"] .. " (" .. Zones["Shattrath City"] ..  ")"] = {	33296, 29381, 29374, 29386, 29368, 29373, 29379, 29367, 29384, 23572, 
 								35326, 34049, 34163, 34162, 33832, 34050, 29383, 29376, 29387, 29370, 30183 },
-		[L["Accessories"] .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = { 34887, 34890, 34889, 34888, 32227, 32228, 32229,
+		[L["Accessories"] .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = { 34887, 34890, 34889, 34888, 32227, 32228, 32229,
 								32231, 32249, 32230, 35318, 35315, 35316},
-		[L["Weapons"] .. " (" .. BZ["Shattrath City"] ..  ")"] = {	29275, 33192, 29268, 29267, 29266, 33334, 29270, 29273, 29272, 29269, 
+		[L["Weapons"] .. " (" .. Zones["Shattrath City"] ..  ")"] = {	29275, 33192, 29268, 29267, 29266, 33334, 29270, 29273, 29272, 29269, 
 								29271, 29274, 33325 },
-		[L["Weapons"] .. " (" .. BZ["Isle of Quel'Danas"] ..  ")"] = {	34894, 34896, 34895, 34893, 34951, 34950, 34949, 34952, 34891, 34898, 34892 }
+		[L["Weapons"] .. " (" .. Zones["Isle of Quel'Danas"] ..  ")"] = {	34894, 34896, 34895, 34893, 34951, 34950, 34949, 34952, 34891, 34898, 34892 }
 	},
 
 	[L["World Drops"]] = {

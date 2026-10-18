@@ -71,14 +71,14 @@ Load order matters:
   registering it and defining that method.
 - `Locale.lua` provides `Altoholic.L`. Keys are the English strings; a missing key returns
   itself. Only enUS and the client's locale are built. Every file starts with
-  `local L = Altoholic.L`. Zone and boss names come from the bundled LibBabble libraries
-  (via LibStub) instead. Names the client already translates are read from its data by
-  ID: profession and faction names from `Altoholic.Professions` and `Altoholic.Factions`
-  (Core.lua, by skill line and faction ID), item types with
+  `local L = Altoholic.L`. Boss names come from the bundled LibBabble-Boss library (via
+  LibStub) instead. Names the client already translates are read from its data by ID:
+  profession, faction and zone names from `Altoholic.Professions`, `Altoholic.Factions`
+  and `Altoholic.Zones` (Core.lua, by skill line, faction and area ID), item types with
   `GetItemClassInfo`/`GetItemSubClassInfo`, slot names from the `INVTYPE_*` and `*SLOT`
   global strings. Check IDs against the client's own DBCs: Turtle reuses some
   Burning Crusade IDs for its own factions. Do these lookups at `PLAYER_LOGIN`, not at
-  file scope: `ReadClientNames()` fills the two tables, and tables that use client names
+  file scope: `ReadClientNames()` fills those tables, and tables that use client names
   are built by functions called after it (`BuildFactionsRefTable`, `BuildLootTable`,
   `BuildSuggestions`, `BuildSearchSubMenu`). `GetItemClassInfo(0)` (Consumable) returns
   nil, so match items by class and subclass ID rather than by name, and give labels an

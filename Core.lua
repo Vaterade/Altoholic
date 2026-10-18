@@ -4,7 +4,6 @@ Altoholic.BagIndices = {}
 Altoholic.MenuCache = {}
 local L = Altoholic.L
 local V = Altoholic.vars
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
 -- The client's own names are looked up at PLAYER_LOGIN, not while the addon's
 -- files load, since the client data they come from is only certain to be ready
@@ -78,13 +77,85 @@ local FACTION_IDS = {
 	["Zandalar Tribe"] = 270,
 }
 
+-- Zone and instance names as the client spells them, read from AreaTable.dbc
+-- by area ID, so they match GetRealZoneText. Names not listed here keep their
+-- English names: the Burning Crusade places this client has no rows for, the
+-- continents, and labels of the addon's own such as "Dire Maul (East)".
+local ZONE_AREA_IDS = {
+	["Alterac Mountains"] = 36,
+	["Alterac Valley"] = 2597,
+	["Arathi Basin"] = 3358,
+	["Arathi Highlands"] = 45,
+	["Ashenvale"] = 331,
+	["Azshara"] = 16,
+	["Badlands"] = 3,
+	["Blackfathom Deeps"] = 719,
+	["Blackrock Depths"] = 1584,
+	["Blackwing Lair"] = 2677,
+	["Blasted Lands"] = 4,
+	["Burning Steppes"] = 46,
+	["Darkshore"] = 148,
+	["Desolace"] = 405,
+	["Dire Maul"] = 2557,
+	["Duskwood"] = 10,
+	["Dustwallow Marsh"] = 15,
+	["Eastern Plaguelands"] = 139,
+	["Felwood"] = 361,
+	["Feralas"] = 357,
+	["Gnomeregan"] = 721,
+	["Hillsbrad Foothills"] = 267,
+	["Karazhan"] = 2562,
+	["Loch Modan"] = 38,
+	["Maraudon"] = 2100,
+	["Molten Core"] = 2717,
+	["Naxxramas"] = 3456,
+	["Old Hillsbrad Foothills"] = 2367,
+	["Onyxia's Lair"] = 2159,
+	["Ragefire Chasm"] = 2437,
+	["Razorfen Downs"] = 722,
+	["Razorfen Kraul"] = 491,
+	["Redridge Mountains"] = 44,
+	["Ruins of Ahn'Qiraj"] = 3429,
+	["Scarlet Monastery"] = 796,
+	["Scholomance"] = 2057,
+	["Searing Gorge"] = 51,
+	["Shadowfang Keep"] = 209,
+	["Silithus"] = 1377,
+	["Silverpine Forest"] = 130,
+	["Stonetalon Mountains"] = 406,
+	["Stranglethorn Vale"] = 33,
+	["Stratholme"] = 2017,
+	["Swamp of Sorrows"] = 8,
+	["Tanaris"] = 440,
+	["The Barrens"] = 17,
+	["The Black Morass"] = 2366,
+	["The Deadmines"] = 1581,
+	["The Hinterlands"] = 47,
+	["The Stockade"] = 717,
+	["The Temple of Atal'Hakkar"] = 1477,
+	["Thousand Needles"] = 400,
+	["Uldaman"] = 1337,
+	["Un'Goro Crater"] = 490,
+	["Wailing Caverns"] = 718,
+	["Warsong Gulch"] = 3277,
+	["Western Plaguelands"] = 28,
+	["Westfall"] = 40,
+	["Wetlands"] = 11,
+	["Winterspring"] = 618,
+	["Zul'Aman"] = 3805,
+	["Zul'Farrak"] = 1176,
+	["Zul'Gurub"] = 1977,
+}
+
 local function EnglishName(self, name)
 	return name
 end
 
 Altoholic.Professions = setmetatable({}, { __index = EnglishName })
 Altoholic.Factions = setmetatable({}, { __index = EnglishName })
+Altoholic.Zones = setmetatable({}, { __index = EnglishName })
 local Factions = Altoholic.Factions
+local Zones = Altoholic.Zones
 
 function Altoholic:ReadClientNames()
 	for name, skillLineID in pairs(PROFESSION_SKILL_LINES) do
@@ -92,6 +163,9 @@ function Altoholic:ReadClientNames()
 	end
 	for name, factionID in pairs(FACTION_IDS) do
 		self.Factions[name] = (GetFactionInfoByID(factionID))
+	end
+	for name, areaID in pairs(ZONE_AREA_IDS) do
+		self.Zones[name] = C_Map.GetAreaInfo(areaID)
 	end
 end
 
@@ -166,7 +240,7 @@ Altoholic.FactionsRefTable = {
 	Factions["Orgrimmar"],
 	Factions["Thunder Bluff"],
 	Factions["Undercity"],
-	BZ["Silvermoon City"],
+	Zones["Silvermoon City"],
 	Factions["Durotar Labor Union"],
 
 	{ Factions["Alliance Forces"] },
@@ -185,7 +259,7 @@ Altoholic.FactionsRefTable = {
 	Factions["Gadgetzan"],
 	Factions["Ratchet"],
 
-	{ BZ["Outland"] },
+	{ Zones["Outland"] },
 	Factions["Ashtongue Deathsworn"],
 	Factions["Cenarion Expedition"],
 	Factions["The Consortium"],
@@ -197,7 +271,7 @@ Altoholic.FactionsRefTable = {
 	Factions["Sporeggar"],
 	Factions["Thrallmar"],
 
-	{ BZ["Shattrath City"] },
+	{ Zones["Shattrath City"] },
 	Factions["Lower City"],
 	Factions["Sha'tari Skyguard"],
 	Factions["Shattered Sun Offensive"],
