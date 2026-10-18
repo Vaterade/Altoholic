@@ -7,12 +7,8 @@
 ## Author: Dyaxler, with some additions by Giselbaer and Vaterade
 ## Version: 1.4.0
 ## Dependencies: !!!ClassicAPI
-## OptionalDeps: LibBabble-Boss-3.0
 ## SavedVariables: AltoholicDB
 ## X-Category: Interface Enhancements
-
-Libs\LibStub\LibStub.lua
-Libs\LibBabble-Boss-3.0\LibBabble-Boss-3.0.lua
 
 ClassicAPICheck.lua
 Init.lua
@@ -22,6 +18,7 @@ Locale\localization_frFR.lua
 Locale\localization_deDE.lua
 Locale\localization_zhTW.lua
 Locale\localization_zhCN.lua
+Locale\Bosses.lua
 Database.lua
 
 AltoholicTemplates.xml

@@ -71,8 +71,9 @@ Load order matters:
   registering it and defining that method.
 - `Locale.lua` provides `Altoholic.L`. Keys are the English strings; a missing key returns
   itself. Only enUS and the client's locale are built. Every file starts with
-  `local L = Altoholic.L`. Boss names come from the bundled LibBabble-Boss library (via
-  LibStub) instead. Names the client already translates are read from its data by ID:
+  `local L = Altoholic.L`. Boss names are `L` strings too, translated in
+  `Locale/Bosses.lua`; the addon bundles no libraries. Names the client already translates
+  are read from its data by ID:
   profession, faction and zone names from `Altoholic.Professions`, `Altoholic.Factions`
   and `Altoholic.Zones` (Core.lua, by skill line, faction and area ID), item types with
   `GetItemClassInfo`/`GetItemSubClassInfo`, slot names from the `INVTYPE_*` and `*SLOT`
