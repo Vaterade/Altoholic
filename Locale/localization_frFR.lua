@@ -58,18 +58,9 @@ Altoholic:RegisterTranslations("frFR", function() return {
 	["Poisons"] = "Poisons",
 	["Beast Training"] = "Dressage des bêtes",
 	
-	--factions not in LibFactions or LibZone
+	-- reputation list: a faction the client has no name for, and the "Other" heading
 	["Exodar"] = "Exodar",
-	["Gnomeregan Exiles"] = "Exilés de Gnomeregan",
-	["Stormwind"] = "Hurlevent",
-	["Darkspear Trolls"] = "Trolls Sombrelance",
-	["Alliance Forces"] = "Forces de l'Alliance",
-	["Horde Forces"] = "Forces de la Horde",
-	["Steamwheedle Cartel"] = "Cartel Gentepression",
 	["Other"] = "Autres",
-	["Ravenholdt"] = "Ravenholdt",
-	["Shen'dralar"] = "Shen'dralar",
-	["Syndicate"] = "Syndicat",
 
 	-- menu
 	["Account Summary"] = "Résumé du compte",

@@ -58,26 +58,9 @@ Altoholic:RegisterTranslations("enUS", function() return {
 	["Poisons"] = true,
 	["Beast Training"] = true,
 	
-	--factions not in LibFactions or LibZone
+	-- reputation list: a faction the client has no name for, and the "Other" heading
 	["Exodar"] = true,
-	["Gnomeregan Exiles"] = true,
-	["Silvermoon Remnant"] = true,	-- twow
-	["Stormwind"] = true,
-
-	["Darkspear Trolls"] = true,
-	["Durotar Labor Union"] = true,	-- twow
-
-	["Alliance Forces"] = true,
-	["Horde Forces"] = true,
-	["Steamwheedle Cartel"] = true,
 	["Other"] = true,
-	["Kul Tiras"] = true,
-	["Ravenholdt"] = true,
-	["Shen'dralar"] = true,
-	["Syndicate"] = true,
-	["Theramore"] = true,
-	["Wardens of Time"] = true,
-	["Wildhammer Clan"] = true,
 	
 	-- menu
 	["Account Summary"] = true,

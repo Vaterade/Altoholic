@@ -59,18 +59,9 @@ Altoholic:RegisterTranslations("zhTW", function() return {
 	["Poisons"] = "毒藥",
 	["Beast Training"] = "野獸訓練",
 	
-	--factions not in LibFactions or LibZone
+	-- reputation list: a faction the client has no name for, and the "Other" heading
 	["Exodar"] = "艾克索達",
-	["Gnomeregan Exiles"] = "諾姆瑞根流亡者",
-	["Stormwind"] = "暴風城",
-	["Darkspear Trolls"] = "暗矛食人妖",
-	["Alliance Forces"] = "聯盟部隊",
-	["Horde Forces"] = "部落部隊",
-	["Steamwheedle Cartel"] = "熱砂企業",
 	["Other"] = "其他",
-	["Ravenholdt"] = "拉文霍德",
-	["Shen'dralar"] = "辛德拉",
-	["Syndicate"] = "辛迪加",
 	
 	-- menu
 	["Account Summary"] = "帳號摘要",
