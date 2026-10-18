@@ -31,14 +31,23 @@ local INFO_TOTAL_LINE = 3
 local LEVEL_CAP = 60
 
 -- Item class and subclass names from ItemClass.dbc / ItemSubClass.dbc, in the
--- client's language. They are the itemType / itemSubType strings GetItemInfo
--- returns, which the search compares against.
+-- client's language, label the Search menu; the search itself matches items by
+-- class and subclass ID. GetItemClassInfo returns nil for class 0 (Consumable),
+-- so a class keeps its English name when the client gives none.
 local WEAPON = Enum.ItemClass.Weapon
 local ARMOR = Enum.ItemClass.Armor
 local RECIPE = Enum.ItemClass.Recipe
 
+local ITEM_CLASS_ENGLISH = {
+	[Enum.ItemClass.Consumable] = "Consumable",
+	[WEAPON] = "Weapon",
+	[ARMOR] = "Armor",
+	[Enum.ItemClass.Tradegoods] = "Trade Goods",
+	[RECIPE] = "Recipe",
+}
+
 local function ItemClassName(classID)
-	return GetItemClassInfo(classID)
+	return GetItemClassInfo(classID) or L[ITEM_CLASS_ENGLISH[classID]]
 end
 
 local function ItemSubClassName(classID, subClassID)
@@ -48,11 +57,9 @@ end
 -- A search menu entry for an item class, or one of its subclasses. Without a
 -- name the entry is labelled with the subclass name.
 local function SearchEntry(name, classID, subClassID)
-	local itemType = ItemClassName(classID)
-	local itemSubType = subClassID and ItemSubClassName(classID, subClassID)
 	return {
-		name = name or itemSubType,
-		OnClick = function() Altoholic:SearchItem(itemType, itemSubType) end
+		name = name or ItemSubClassName(classID, subClassID),
+		OnClick = function() Altoholic:SearchItem(classID, subClassID) end
 	}
 end
 
@@ -949,7 +956,7 @@ function Altoholic:Menu_Update(MenuLevel1, MenuLevel2, MenuLevel3)
 end
 
 -- The Search menu and the slot filter are labelled with the client's item class
--- names, which can only be read once the player is in the world (see Core.lua).
+-- names, so they are built at PLAYER_LOGIN like the other tables (see Core.lua).
 function Altoholic:BuildSearchSubMenu()
 	self.EquipmentSlots[17] = ItemSubClassName(ARMOR, 6)
 	self.Menu[MENU_SEARCH].subMenu = {
@@ -993,11 +1000,11 @@ function Altoholic:BuildSearchSubMenu()
 		},
 		{ name = ItemClassName(Enum.ItemClass.Consumable),	isCollapsed = true,
 			subMenu = {},
-			OnClick = function() Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Consumable))	end
+			OnClick = function() Altoholic:SearchItem(Enum.ItemClass.Consumable)	end
 		},
 		{ name = ItemClassName(Enum.ItemClass.Tradegoods),	isCollapsed = true,
 			subMenu = {},
-			OnClick = function()	Altoholic:SearchItem(ItemClassName(Enum.ItemClass.Tradegoods))	end
+			OnClick = function()	Altoholic:SearchItem(Enum.ItemClass.Tradegoods)	end
 		},
 		{ name = ItemClassName(RECIPE), isCollapsed = true,
 			subMenu = {

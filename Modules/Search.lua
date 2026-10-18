@@ -82,14 +82,15 @@ function Altoholic:SearchReset()
     self.SearchResults = {}
 end
 
-function Altoholic:SearchItem(searchType, searchSubType)
+-- classID and subClassID restrict the search to one item class / subclass (Enum.ItemClass)
+function Altoholic:SearchItem(classID, subClassID)
 	if (V.ongoingsearch ~= nil) then
 		return
 	end
 	V.ongoingsearch = 1
 	V.SearchLoots = nil
-	V.SearchType = searchType
-	V.SearchSubType = searchSubType
+	V.SearchClassID = classID
+	V.SearchSubClassID = subClassID
 	local value = AltoholicFrame_SearchEditBox:GetText()
 	V.SearchValue = strlower(value)
 	V.MinLevel = AltoholicFrame_MinLevel:GetNumber()
@@ -140,8 +141,8 @@ function Altoholic:SearchItem(searchType, searchSubType)
 	V.SearchValue = nil
 	V.SearchFaction = nil
 	V.SearchRealm = nil
-	V.SearchType = nil
-	V.SearchSubType = nil
+	V.SearchClassID = nil
+	V.SearchSubClassID = nil
 	if V.SearchLoots then
 		if AltoOptions_SortDescending:GetChecked() then
 			table.sort(self.SearchResults, function(a,b)
@@ -196,7 +197,7 @@ function Altoholic:SearchRealm()
 				end
 			end
 		end
-		if AltoholicFrame_CheckButton3:GetChecked() and (V.SearchType == nil) then
+		if AltoholicFrame_CheckButton3:GetChecked() and (V.SearchClassID == nil) then
 			for ProfessionName, p in pairs(c.recipes) do
 				if p.ScanFailed == false then
 					for CraftNumber, craft in pairs(p.list) do
@@ -231,17 +232,26 @@ function Altoholic:VerifyRecipe(link, profession, itemID, CraftNumber, charName)
 	} )
 end
 
+-- false when the item is not of the class / subclass the search is restricted to
+local function MatchesItemClass(itemID)
+	local _, _, _, _, _, classID, subClassID = C_Item.GetItemInfoInstant(itemID)
+	if (V.SearchClassID ~= nil) and (V.SearchClassID ~= classID) then
+		return false
+	end
+	if (V.SearchSubClassID ~= nil) and (V.SearchSubClassID ~= subClassID) then
+		return false
+	end
+	return true
+end
+
 function Altoholic:VerifyItem(itemID, itemCount)
-	local itemName, _, itemRarity, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(itemID)
+	local itemName, _, itemRarity, itemMinLevel, _, _, _, itemEquipLoc = GetItemInfo(itemID)
 	if (itemName == nil) and (itemRarity == nil) then
 		return
 	end
-	if (V.SearchType ~= nil) and (V.SearchType ~= itemType) then
+	if not MatchesItemClass(itemID) then
 		return
 	end
-	if (V.SearchSubType ~= nil) and (V.SearchSubType ~= itemSubType) then
-		return
-	end	
 	if (itemRarity < V.SearchRarity) then
 		return
 	end
@@ -273,7 +283,7 @@ end
 
 function Altoholic:VerifyLoot(Instance, Boss, itemID)
 	V.TotalLoots = V.TotalLoots + 1
-	local itemName, itemLink, itemRarity, itemMinLevel, itemType, itemSubType, _, itemEquipLoc, itemIcon = GetItemInfo(itemID)
+	local itemName, itemLink, itemRarity, itemMinLevel, _, _, _, itemEquipLoc, itemIcon = GetItemInfo(itemID)
     if itemMinLevel == 0 or itemMinLevel == nil then
         itemMinLevel = 57
     end    
@@ -282,12 +292,9 @@ function Altoholic:VerifyLoot(Instance, Boss, itemID)
 		V.TotalUnknown = V.TotalUnknown + 1
 		return
 	end
-	if (V.SearchType ~= nil) and (V.SearchType ~= itemType) then
-		return		-- if there's a type and it's invalid .. Exit
+	if not MatchesItemClass(itemID) then
+		return		-- if there's a type or subtype and it's invalid .. Exit
 	end
-	if (V.SearchSubType ~= nil) and (V.SearchSubType ~= itemSubType) then
-		return		-- if there's a subtype and it's invalid .. Exit
-	end	
 	if (itemRarity < V.SearchRarity) then
 		return		-- if rarity is too low .. exit
 	end
@@ -317,7 +324,7 @@ function Altoholic:VerifyLoot(Instance, Boss, itemID)
 end
 
 function Altoholic:VerifyUpgrade()
-	local itemName, _, itemRarity, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(V.SearchLootItemID)
+	local itemName, _, itemRarity, itemMinLevel, _, _, _, itemEquipLoc = GetItemInfo(V.SearchLootItemID)
     if itemMinLevel == 0 or itemMinLevel == nil then
         itemMinLevel = 57
     end
@@ -325,8 +332,7 @@ function Altoholic:VerifyUpgrade()
 	if (itemName == nil) and (itemRarity == nil) then
 		return			-- with these 2 being nil, the item isn't in the item cache, so its link would be invalid: don't list it
 	end
-	if (itemLevel <= V.Search_iLvl) or (V.SearchType ~= itemType) or 
-		(V.SearchSubType ~= itemSubType) then
+	if (itemLevel <= V.Search_iLvl) or not MatchesItemClass(V.SearchLootItemID) then
 		return		-- not within the right level boundaries ? invalid type or subtype ? .. exit
 	end
 	if Altoholic.InvSlots[itemEquipLoc] ~= V.SearchEquipLoc then
@@ -341,7 +347,7 @@ function Altoholic:VerifyUpgrade()
 end
 
 function Altoholic:VerifyUpgradeByStats()
-	local itemName, itemLink, itemRarity, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(V.SearchLootItemID)
+	local itemName, itemLink, itemRarity, itemMinLevel, _, _, _, itemEquipLoc = GetItemInfo(V.SearchLootItemID)
     if itemMinLevel == 0 or itemMinLevel == nil then
         itemMinLevel = 57
     end
@@ -349,8 +355,7 @@ function Altoholic:VerifyUpgradeByStats()
 	if (itemName == nil) and (itemRarity == nil) then
 		return			-- with these 2 being nil, the item isn't in the item cache, so its link would be invalid: don't list it
 	end
-	if (itemLevel <= V.Search_iLvl) or (V.SearchType ~= itemType) or 
-		(V.SearchSubType ~= itemSubType) then
+	if (itemLevel <= V.Search_iLvl) or not MatchesItemClass(V.SearchLootItemID) then
 		return		-- not within the right level boundaries ? invalid type or subtype ? .. exit
 	end
 	if Altoholic.InvSlots[itemEquipLoc] ~= V.SearchEquipLoc then

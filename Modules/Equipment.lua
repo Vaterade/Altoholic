@@ -197,14 +197,15 @@ function Equipment_RightClickMenu_OnLoad()
 end
 
 function Altoholic_FindEquipmentUpgrade(self)
-	local _, itemLink, _, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(V.UpgradeItemID)
+	local _, itemLink, _, itemMinLevel, _, _, _, itemEquipLoc = GetItemInfo(V.UpgradeItemID)
+	local _, _, _, _, _, classID, subClassID = C_Item.GetItemInfoInstant(V.UpgradeItemID)
     if itemMinLevel == 0 or itemMinLevel == nil then
         itemMinLevel = 57
     end
     local itemLevel = itemMinLevel + 5
 	V.Search_iLvl = itemLevel
-	V.SearchType = itemType
-	V.SearchSubType = itemSubType
+	V.SearchClassID = classID
+	V.SearchSubClassID = subClassID
 	V.SearchEquipLoc = Altoholic.InvSlots[itemEquipLoc]
     Altoholic.SearchResults = {}
 	V.SearchLoots = true
@@ -241,8 +242,8 @@ function Altoholic_FindEquipmentUpgrade(self)
 		end
 	end
 	V.Search_iLvl = nil
-	V.SearchType = nil
-	V.SearchSubType = nil
+	V.SearchClassID = nil
+	V.SearchSubClassID = nil
 	V.SearchEquipLoc = nil
 	V.CharacterClass = nil
 	V.SearchInstance = nil

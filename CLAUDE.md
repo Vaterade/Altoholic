@@ -77,10 +77,12 @@ Load order matters:
   (Core.lua, by skill line and faction ID), item types with
   `GetItemClassInfo`/`GetItemSubClassInfo`, slot names from the `INVTYPE_*` and `*SLOT`
   global strings. Check IDs against the client's own DBCs: Turtle reuses some
-  Burning Crusade IDs for its own factions. **These lookups return nil while the addon's
-  files load**, so never call them at file scope: `ReadClientNames()` fills the two tables
-  at `PLAYER_LOGIN`, and tables that use client names are built by functions called after
-  it (`BuildFactionsRefTable`, `BuildLootTable`, `BuildSuggestions`, `BuildSearchSubMenu`).
+  Burning Crusade IDs for its own factions. Do these lookups at `PLAYER_LOGIN`, not at
+  file scope: `ReadClientNames()` fills the two tables, and tables that use client names
+  are built by functions called after it (`BuildFactionsRefTable`, `BuildLootTable`,
+  `BuildSuggestions`, `BuildSearchSubMenu`). `GetItemClassInfo(0)` (Consumable) returns
+  nil, so match items by class and subclass ID rather than by name, and give labels an
+  English fallback.
 - `Database.lua` owns the saved data. `Altoholic:InitDatabase()` runs at `PLAYER_LOGIN` and
   sets `self.db.account` to `AltoholicDB.account`, giving `self.db.account.options` and
   `self.db.account.data[faction][realm].{char,guild,reputation}[name]`. The layout is the one

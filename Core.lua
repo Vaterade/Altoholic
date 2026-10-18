@@ -6,10 +6,10 @@ local L = Altoholic.L
 local V = Altoholic.vars
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
--- The client's own names for these are only readable once the player is in the
--- world: while the addon's files load, the lookups below return nil. So the
--- tables are filled by ReadClientNames() at PLAYER_LOGIN, and every table that
--- uses them is built after it (BuildFactionsRefTable, BuildLootTable,
+-- The client's own names are looked up at PLAYER_LOGIN, not while the addon's
+-- files load, since the client data they come from is only certain to be ready
+-- by then. ReadClientNames() fills the tables below, and every table that uses
+-- them is built after it (BuildFactionsRefTable, BuildLootTable,
 -- BuildSuggestions, BuildSearchSubMenu). Until then, and for anything the
 -- client has no name for, a lookup returns the English name it was asked for.
 
