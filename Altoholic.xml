@@ -474,9 +474,6 @@
 						<Offset x="10" y="0" />
 					</Anchor>
 				</Anchors>
-				<FontString inherits="ChatFontNormal">
-					<Color r="255" g="255" b="255" />
-				</FontString>
 				<Scripts>
 					<OnLoad>
 						this:SetAutoFocus( false );
@@ -497,9 +494,6 @@
 						<Offset x="10" y="0" />
 					</Anchor>
 				</Anchors>
-				<FontString inherits="ChatFontNormal">
-					<Color r="255" g="255" b="255" />
-				</FontString>
 				<Scripts>
 					<OnEnterPressed>
 						this:ClearFocus();
@@ -513,9 +507,6 @@
 						<Offset x="12" y="0" />
 					</Anchor>
 				</Anchors>
-				<FontString inherits="ChatFontNormal">
-					<Color r="255" g="255" b="255" />
-				</FontString>
 				<Scripts>
 					<OnEnterPressed>
 						this:ClearFocus();
