@@ -72,6 +72,7 @@ function Altoholic:Recipes_Update()
                     local first, second, third = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
                     local first, second = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)")
                     local first = string.match(s.reagents, "(%d+:%d+)")
+                    local reagent
                     if eighth ~= nil and j == 8 then
                         reagent = eighth
                     elseif seventh ~= nil and j == 7 then
