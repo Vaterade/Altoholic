@@ -25,6 +25,7 @@ local MENU_QUESTS = 6
 local MENU_RECIPES = 7
 local MENU_AUCTIONS = 8
 local MENU_BIDS = 9
+local MENU_OPTIONS = 10
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
 local INFO_TOTAL_LINE = 3
@@ -72,40 +73,31 @@ Altoholic.Menu = {
 			{ name = L["Reputations"], OnClick = function() Altoholic:ActivateMenuItem("AltoReputations") end },
 			{ name = "Raids", OnClick = function() Altoholic:ActivateMenuItem("AltoRaids") end },
 			{ name = "Attunements", OnClick = function() Altoholic:ActivateMenuItem("AltoAttunements") end }
-		},
-		OnClick = function() Altoholic:Menu_Update(MENU_SUMMARY) end
+		}
 	},
 	{	name = L["Containers"], isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_CONTAINERS) end
+		subMenu = {}
 	},
 	{	name = L["E-Mail"], isCollapsed = true,
-        subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_MAIL) end
+        subMenu = {}
 	},
 	{	name = L["Search"], isCollapsed = true,
-        subMenu = {},		-- filled by BuildSearchSubMenu
-		OnClick = function() Altoholic:Menu_Update(MENU_SEARCH) end
+        subMenu = {}		-- filled by BuildSearchSubMenu
 	},
 	{ name = L["Equipment"], isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_EQUIPMENT) end
+		subMenu = {}
 	},
 	{ name = L["Quests"], isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_QUESTS) end
+		subMenu = {}
 	},
 	{ name = L["Recipes"], isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_RECIPES) end
+		subMenu = {}
 	},
 	{ name = AUCTIONS, isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_AUCTIONS) end
+		subMenu = {}
 	},
 	{ name = BIDS, isCollapsed = true,
-		subMenu = {},
-		OnClick = function() Altoholic:Menu_Update(MENU_BIDS) end
+		subMenu = {}
 	},
 	{ name = L["Options"], OnClick = function() Altoholic:ActivateMenuItem("AltoOptions") end	}
 }
@@ -408,6 +400,7 @@ function Altoholic:ActivateMenuItem(frame)
        	_G[v]:Hide()
 	end
 	_G[frame]:Show()
+	self:Menu_FollowTab(frame)
 end
 
 function Altoholic:OnShow()
@@ -419,15 +412,13 @@ function Altoholic:OnShow()
 	self:UpdatePlayerStats()
 	self:UpdatePlayerBags()
 	self:UpdateTalents()
-	SetPortraitTexture(AltoholicFramePortrait,"player");
 	V.guild = GetGuildInfo("player")
 	if V.RebuildRecipeMenu then
 		self:BuildRecipesSubMenu()
 	end
 	self:BuildFactionsTable()
 	self:BuildCharacterInfoTable()
-	self:ActivateMenuItem("AltoSummary")
-	self:Menu_Update()
+	self:SelectCategory(MENU_SUMMARY)
 	self:Skin_Apply()
 end
 
@@ -890,9 +881,64 @@ function Altoholic:CHAT_MSG_ADDON(a1, a2)
 	end
 end
 
--- *** Scroll Frames Update ***
+-- *** The menu ***
+-- Two columns, styled after pfUI's config window. The first lists Altoholic.Menu; the
+-- second, the subMenu tree of the selected category, flattened: realms (isHeader) are
+-- section titles and always expanded, entries with a subMenu of their own (Search
+-- classes, Recipes characters) expand on click, and the rest open a tab. The selected
+-- row is remembered by its key, the path of names to it, so it survives the
+-- Build*SubMenu functions replacing the tables.
+local MENU_ROWS = 15
+local TEAL_R, TEAL_G, TEAL_B = .2, 1, .8	-- pfUI's highlight colour
+
+-- the category each tab belongs to, for tabs opened from elsewhere (the Search button, ...)
+local TAB_CATEGORY = {
+	AltoSummary = MENU_SUMMARY, AltoBags = MENU_SUMMARY, AltoSkills = MENU_SUMMARY,
+	AltoReputations = MENU_SUMMARY, AltoRaids = MENU_SUMMARY, AltoAttunements = MENU_SUMMARY,
+	AltoContainers = MENU_CONTAINERS, AltoMail = MENU_MAIL, AltoSearch = MENU_SEARCH,
+	AltoEquipment = MENU_EQUIPMENT, AltoQuests = MENU_QUESTS, AltoRecipes = MENU_RECIPES,
+	AltoAuctions = MENU_AUCTIONS, AltoOptions = MENU_OPTIONS,
+}
+
+local function MenuRow_SetSelected(row, selected)
+	local name = row:GetName()
+	if selected then
+		_G[name .. "Text"]:SetTextColor(TEAL_R, TEAL_G, TEAL_B)
+		_G[name .. "Selected"]:SetGradientAlpha("HORIZONTAL", 1, 1, 1, 0, 1, 1, 1, .05)
+		_G[name .. "Selected"]:Show()
+	else
+		_G[name .. "Text"]:SetTextColor(1, 1, 1)
+		_G[name .. "Selected"]:Hide()
+	end
+end
+
+-- the second column's lines: { entry, depth, key, isHeader, isParent, isEmpty }, and
+-- { isSpacer = true } for the gap above each realm after the first. isEmpty: nothing to
+-- open or expand (a Recipes character without professions)
+local function Flatten(list, entries, depth, key)
+	for _, e in ipairs(entries) do
+		local k = key .. "/" .. (e.name or "")
+		local hasChildren = e.subMenu ~= nil and #e.subMenu > 0
+		if e.isHeader and #list > 0 then
+			table.insert(list, { isSpacer = true })
+		end
+		table.insert(list, { entry = e, depth = depth, key = k,
+			isHeader = e.isHeader, isParent = hasChildren and not e.isHeader,
+			isEmpty = not e.isHeader and not hasChildren and not e.OnClick })
+		if hasChildren and (e.isHeader or e.isCollapsed == false) then
+			Flatten(list, e.subMenu, e.isHeader and depth or depth + 1, k)
+		end
+	end
+	return list
+end
+
+local function Menu_ResetScroll()
+	FauxScrollFrame_SetOffset(AltoholicMenuScrollFrame, 0)
+	AltoholicMenuScrollFrameScrollBar:SetValue(0)
+end
+
 function Altoholic:Menu_Update(MenuLevel1, MenuLevel2, MenuLevel3)
-	local VisibleLines = 15
+	-- with levels: toggle that entry, then redraw
 	if MenuLevel1 ~= nil then
 		local m
 		if MenuLevel2 ~= nil then
@@ -910,49 +956,165 @@ function Altoholic:Menu_Update(MenuLevel1, MenuLevel2, MenuLevel3)
 			m.isCollapsed = true
 		end
 	end
-	self.MenuCache = {}
-	for _, L0 in pairs (self.Menu) do
-		table.insert(self.MenuCache, { linetype=1, name=L0.name, OnClick=L0.OnClick } )
-		if L0.isCollapsed == false then
-			for _, L1 in pairs (L0.subMenu) do
-				table.insert(self.MenuCache, { linetype=2, name=L1.name, id=L1.id, OnClick=L1.OnClick	} )
-				if L1.isCollapsed == false then
-					for _, L2 in pairs (L1.subMenu) do
-						table.insert(self.MenuCache, { linetype=3, name=L2.name, id=L2.id, OnClick=L2.OnClick	} )
-						if L2.isCollapsed == false then
-							for _, L3 in pairs (L2.subMenu) do
-								table.insert(self.MenuCache, { linetype=4, name=L3.name, id=L3.id, OnClick=L3.OnClick	} )
-							end
-						end
-					end
-				end
+	V.MenuCategory = V.MenuCategory or MENU_SUMMARY
+
+	for i = 1, 10 do
+		local row = _G["AltoholicCategory" .. i]
+		local m = self.Menu[i]
+		if m then
+			_G["AltoholicCategory" .. i .. "Text"]:SetText(m.name)
+			MenuRow_SetSelected(row, i == V.MenuCategory)
+			row:Show()
+		else
+			row:Hide()
+		end
+	end
+
+	local m = self.Menu[V.MenuCategory]
+	self.MenuCache = (m and m.subMenu) and Flatten({}, m.subMenu, 0, "") or {}
+	local offset = FauxScrollFrame_GetOffset(AltoholicMenuScrollFrame)
+	for i = 1, MENU_ROWS do
+		local row = _G["AltoholicMenuRow" .. i]
+		local text = _G["AltoholicMenuRow" .. i .. "Text"]
+		local line = self.MenuCache[i + offset]
+		row.line = line
+		if line and not line.isSpacer then
+			text:ClearAllPoints()
+			text:SetPoint("LEFT", row, "LEFT", 6 + line.depth * 10, 0)
+			text:SetPoint("RIGHT", row, "RIGHT", -2, 0)
+			text:SetJustifyH("LEFT")
+			local label = line.entry.name or ""
+			if line.isParent then
+				label = (line.entry.isCollapsed == false and "|cFF808080- |r" or "|cFF808080+ |r") .. label
+			end
+			text:SetText(label)
+			if line.isHeader then
+				row:EnableMouse(false)
+				MenuRow_SetSelected(row, false)
+				text:SetTextColor(TEAL_R, TEAL_G, TEAL_B)
+			elseif line.isEmpty then
+				row:EnableMouse(false)
+				MenuRow_SetSelected(row, false)
+				text:SetTextColor(.5, .5, .5)
+			else
+				row:EnableMouse(true)
+				MenuRow_SetSelected(row, not line.isParent and line.key == V.MenuSelected)
+			end
+			row:Show()
+		else
+			row:Hide()
+		end
+	end
+	FauxScrollFrame_Update(AltoholicMenuScrollFrame, #self.MenuCache, MENU_ROWS, 20)
+end
+
+local function Menu_ScrollTo(index)
+	local offset = FauxScrollFrame_GetOffset(AltoholicMenuScrollFrame)
+	if index <= offset then
+		offset = index - 1
+	elseif index > offset + MENU_ROWS then
+		offset = index - MENU_ROWS
+	else
+		return
+	end
+	FauxScrollFrame_SetOffset(AltoholicMenuScrollFrame, offset)
+	AltoholicMenuScrollFrameScrollBar:SetValue(offset * 20)
+end
+
+-- opens the tab of a second-column line and marks it selected
+function Altoholic:Menu_Open(line)
+	V.MenuSelected = line.key
+	if line.entry.OnClick then
+		line.entry.OnClick(line.entry)
+	end
+	self:Menu_Update()
+end
+
+-- the line a category opens when it is selected: the logged-in character's entry, else
+-- the first one that opens or expands. An entry that expands (a Recipes character) is
+-- expanded and its first child opened.
+function Altoholic:Menu_DefaultLine()
+	local me = V.faction .. ":" .. V.realm .. ":" .. V.player
+	local myRealm = V.faction .. ":" .. V.realm
+	local function Usable(line) return line.entry and not line.isHeader and not line.isEmpty end
+	local target
+	for index, line in ipairs(self.MenuCache) do
+		local e = line.entry
+		if Usable(line) and (e.altID == me or e.realm == myRealm) then
+			target = index
+			break
+		end
+	end
+	if not target then
+		for index, line in ipairs(self.MenuCache) do
+			if Usable(line) then
+				target = index
+				break
 			end
 		end
 	end
-	local offset = FauxScrollFrame_GetOffset(_G["AltoholicMenuScrollFrame"]);
-	for i=1, VisibleLines do
-		local line = i + offset
-		if line > #self.MenuCache then
-			_G["CategoryButton"..i]:Hide()
-		else
-            local p = self.MenuCache[line]
-            if p.linetype == 1 then
-                _G["CategoryButton"..i.."NormalText"]:SetText(WHITE .. p.name)
-            elseif p.linetype == 2 then
-                _G["CategoryButton"..i.."NormalText"]:SetText("|cFFBBFFBB   " .. p.name)
-            elseif p.linetype == 3 then
-                _G["CategoryButton"..i.."NormalText"]:SetText("|cFFBBBBFF      " .. p.name)
-            else
-                _G["CategoryButton"..i.."NormalText"]:SetText("|cFFFFFFBB         " .. p.name)
-            end
-            if p.id ~= nil then
-                _G["CategoryButton"..i]:SetID(p.id)
-            end
-            _G["CategoryButton"..i]:SetScript("OnClick", p.OnClick)
-            _G["CategoryButton"..i]:Show()
-        end
+	local line = target and self.MenuCache[target]
+	if not line or not line.isParent then
+		return target
 	end
-	FauxScrollFrame_Update(_G["AltoholicMenuScrollFrame"], #self.MenuCache, VisibleLines, 20);
+	line.entry.isCollapsed = false
+	self:Menu_Update()
+	local child = self.MenuCache[target + 1]
+	if child and Usable(child) and not child.isParent and child.depth > line.depth then
+		return target + 1
+	end
+end
+
+function Altoholic:SelectCategory(category)
+	local m = self.Menu[category]
+	if not m then return end
+	V.MenuCategory = category
+	V.MenuSelected = nil
+	Menu_ResetScroll()
+	self:Menu_Update()
+
+	if not m.subMenu then
+		-- Options: no second column
+		if m.OnClick then m.OnClick(m) end
+		return
+	end
+	if category == MENU_SEARCH then
+		-- every entry here starts a search, so open none: show the last results
+		self:ActivateMenuItem("AltoSearch")
+		return
+	end
+	local index = self:Menu_DefaultLine()
+	if index then
+		Menu_ScrollTo(index)
+		self:Menu_Open(self.MenuCache[index])
+	end
+end
+
+function Altoholic:MenuRow_OnClick(row)
+	if string.find(row:GetName(), "^AltoholicCategory") then
+		self:SelectCategory(row:GetID())
+		return
+	end
+	local line = row.line
+	if not line or not line.entry or line.isHeader then return end
+	if line.isParent then
+		line.entry.isCollapsed = (line.entry.isCollapsed == false)
+		self:Menu_Update()
+	else
+		self:Menu_Open(line)
+	end
+end
+
+-- a tab opened from elsewhere (the Search button, a link in another tab) selects its
+-- category, so the first column never names a different tab than the one shown
+function Altoholic:Menu_FollowTab(frame)
+	local category = TAB_CATEGORY[frame]
+	if not category or category == V.MenuCategory then return end
+	if frame == "AltoAuctions" and V.MenuCategory == MENU_BIDS then return end
+	V.MenuCategory = category
+	V.MenuSelected = nil
+	Menu_ResetScroll()
+	self:Menu_Update()
 end
 
 -- The Search menu and the slot filter are labelled with the client's item class
@@ -1037,15 +1199,11 @@ function Altoholic:BuildContainersSubMenu()
 	local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_CONTAINERS].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self)
-					Altoholic:Menu_Update(MENU_CONTAINERS, realmsID)
-				end
+				subMenu = {}
 			} )
 			local i = 1
 
@@ -1055,6 +1213,7 @@ function Altoholic:BuildContainersSubMenu()
 				local altID = FactionName .. ":" .. RealmName .. ":" .. CharacterName
 				table.insert(self.Menu[MENU_CONTAINERS].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					id = (n*100)+i,
 					OnClick = function(self)
 						Altoholic:SelectAlt(altID)
@@ -1075,13 +1234,11 @@ function Altoholic:BuildMailSubMenu()
 	local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_MAIL].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self) Altoholic:Menu_Update(MENU_MAIL, realmsID)	end
+				subMenu = {}
 			} )
 			local i = 1
 			local byLevel = Altoholic:Get_Sorted_Character_List(FactionName, RealmName)
@@ -1093,6 +1250,7 @@ function Altoholic:BuildMailSubMenu()
 				local altID = FactionName .. ":" .. RealmName .. ":" .. CharacterName
 				table.insert(self.Menu[MENU_MAIL].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					hasmail = CharacterNameM,
 					id = (n*100)+i,
 					OnClick = function(self)
@@ -1117,7 +1275,7 @@ function Altoholic:BuildEquipmentSubMenu()
 			local altID = FactionName .. ":" .. RealmName .. ":" .. CharacterName
 			table.insert(self.Menu[MENU_EQUIPMENT].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				realm = FactionName .. ":" .. RealmName,
 				id = (n*100)+1,
 				subMenu = {},
 				OnClick = function(self)
@@ -1135,13 +1293,11 @@ function Altoholic:BuildQuestsSubMenu()
 	local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_QUESTS].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self) Altoholic:Menu_Update(MENU_QUESTS, realmsID)	end
+				subMenu = {}
 			} )
 			local i = 1
 			local byLevel = Altoholic:Get_Sorted_Character_List(FactionName, RealmName)
@@ -1150,6 +1306,7 @@ function Altoholic:BuildQuestsSubMenu()
 				local altID = FactionName .. ":" .. RealmName .. ":" .. CharacterName
 				table.insert(self.Menu[MENU_QUESTS].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					id = (n*100)+i,
 					OnClick = function(self)
 						Altoholic:SelectAlt(altID)
@@ -1170,32 +1327,24 @@ function Altoholic:BuildRecipesSubMenu()
 	local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_RECIPES].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self) Altoholic:Menu_Update(MENU_RECIPES, realmsID)	end
+				subMenu = {}
 			} )
 			local i = 1
 			local byLevel = Altoholic:Get_Sorted_Character_List(FactionName, RealmName)
 			for _, CharacterName in ipairs(byLevel) do
 				local c = self.db.account.data[FactionName][RealmName].char[CharacterName]
 				local altID = FactionName .. ":" .. RealmName .. ":" .. CharacterName
-				local id = n*100 + i
+				-- a character only expands to its professions (Altoholic:MenuRow_OnClick);
+				-- without any it is shown greyed out
 				table.insert(self.Menu[MENU_RECIPES].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					isCollapsed = true,
-					id,
-					subMenu = {},
-					OnClick = function(self)
-						local lid = id
-						local realmID = floor(lid / 100)
-						local charID = (lid % 100)
-						--Altoholic:SelectAlt(altID)
-						Altoholic:Menu_Update(MENU_RECIPES, realmID, charID)
-					end
+					subMenu = {}
 				} )
 				for TradeSkillName, _ in pairs(c.recipes) do
 					local skillName = Altoholic:GetProfessionID(TradeSkillName)
@@ -1228,13 +1377,11 @@ function Altoholic:BuildAuctionsSubMenu()
     local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_AUCTIONS].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self) Altoholic:Menu_Update(MENU_AUCTIONS, realmsID) end
+				subMenu = {}
 			} )
 			local i = 1
 			local byLevel = Altoholic:Get_Sorted_Character_List(FactionName, RealmName)
@@ -1247,6 +1394,7 @@ function Altoholic:BuildAuctionsSubMenu()
 				end
 				table.insert(self.Menu[MENU_AUCTIONS].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					id = (n*100)+i,
 					OnClick = function(self)
 						Altoholic.Auctions_Update = Altoholic.Auctions_Update_Auctions
@@ -1267,13 +1415,11 @@ function Altoholic:BuildBidsSubMenu()
 	local n = 1
 	for FactionName, f in pairs(self.db.account.data) do
 		for RealmName, r in pairs(f) do
-			local realmsID = n
 			table.insert(self.Menu[MENU_BIDS].subMenu, {
 				name = self:GetRealmString(FactionName, RealmName),
-				isCollapsed = true,
+				isHeader = true,
 				id = n,
-				subMenu = {},
-				OnClick = function(self) Altoholic:Menu_Update(MENU_BIDS, realmsID) end
+				subMenu = {}
 			} )
 			local i = 1
 			local byLevel = Altoholic:Get_Sorted_Character_List(FactionName, RealmName)
@@ -1286,6 +1432,7 @@ function Altoholic:BuildBidsSubMenu()
 				end
 				table.insert(self.Menu[MENU_BIDS].subMenu[n].subMenu, {
 					name = CharacterName,
+					altID = altID,
 					id = (n*100)+i,
 					OnClick = function(self)
 						Altoholic.Auctions_Update = Altoholic.Auctions_Update_Bids

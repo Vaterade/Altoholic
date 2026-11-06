@@ -41,23 +41,15 @@ function Altoholic:Skin_Apply()
 	if applied or not self:Skin_Enabled() or not Env() then return end
 	applied = true
 
-	-- the window: same size and art as the auction frame, skinned the way pfUI skins that one
+	-- the window: pfUI's backdrop in place of the plain one. Not StripTextures: the
+	-- window's only textures are the menu and tab panels, which are pfUI's look already
 	local frame = AltoholicFrame
-	Skin("StripTextures", frame, true)
+	frame:SetBackdrop(nil)
 	Skin("CreateBackdrop", frame, nil, nil, .75)
 	Skin("CreateBackdropShadow", frame)
 	Skin("SkinCloseButton", AltoholicFrameCloseButton, frame.backdrop, -6, -6)
-	if frame.backdrop then
-		AltoholicFrameName:ClearAllPoints()
-		AltoholicFrameName:SetPoint("TOP", frame.backdrop, "TOP", 0, -10)
-	end
 
-	-- left-hand menu
-	for i = 1, 15 do
-		local button = _G["CategoryButton" .. i]
-		Skin("StripTextures", button, nil, "BACKGROUND")
-		Skin("SkinButton", button)
-	end
+	-- the menu rows are plain already (AltoMenuRowTemplate); only the scrollbar needs it
 	Skin("StripTextures", AltoholicMenuScrollFrame)
 	Skin("SkinScrollbar", AltoholicMenuScrollFrameScrollBar)
 

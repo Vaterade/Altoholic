@@ -70,9 +70,10 @@
 		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 	</Button>
 
+	<!-- 956 wide: two menu columns (18-298) and the 615-wide tab area hung from the right edge -->
 	<Frame name="AltoholicFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
 		<Size>
-			<AbsDimension x="832" y="447"/>
+			<AbsDimension x="956" y="447"/>
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -84,6 +85,8 @@
 		<Scripts>
 			<OnLoad>
 				this:RegisterForDrag("LeftButton");
+				this:SetBackdropColor(0.06, 0.06, 0.06, 0.92);
+				this:SetBackdropBorderColor(0.4, 0.4, 0.4, 1);
 			</OnLoad>
 			<OnDragStart>
 				this:StartMoving();
@@ -99,100 +102,39 @@
 				PlaySound("UChatScrollButton");
 			</OnHide>
 		</Scripts>
+		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize><AbsValue val="16"/></EdgeSize>
+			<TileSize><AbsValue val="16"/></TileSize>
+			<BackgroundInsets><AbsInset left="4" right="4" top="4" bottom="4"/></BackgroundInsets>
+		</Backdrop>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentPortrait">
-					<Size>
-						<AbsDimension x="58" y="58"/>
-					</Size>
+				<!-- like pfUI's config: the second column and the tab sit on a faint panel,
+				     and the tab on a second one inside it -->
+				<Texture name="$parentMenuPanel">
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="12" y="-8"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT"><Offset x="136" y="-101"/></Anchor>
+						<Anchor point="BOTTOMRIGHT"><Offset x="-12" y="34"/></Anchor>
 					</Anchors>
+					<Color r="1" g="1" b="1" a="0.05"/>
 				</Texture>
-			</Layer>
-			<Layer level="ARTWORK">
-				<Texture name="$parentTopLeft" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-TopLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
+				<Texture name="$parentTabPanel">
 					<Anchors>
-						<Anchor point="TOPLEFT"/>
+						<Anchor point="TOPLEFT"><Offset x="304" y="-101"/></Anchor>
+						<Anchor point="BOTTOMRIGHT"><Offset x="-12" y="34"/></Anchor>
 					</Anchors>
-				</Texture>
-				<Texture name="$parentTop" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-Top">
-					<Size>
-						<AbsDimension x="320" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture name="$parentTopRight" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-TopRight">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentTop" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture name="$parentBotLeft" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-BotLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="0" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture name="$parentBot" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-Bot">
-					<Size>
-						<AbsDimension x="320" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<Texture name="$parentBotRight" file="Interface\AuctionFrame\UI-AuctionFrame-Browse-BotRight">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentBot" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
+					<Color r="1" g="1" b="1" a="0.05"/>
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
 				<FontString name="$parentName" inherits="GameFontNormal" justifyH="CENTER">
 					<Size>
-						<AbsDimension x="135" y="18"/>
+						<AbsDimension x="300" y="18"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT">
+						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="380" y="-16"/>
+								<AbsDimension x="0" y="-12"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -234,8 +176,9 @@
 				<FontString name="$parentSearch" inherits="GameFontNormalSmall" text="XML_TEXT_2">
 					<Size x="120" y="20" />
 					<Anchors>
+						<!-- centered over the search box (18-188) -->
 						<Anchor point="TOPLEFT">
-							<Offset x="70" y="-35" />
+							<Offset x="43" y="-35" />
 						</Anchor>
 					</Anchors>
 					<Color r="255" g="255" b="255" />
@@ -244,7 +187,7 @@
 					<Size x="70" y="20" />
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parentSearch" relativePoint="RIGHT" >
-							<Offset x="33" y="0" />
+							<Offset x="60" y="0" />
 						</Anchor>
 					</Anchors>
 					<Color r="255" g="255" b="255" />
@@ -279,199 +222,201 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="CategoryButton1" inherits="MenuItemTemplate" id="1">
+			<!-- first column: the categories (Altoholic.Menu) -->
+			<Button name="AltoholicCategory1" inherits="AltoMenuRowTemplate" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="23" y="-105"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT"><Offset x="18" y="-105"/></Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton2" inherits="MenuItemTemplate" id="2">
+			<Button name="AltoholicCategory2" inherits="AltoMenuRowTemplate" id="2">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton1" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory1" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton3" inherits="MenuItemTemplate" id="3">
+			<Button name="AltoholicCategory3" inherits="AltoMenuRowTemplate" id="3">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton2" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory2" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton4" inherits="MenuItemTemplate" id="4">
+			<Button name="AltoholicCategory4" inherits="AltoMenuRowTemplate" id="4">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton3" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory3" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton5" inherits="MenuItemTemplate" id="5">
+			<Button name="AltoholicCategory5" inherits="AltoMenuRowTemplate" id="5">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton4" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory4" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton6" inherits="MenuItemTemplate" id="6">
+			<Button name="AltoholicCategory6" inherits="AltoMenuRowTemplate" id="6">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton5" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory5" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton7" inherits="MenuItemTemplate" id="7">
+			<Button name="AltoholicCategory7" inherits="AltoMenuRowTemplate" id="7">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton6" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory6" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton8" inherits="MenuItemTemplate" id="8">
+			<Button name="AltoholicCategory8" inherits="AltoMenuRowTemplate" id="8">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton7" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory7" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton9" inherits="MenuItemTemplate" id="9">
+			<Button name="AltoholicCategory9" inherits="AltoMenuRowTemplate" id="9">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton8" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory8" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton10" inherits="MenuItemTemplate" id="10">
+			<Button name="AltoholicCategory10" inherits="AltoMenuRowTemplate" id="10">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton9" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory9" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton11" inherits="MenuItemTemplate" id="11">
+			<!-- second column: what is under the selected category -->
+			<Button name="AltoholicMenuRow1" inherits="AltoMenuRowTemplate" id="1">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton10" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT"><Offset x="140" y="-105"/></Anchor>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton12" inherits="MenuItemTemplate" id="12">
+			<Button name="AltoholicMenuRow2" inherits="AltoMenuRowTemplate" id="2">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton11" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow1" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton13" inherits="MenuItemTemplate" id="13">
+			<Button name="AltoholicMenuRow3" inherits="AltoMenuRowTemplate" id="3">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton12" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow2" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton14" inherits="MenuItemTemplate" id="14">
+			<Button name="AltoholicMenuRow4" inherits="AltoMenuRowTemplate" id="4">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton13" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow3" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
-			<Button name="CategoryButton15" inherits="MenuItemTemplate" id="15">
+			<Button name="AltoholicMenuRow5" inherits="AltoMenuRowTemplate" id="5">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CategoryButton14" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow4" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow6" inherits="AltoMenuRowTemplate" id="6">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow5" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow7" inherits="AltoMenuRowTemplate" id="7">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow6" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow8" inherits="AltoMenuRowTemplate" id="8">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow7" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow9" inherits="AltoMenuRowTemplate" id="9">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow8" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow10" inherits="AltoMenuRowTemplate" id="10">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow9" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow11" inherits="AltoMenuRowTemplate" id="11">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow10" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow12" inherits="AltoMenuRowTemplate" id="12">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow11" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow13" inherits="AltoMenuRowTemplate" id="13">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow12" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow14" inherits="AltoMenuRowTemplate" id="14">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow13" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AltoholicMenuRow15" inherits="AltoMenuRowTemplate" id="15">
+				<Size>
+					<AbsDimension x="136" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicMenuRow14" relativePoint="BOTTOMLEFT"/>
 				</Anchors>
 			</Button>
 			<ScrollFrame name="AltoholicMenuScrollFrame" inherits="FauxScrollFrameTemplate">
 				<Size>
-					<AbsDimension x="160" y="305"/>
+					<AbsDimension x="136" y="300"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="158" y="-105"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT"><Offset x="140" y="-105"/></Anchor>
 				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="256"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="5"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="106"/>
-							</Size>
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="-2"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
 						FauxScrollFrame_OnVerticalScroll(20, function()
 							Altoholic:Menu_Update();
 						end)
 					</OnVerticalScroll>
-					<OnShow>
-						Altoholic:Menu_Update();
-					</OnShow>
 				</Scripts>
 			</ScrollFrame>
 			
+			<!-- the search box and the Reset button line up with the left edge of the
+			     first menu column; 170 wide = Reset + gap + Search -->
 			<EditBox name="$parent_SearchEditBox" inherits="InputBoxTemplate">
-				<Size x="140" y="16" />
+				<Size x="170" y="16" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentSearch" relativePoint="BOTTOMLEFT" >
-						<Offset x="10" y="0" />
+					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory1" relativePoint="TOPLEFT" >
+						<Offset x="0" y="50" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -490,8 +435,8 @@
 			<EditBox name="$parent_MinLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_SearchEditBox" relativePoint="RIGHT" >
-						<Offset x="10" y="0" />
+					<Anchor point="TOPLEFT" relativeTo="$parentLevelRange" relativePoint="BOTTOMLEFT" >
+						<Offset x="7" y="0" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -520,7 +465,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent_SearchEditBox" relativePoint="BOTTOMLEFT" >
 						<Offset>
-							<AbsDimension x="-40" y="0"/>
+							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -569,7 +514,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="530" y="-40"/>
+							<AbsDimension  x="654" y="-40"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -588,7 +533,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="530" y="-60"/>
+							<AbsDimension  x="654" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -607,7 +552,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="530" y="-80"/>
+							<AbsDimension  x="654" y="-80"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -629,7 +574,7 @@
 				<Anchors> 
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="680" y="-40"/>
+							<AbsDimension  x="804" y="-40"/>
 						</Offset>
 					</Anchor>
 				</Anchors>      
@@ -647,7 +592,7 @@
 				<Anchors> 
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="680" y="-60"/>
+							<AbsDimension  x="804" y="-60"/>
 						</Offset>
 					</Anchor>
 				</Anchors>      
@@ -664,7 +609,7 @@
 				<Anchors> 
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension  x="680" y="-80"/>
+							<AbsDimension  x="804" y="-80"/>
 						</Offset>
 					</Anchor>
 				</Anchors>      
@@ -679,7 +624,7 @@
 				<Anchors>
 					<Anchor point="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="3" y="-8"/>
+							<AbsDimension x="-2" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>

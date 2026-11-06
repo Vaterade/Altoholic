@@ -23,46 +23,39 @@
 			</OnClick>
 		</Scripts>
 	</Button>
-	<!-- Navigation -->
-	<Button name="MenuItemTemplate" hidden="true" virtual="true">
+	<!-- Navigation: a plain menu row, styled after pfUI's config window. The rows are
+	     AltoholicCategory1-10 (first column) and AltoholicMenuRow1-15 (second column);
+	     Altoholic.lua sets their text, indent and click handler. -->
+	<Button name="AltoMenuRowTemplate" hidden="true" virtual="true">
 		<Size>
-			<AbsDimension x="136" y="20"/>
+			<AbsDimension x="116" y="20"/>
 		</Size>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentLines" file="Interface\AuctionFrame\UI-AuctionFrame-FilterLines">
-					<Size>
-						<AbsDimension x="7" y="20"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="13" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0" right="0.4375" top="0" bottom="0.625"/>
+				<!-- the selected row; Altoholic:MenuRow_SetSelected fades it in from the left -->
+				<Texture name="$parentSelected" hidden="true" setAllPoints="true">
+					<Color r="1" g="1" b="1" a="1"/>
 				</Texture>
 			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture setAllPoints="true">
+					<Color r="1" g="1" b="1" a="0.05"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontHighlightSmall">
+					<Anchors>
+						<Anchor point="LEFT"/>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</FontString>
+			</Layer>
 		</Layers>
-		<NormalTexture name="$parentNormalTexture" file="Interface\AuctionFrame\UI-AuctionFrame-FilterBg">
-			<TexCoords left="0" right="0.53125" top="0" bottom="0.625"/>
-		</NormalTexture>
-		<HighlightTexture file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD"/>
-		<ButtonText name="$parentNormalText">
-			<Size>
-				<AbsDimension x="115" y="8"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="4" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</ButtonText>
-		<NormalFont inherits="GameFontNormalSmall" justifyH="LEFT"/>
-		<HighlightFont inherits="GameFontHighlightSmall" justifyH="LEFT"/>
+		<Scripts>
+			<OnClick>
+				Altoholic:MenuRow_OnClick(this)
+			</OnClick>
+		</Scripts>
 	</Button>
 
 </Ui>
