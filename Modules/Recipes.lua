@@ -61,41 +61,16 @@ function Altoholic:Recipes_Update()
 				_G[entry..i.."RecipeLinkNormalText"]:SetText(s.link)
 				_G[entry..i.."RecipeLink"]:SetID(line)
 				_G[entry..i.."RecipeLink"]:SetPoint("TOPLEFT", 15, 0)
-                local numReagents = s.numReagents
+				-- s.reagents is "itemID:count|itemID:count|..." (see Skills.lua)
+				local reagents = {}
+				for id, count in string.gmatch(s.reagents or "", "(%d+):(%d+)") do
+					table.insert(reagents, { tonumber(id), tonumber(count) })
+				end
 				for j=1, 8 do
 					local itemName = entry..i .. "Item" .. j;
-                    local first, second, third, fourth, fifth, sixth, seventh, eighth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second, third, fourth, fifth, sixth, seventh = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second, third, fourth, fifth, sixth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second, third, fourth, fifth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second, third, fourth = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second, third = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)|(%d+:%d+)")
-                    local first, second = string.match(s.reagents, "(%d+:%d+)|(%d+:%d+)")
-                    local first = string.match(s.reagents, "(%d+:%d+)")
-                    local reagent
-                    if eighth ~= nil and j == 8 then
-                        reagent = eighth
-                    elseif seventh ~= nil and j == 7 then
-                        reagent = seventh
-                    elseif sixth ~= nil and j == 6 then
-                        reagent = sixth
-                    elseif fifth ~= nil and j == 5 then
-                        reagent = fifth
-                    elseif fourth ~= nil and j == 4 then
-                        reagent = fourth
-                    elseif third ~= nil and j == 3 then
-                        reagent = third
-                    elseif second ~= nil and j == 2 then
-                        reagent = second
-                    elseif first ~= nil and j == 1 then
-                        reagent = first
-                    else
-                        reagent = nil
-                    end
+					local reagent = reagents[j]
 					if reagent then
-                        local reagentID, reagentCount = string.match(reagent, "(%d+):(%d+)")
-                        reagentID = tonumber(reagentID)
-						reagentCount = tonumber(reagentCount)
+						local reagentID, reagentCount = reagent[1], reagent[2]
 						local itemButton = _G[itemName];
 						itemButton:SetID(reagentID)
 						local itemTexture = _G[itemName .. "IconTexture"]
@@ -155,7 +130,7 @@ function Altoholic:Recipes_OnEnter(frame)
     local id = frame:GetParent():GetID()
     local c = Altoholic.db.account.data[V.CurrentFaction][V.CurrentRealm].char[V.CurrentAlt]
     if c.recipes[V.CurrentProfession].list[id].isHeader then return end
-    local itemLink = itemLink
+    local itemLink
     if V.CurrentProfession == "Enchanting" then
         local enchantlink = c.recipes[V.CurrentProfession].list[id].link
         itemLink = Altoholic:GetEnchantIDFromLink(tostring(enchantlink))
