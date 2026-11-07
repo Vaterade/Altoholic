@@ -37,7 +37,7 @@ function Altoholic:TaskFromRecipe(recipe)
 		table.insert(reagents, { id = r[1], name = ItemName(r[1]), icon = ItemIcon(r[1]), count = r[2] })
 	end
 	-- an enchant's link names its spell; a tradeskill's is the item it makes
-	local spell = recipe.link and tonumber(string.match(recipe.link, "enchant:(%d+)"))
+	local spell = recipe.spell or (recipe.link and tonumber(string.match(recipe.link, "enchant:(%d+)")))
 	return {
 		name = recipe.name,
 		spell = spell,

@@ -111,8 +111,13 @@ pfUI-trades keeps lists by realm, so only the logged-in realm's characters can b
 defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button left of the search box, a hidden
 category) and the popup shown 5 s after login. Window parts that need `PLAYER_LOGIN` add a
 function to `UI.loginHooks`.
-`MissingRecipes.lua` compares a character's saved recipes with `Altoholic.RecipeDB`
-(`Items/Recipes.lua`, names translated in `Locale/Recipes.lua`), matching by name. Both files
+`MissingRecipes.lua` compares a character's recipes with `Altoholic.RecipeDB`
+(`Items/Recipes.lua`, names translated in `Locale/Recipes.lua`). A recipe counts as known by
+spell ID, from ClassicAPI's `IsPlayerSpell` (`ScanKnownRecipes` in `Professions.lua`, saved
+as `c.knownRecipes[English profession][spellID]` at login, on opening a profession and on
+the "You have learned how to create" chat line) or from the window scan's `row.spell`; or
+by name, for recipes whose spell ID in the list is a stand-in (900000 and up, most of
+Survival). Recipes don't fire the spellbook's learned events. Both files
 are generated from LibCrafts-1.0 by `tools/convert-libcrafts.lua <LibCrafts folder>`; don't
 edit them by hand, convert again. `Sources.lua` reads an item's vendors, drops and objects
 from pfQuest's `pfDB` when pfQuest is loaded (names from `pfDB[kind].loc`, zones from

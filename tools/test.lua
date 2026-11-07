@@ -182,6 +182,7 @@ GetTradeSkillItemID = function() return 2840 end
 GetItemClassInfo = function(c) return "Class" .. c end
 GetItemSubClassInfo = function(c, s) return "Sub" .. c .. "." .. s end
 GetQuestLogSelection, GetNumQuestLogEntries = function() return 0 end, function() return 0 end
+ERR_LEARN_RECIPE_S = "You have learned how to create a new item: %s."
 SendMail = function() end
 SetItemRef = function() end
 
@@ -277,6 +278,22 @@ check(Altoholic:RecipeKey("Simple Herbalist\226\128\153s Backpack") == "Simple H
 	and not Altoholic:IsRecipeHeader({ isHeader = true, name = "Simple Herbalist\226\128\153s Backpack", link = "x" }),
 	"a curly apostrophe matches the recipe list's straight one")
 
+-- known recipes by spell ID: the scan saves each recipe's spell, IsPlayerSpell the rest
+check(list[2].spell == 2657, "the scan saves the recipe's spell ID from its recipe link")
+IsPlayerSpell = function(spell) return spell == 2657 or spell == 2658 end	-- Smelt Copper, Smelt Silver
+Altoholic:ScanKnownRecipes()
+check(c.knownRecipes.Mining and c.knownRecipes.Mining[2658] and not c.knownRecipes.Mining[3304], "IsPlayerSpell finds the known recipes")
+local m2 = Altoholic:MissingRecipes(c, "Mining")
+local silverMissing
+for _, m in ipairs(m2) do if m.spell == 2658 then silverMissing = true end end
+check(#m2 == 11 and not silverMissing, "a recipe known by spell ID isn't missing, though the window never listed it")
+-- a recipe learned from an item: the chat line triggers a new check
+IsPlayerSpell = function(spell) return spell == 2657 or spell == 2658 or spell == 3304 end	-- + Smelt Tin
+Altoholic:CHAT_MSG_SYSTEM("You have learned how to create a new item: Smelt Tin.")
+RunTimers()
+check(c.knownRecipes.Mining[3304], "learning a recipe is noticed from its chat line")
+IsPlayerSpell = nil
+
 -- the options read from the database, not from the old check buttons
 check(Altoholic:Option("TooltipSource") == 1 and Altoholic:Option("TooltipAlreadyKnown") == nil, "Option() reads the stored setting")
 
@@ -356,17 +373,17 @@ pfMap = { ShowMapID = function(_, map) mapped = mapped and map end, DeleteNode =
 check(Altoholic:ShowItemOnMap(3396) and mapped == 1519, "an item goes on pfQuest's map")
 pfDB, pfDatabase, pfMap = nil, nil, nil
 
--- missing recipes: Mining has 13, Testchar knows Smelt Copper
+-- missing recipes: Mining has 13, Testchar knows Smelt Copper (scanned), Silver and Tin (by spell ID)
 local missing, total = Altoholic:MissingRecipes(c, "Mining")
-check(total == 13 and #missing == 12, "missing recipes: all of Mining but Smelt Copper (" .. tostring(missing and #missing) .. "/" .. tostring(total) .. ")")
+check(total == 13 and #missing == 10, "missing recipes: all of Mining but the three known (" .. tostring(missing and #missing) .. "/" .. tostring(total) .. ")")
 UI.Open("recipes")
 check(UI.current.missing:IsShown(), "recipes: the Missing Recipes button shows for a known profession")
 UI.current.missing.scripts.OnClick(UI.current.missing)
-check(UI.current == UI.views.MissingRecipes and #UI.current.list.data == 12, "the button opens the missing list")
+check(UI.current == UI.views.MissingRecipes and #UI.current.list.data == 10, "the button opens the missing list")
 UI.views.MissingRecipes.only.checked = true	-- a click checks it before OnClick runs
 UI.views.MissingRecipes.only.scripts.OnClick(UI.views.MissingRecipes.only)
 local learnable = #UI.current.list.data
-check(learnable > 0 and learnable < 12, "and it narrows to what skill 150 can learn (" .. learnable .. ")")
+check(learnable > 0 and learnable < 10, "and it narrows to what skill 150 can learn (" .. learnable .. ")")
 UI.views.MissingRecipes.only.checked = nil
 UI.views.MissingRecipes.only.scripts.OnClick(UI.views.MissingRecipes.only)
 check(rl and #rl == 2 and rl[1].header == "Smelting" and rl[2].recipe, "recipes: the header and the recipe")

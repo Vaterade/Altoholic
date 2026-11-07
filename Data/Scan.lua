@@ -377,6 +377,7 @@ function Altoholic:StartScanning()
 	self:RegisterEvent("CRAFT_SHOW")
 	self:RegisterEvent("CRAFT_CLOSE")
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB")
+	self:RegisterEvent("CHAT_MSG_SYSTEM")
 	local c = self.db.account.data[V.faction][V.realm].char[V.player]
 	c.level = UnitLevel("player")
 	c.race = UnitRace("player")
@@ -385,6 +386,7 @@ function Altoholic:StartScanning()
 	self:UpdateTalents()
 	self:UpdatePlayerBags()
 	self:HookTooltip()
+	self:ScanKnownRecipes()
 end
 
 function Altoholic:PLAYER_LEVEL_UP(newLevel)

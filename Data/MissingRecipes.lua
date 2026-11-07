@@ -49,17 +49,27 @@ function Altoholic:MissingRecipes(c, profession)
 	if not en then return nil end
 	local p = rawget(rawget(c, "recipes") or {}, profession)
 	local list = p and rawget(p, "list")
-	local known = {}
+	-- known by spell ID, from IsPlayerSpell at the character's last login and from their last
+	-- profession window scan; by name, from that scan (for recipes without a real spell ID)
+	local knownSpells = rawget(c, "knownRecipes") and c.knownRecipes[en] or {}
+	local scannedSpells, known = {}, {}
 	local i = 1
 	while list and rawget(list, i) do
 		local r = rawget(list, i)
-		if r.name and not self:IsRecipeHeader(r) then known[self:RecipeKey(r.name)] = true end
+		if r.name and not self:IsRecipeHeader(r) then
+			known[self:RecipeKey(r.name)] = true
+			if r.spell then scannedSpells[r.spell] = true end
+		end
 		i = i + 1
+	end
+	local function Known(craft)
+		if knownSpells[craft[1]] or scannedSpells[craft[1]] then return true end
+		return known[self:RecipeKey(L[craft[2]])] or known[self:RecipeKey(craft[2])]
 	end
 	local missing, all = {}, self.RecipeDB[en]
 	for _, craft in ipairs(all) do
 		local name = L[craft[2]]
-		if not known[self:RecipeKey(name)] and not known[self:RecipeKey(craft[2])] then
+		if not Known(craft) then
 			local recipes, how = {}, {}
 			for _, r in ipairs(craft[7] or {}) do
 				table.insert(recipes, { id = r[1], sources = Describe(r[2], RECIPE) })

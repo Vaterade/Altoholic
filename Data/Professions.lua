@@ -38,7 +38,7 @@ end
 
 -- a row about to be rewritten by a scan: nothing of what it held before is kept
 local function Clear(row)
-	row.isHeader, row.link, row.id, row.reagents = nil, nil, nil, nil
+	row.isHeader, row.link, row.id, row.reagents, row.spell = nil, nil, nil, nil, nil
 end
 
 -- rows past the end of the list the window gave, left from a longer earlier list
@@ -107,6 +107,8 @@ function Altoholic:UpdateTradeSkill(tradeskillName)
 			r[i].isHeader = true
 		else
 			r[i].link = GetTradeSkillItemLink(i)
+			-- the recipe's own spell, which ClassicAPI's recipe link carries
+			r[i].spell = tonumber(string.match(GetTradeSkillRecipeLink and GetTradeSkillRecipeLink(i) or "", "enchant:(%d+)"))
 			r[i].id = GetTradeSkillItemID(i)
 			if not r[i].link or not r[i].id then
 				bScanFailed = true
@@ -172,6 +174,7 @@ function Altoholic:UpdateCraft(tradeskillName)
 			r[i].isHeader = true
 		else
 			r[i].link = GetCraftItemLink(i)
+			r[i].spell = GetCraftSpellID and GetCraftSpellID(i)
 			local itemLink = GetCraftItemLink(i)
 			if not itemLink then
 				bScanFailed = true
@@ -211,6 +214,7 @@ end)
 
 function Altoholic:TRADE_SKILL_SHOW()
 	self:UpdateTradeSkill(GetTradeSkillLine())
+	self:ScanKnownRecipesSoon()
 end
 
 function Altoholic:TRADE_SKILL_UPDATE()
@@ -227,6 +231,7 @@ end
 
 function Altoholic:CRAFT_SHOW()
 	self:UpdateCraft(GetCraftName())
+	self:ScanKnownRecipesSoon()
 end
 
 function Altoholic:CRAFT_UPDATE()
@@ -246,4 +251,57 @@ function Altoholic:LEARNED_SPELL_IN_TAB()
 		self:UnregisterEvent("LEARNED_SPELL_IN_TAB")
 	end
 	self:UpdatePlayerSpells()
+end
+
+-- *** Known recipes, by spell ID ***
+-- ClassicAPI's IsPlayerSpell answers for any recipe the logged-in character knows, without
+-- the profession window. Every craft of Items/Recipes.lua is checked and the known ones
+-- kept, by English profession name:
+--   c.knownRecipes[profession] = { [spellID] = true, ... }, c.knownRecipesTime
+-- Missing Recipes reads it for every character, so an alt's list is as of their last login.
+-- Spell IDs from PLACEHOLDER up are stand-ins in the recipe list (most of Survival's), not
+-- real spells; those recipes are still matched by name.
+local PLACEHOLDER = 900000
+
+function Altoholic:IsRealRecipeSpell(spell)
+	return spell and spell < PLACEHOLDER
+end
+
+function Altoholic:ScanKnownRecipes()
+	if not IsPlayerSpell or not self.RecipeDB then return end
+	local c = self.db.account.data[V.faction][V.realm].char[V.player]
+	local known = {}
+	for profession, crafts in pairs(self.RecipeDB) do
+		local set
+		for _, craft in ipairs(crafts) do
+			if craft[1] < PLACEHOLDER and IsPlayerSpell(craft[1]) then
+				set = set or {}
+				set[craft[1]] = true
+			end
+		end
+		if set then known[profession] = set end
+	end
+	c.knownRecipes = known
+	c.knownRecipesTime = time()
+end
+
+-- several things can say a recipe was learned at once; one check a moment later covers them
+local scanPending
+function Altoholic:ScanKnownRecipesSoon()
+	if scanPending then return end
+	scanPending = true
+	C_Timer.After(1, function()
+		scanPending = nil
+		Altoholic:ScanKnownRecipes()
+		Altoholic:DataChanged("recipes")
+	end)
+end
+
+-- "You have learned how to create a new item: %s." Recipes aren't spellbook spells, so this
+-- chat line is what learning one from an item or a trainer reliably gives.
+local learnedRecipe = ERR_LEARN_RECIPE_S and ("^" .. string.gsub(string.gsub(ERR_LEARN_RECIPE_S, "([%.%(%)%-%+%*%?%[%]%^%$])", "%%%1"), "%%s", ".+"))
+function Altoholic:CHAT_MSG_SYSTEM(message)
+	if learnedRecipe and message and string.find(message, learnedRecipe) then
+		self:ScanKnownRecipesSoon()
+	end
 end
