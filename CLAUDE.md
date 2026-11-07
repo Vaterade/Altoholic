@@ -122,6 +122,11 @@ are generated from LibCrafts-1.0 by `tools/convert-libcrafts.lua <LibCrafts fold
 edit them by hand, convert again. `Sources.lua` reads an item's vendors, drops and objects
 from pfQuest's `pfDB` when pfQuest is loaded (names from `pfDB[kind].loc`, zones from
 `pfDB.zones.loc`) and maps them with `pfDatabase:SearchItemID`; it finds nothing otherwise.
+pfUI-tradeskill carries copies of this code and of the recipe list, but loads after Altoholic
+and uses Altoholic's when it is there: `RecipeDB` and `L`, and the methods `HasItemSources`,
+`ItemSources`, `AddItemSources`, `ShowItemOnMap`, `EnglishProfession`, `RecipeKey` and
+`ParseReagents`. Treat those as an interface: changing what they take or return needs the same
+change in pfUI-tradeskill's `core.lua` (`M.UseAltoholic`).
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
 changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
 answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls
