@@ -61,3 +61,5 @@ UI\Views\Summary.lua
 UI\Views\Containers.lua
 UI\Views\Search.lua
 UI\Views\Equipment.lua
+UI\Views\Mail.lua
+UI\Views\Recipes.lua
