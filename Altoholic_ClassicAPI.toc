@@ -56,6 +56,7 @@ Modules\Attunements.xml
 
 UI\Widgets.lua
 UI\Window.lua
+UI\Grid.lua
 UI\Menu.lua
 UI\Views\Summary.lua
 UI\Views\Containers.lua
@@ -65,3 +66,5 @@ UI\Views\Mail.lua
 UI\Views\Recipes.lua
 UI\Views\Skills.lua
 UI\Views\BagUsage.lua
+UI\Views\Reputations.lua
+UI\Views\Attunements.lua
