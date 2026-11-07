@@ -62,4 +62,5 @@ UI\Views\Raids.lua
 UI\Views\Quests.lua
 UI\Views\Auctions.lua
 UI\Views\Options.lua
+UI\Views\About.lua
 UI\Views\Notes.lua

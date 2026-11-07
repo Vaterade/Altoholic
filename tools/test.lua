@@ -127,6 +127,8 @@ end
 -- *** the character ***
 CLASSIC_API_VERSION = 11810
 GetLocale = function() return "enUS" end
+GetBuildInfo = function() return "1.12.1", "5875" end
+GetAddOnInfo = function(name) return name, name, "", nil, nil, "MISSING" end
 UnitName = function() return "Testchar" end
 UnitFactionGroup = function() return "Alliance" end
 GetRealmName = function() return "Testrealm" end
@@ -327,6 +329,11 @@ alt.class, alt.level, alt.race = "Mage", 10, "Gnome"
 check(#UI.Realms()[1].chars == 2, "a second character shows up")
 check(not Altoholic:DeleteCharacter("Alliance", "Testrealm", "Testchar"), "the logged-in character can't be deleted")
 check(Altoholic:DeleteCharacter("Alliance", "Testrealm", "Altchar") and #UI.Realms()[1].chars == 1, "an alt can")
+UI.Open("about")
+check(UI.current == UI.views.About and UI.current.info[1]:GetText() == Altoholic.vars.version, "About shows the version")
+local deps = UI.current.deps.list.data
+check(#deps == 5 and deps[1].cells[1] == "ClassicAPI" and deps[1].cells[3]:find("v1%.18%.10")
+	and deps[2].cells[3]:find("Optional %- not installed"), "About's Needed column: ClassicAPI's version, pfUI optional and not installed")
 UI.Open("options")
 check(UI.current == UI.views.Options and UI.current.boxes.TooltipSource:GetChecked(), "options show the stored settings")
 check(AltoholicMinimapIcon ~= nil, "the minimap button is made at login")

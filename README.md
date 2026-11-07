@@ -15,9 +15,19 @@ Since 1.4.0 this addon requires [ClassicAPI](https://github.com/brues-code/Class
 a client mod that brings Lua 5.1 and parts of the modern addon API to the 1.12 client.
 Without it Altoholic only shows a notice at login and leaves your saved data untouched.
 
+These addons are optional; each adds to what Altoholic can do when it is loaded. The About
+page (under Options) shows which are there.
+
+| Addon | What it adds |
+|---|---|
+| [pfUI](https://github.com/brues-code/pfUI) (ClassicAPI edition) | The window takes pfUI's colours, font and borders. Without it, the window draws pfUI's default look itself. |
+| [pfUI-trades](https://github.com/Vaterade/pfUI-trades) | Queue crafts for any character from Recipes and Search. |
+| [pfQuest](https://github.com/brues-code/pfQuest) | Missing Recipes names who sells or drops a recipe and where, and shows them on the map. |
+| [pfQuest-octo-plus](https://github.com/Salahaja/pfQuest-octo-plus) | OctoWoW's items and NPCs for pfQuest, so those sources match this server. |
+
 ## 2.0: a new window
 
-The window is rebuilt from scratch in the style of [pfUI](https://github.com/shagu/pfUI)'s
+The window is rebuilt from scratch in the style of [pfUI](https://github.com/brues-code/pfUI)'s
 settings window: flat dark panels, a column of categories, a column of characters under
 their realms, and a search box along the bottom that searches as you type. It uses no
 Blizzard templates. pfUI isn't required: when it is loaded, the window takes pfUI's colours,
@@ -43,7 +53,29 @@ font and border size; without it, it draws the same look with pfUI's defaults.
   converted with `tools/convert-libcrafts.lua`. With [pfQuest](https://github.com/brues-code/pfQuest)
   loaded, hovering a recipe item names the vendors, mobs and chests it comes from and their
   zones, and clicking it shows them on pfQuest's world map.
+- **About**, under Options, shows the version and which of the addons under Requirements are loaded.
+  The credits are further down this page.
 - The saved data is the same as 1.x, so nothing is lost when updating.
+
+## Credits
+
+Altoholic 2.0 is built on the work of these addons and people:
+
+| Who | What Altoholic uses |
+|---|---|
+| Thaoky | Altoholic, the original addon (2.4.015), which all of this grew from |
+| [Dyaxler](https://github.com/Dyaxler/Altoholic_Vanilla) | Altoholic for Vanilla WoW, the backport to 1.12 |
+| [Giselbaer](https://github.com/gbl/Altoholic_Vanilla) | The Turtle WoW version: raid lockouts, attunements, completed quests |
+| [Vaterade](https://github.com/Vaterade/Altoholic) | The OctoWoW version and the 2.0 window |
+| [Shagu, me0wg4ming & brues](https://github.com/brues-code/pfUI) | pfUI (the ClassicAPI edition), whose look and settings window the 2.0 window follows |
+| [brues-code](https://github.com/brues-code/ClassicAPI) | ClassicAPI, which Altoholic is built on, and the pfQuest version it reads |
+| [Shagu, txtsd](https://github.com/brues-code/pfQuest) | pfQuest: the vendors, drops and map pins for Missing Recipes |
+| [Salahaja & The Iron Hammers](https://github.com/Salahaja/pfQuest-octo-plus) | pfQuest-octo-plus, OctoWoW's item and NPC database |
+| [Roman Kharitonov (refaim)](https://github.com/refaim/MissingCrafts) | LibCrafts-1.0 from MissingCrafts: the recipe list for Missing Recipes (MIT) |
+| Grom | Gromissingcrafts: the Survival recipes, and the copy of the recipe list used (MIT) |
+| AtlasLoot | The loot tables behind the loot and upgrade searches (AtlasLoot 4.05) |
+| LibBabble-Boss-3.0 | Boss name translations |
+| The translators | The French, German and Chinese translations |
 
 ## Giselbaer's changes
 

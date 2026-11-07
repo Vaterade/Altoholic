@@ -78,5 +78,7 @@ Add({ id = "search", title = L["Search"], entries = function() return UI.SearchE
 
 Add({ id = "options", title = L["Options"], view = "Options" })
 
+Add({ id = "about", title = L["About"], view = "About" })
+
 -- hidden: opened by the Notes button in the bottom bar, not from the first column
 Add({ id = "notes", title = L["Notes"], hidden = true, entries = function() return UI.NoteEntries() end })
