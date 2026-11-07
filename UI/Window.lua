@@ -412,7 +412,7 @@ function UI.Create()
 	content = CreateFrame("Frame", nil, page)
 	W.Shade(content)
 
-	-- the bottom bar: the view's controls, then the search box out to the right edge
+	-- the bottom bar: the view's controls, the Notes button, then the search box out to the right edge
 	search = W.EditBox(win, 260, 25, L["Search"] .. "...", function(self)
 		self.searchAt = nil
 		UI.Search(self:GetText())
@@ -431,14 +431,15 @@ function UI.Create()
 	end)
 	UI.searchBox = search
 
-	-- Notes, where pfUI's config has its Unlock button
+	-- Notes, just left of the search box; the view's own strip (its status text) keeps the
+	-- left end of the bar
 	local notes = W.Button(win, L["Notes"], 110, 25, function() UI.Open("notes") end)
-	notes:SetPoint("TOPLEFT", area.backdrop, "BOTTOMLEFT", 0, -5)
+	notes:SetPoint("RIGHT", search, "LEFT", -5, 0)
 	UI.notesButton = notes
 
 	bar = CreateFrame("Frame", nil, win)
-	bar:SetPoint("TOPLEFT", notes, "TOPRIGHT", 5, 0)
-	bar:SetPoint("BOTTOMRIGHT", search, "BOTTOMLEFT", -5, 0)
+	bar:SetPoint("TOPLEFT", area.backdrop, "BOTTOMLEFT", 0, -5)
+	bar:SetPoint("BOTTOMRIGHT", notes, "BOTTOMLEFT", -5, 0)
 
 	win:SetScript("OnShow", function()
 		UI.UpdateNotesButton()

@@ -1,5 +1,5 @@
 -- Notes: leave a note for a character, and see it when they log in. The page is opened by
--- the Notes button at the bottom left of the window (where pfUI's config has Unlock); the
+-- the Notes button in the bottom bar, just left of the search box; the
 -- second column lists the characters with how many notes each has. Data/Notes.lua keeps them.
 local L = Altoholic.L
 local V = Altoholic.vars

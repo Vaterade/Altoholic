@@ -108,7 +108,7 @@ extends tooltips; `Query.lua` holds formatting helpers and `Constants.lua` share
 `Trades.lua` queues saved recipes in pfUI-trades (`pfUITrades.QueueFor`) when it is loaded;
 pfUI-trades keeps lists by realm, so only the logged-in realm's characters can be queued.
 `Notes.lua` keeps notes for characters in `AltoholicDB.account.notes[realm][name]`, outside the
-defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button, a hidden
+defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button left of the search box, a hidden
 category) and the popup shown 5 s after login. Window parts that need `PLAYER_LOGIN` add a
 function to `UI.loginHooks`.
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that

@@ -32,7 +32,7 @@ font and border size; without it, it draws the same look with pfUI's defaults.
   button on each recipe that adds crafts to that character's task list there, and
   right-clicking a recipe in Search queues it on whoever knows it. Only characters on the
   realm you're logged in to can be given work.
-- **Notes**: the Notes button at the bottom left (where pfUI has Unlock) lets you leave
+- **Notes**: the Notes button beside the search box lets you leave
   notes for any character, or type `/alto note <name> <text>`. When that character logs in,
   the notes pop up; Done removes one, Later keeps them for next time.
 - The saved data is the same as 1.x, so nothing is lost when updating.
