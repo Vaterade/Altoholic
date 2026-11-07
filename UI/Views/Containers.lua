@@ -5,7 +5,7 @@ local W = Altoholic.W
 local UI = Altoholic.UI
 
 local SLOTS = 16		-- per line
-local SIZE, GAP = 32, 4
+local SIZE, GAP = 32, 3
 
 -- in the order they are listed: bags, keyring, bank, bank bags
 local ORDER = { 0, 1, 2, 3, 4, -2, 100, 5, 6, 7, 8, 9, 10 }
@@ -68,6 +68,7 @@ function view:Create(frame, bar)
 				end
 			end
 		end)
+	self.list.fit = true
 	self.summary = W.Text(bar)
 	self.summary:SetPoint("LEFT", bar, "LEFT", 4, 0)
 	self.summary:SetTextColor(.7, .7, .7)

@@ -518,6 +518,7 @@ end
 --   createRow(row)                builds a row's widgets once (row is a Button)
 --   updateRow(row, item, index)   fills it for one entry of the data
 --   list:SetData(t)  list:Refresh()  list:ScrollTo(index)
+--   list.fit = true  spreads the rows out to fill the frame's height
 -- The list fills its parent unless it is anchored otherwise; a thin scrollbar appears on
 -- the right while there is more than fits.
 function W.List(parent, rowHeight, createRow, updateRow)
@@ -554,15 +555,19 @@ function W.List(parent, rowHeight, createRow, updateRow)
 		local maxOffset = math.max(0, #self.data - visible)
 		if self.offset > maxOffset then self.offset = maxOffset end
 		local scrolls = maxOffset > 0
+		-- list.fit: the few pixels left under the last whole row are shared out between the
+		-- rows, so the list reaches the bottom of its frame instead of stopping short
+		local step = rowHeight
+		if self.fit then step = math.max(rowHeight, (self:GetHeight() or 0) / visible) end
 		for i = 1, visible do
 			local row = self.rows[i]
 			if not row then
 				row = CreateFrame("Button", nil, self)
 				row:SetHeight(rowHeight)
-				row:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -(i - 1) * rowHeight)
 				createRow(row)
 				self.rows[i] = row
 			end
+			row:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -(i - 1) * step)
 			row:SetPoint("RIGHT", self, "RIGHT", scrolls and -10 or 0, 0)
 			local index = self.offset + i
 			local item = self.data[index]
