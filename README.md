@@ -3,15 +3,13 @@
 Altoholic records the bags, bank, mail, equipment, professions, quests, reputations and
 raid lockouts of all your characters and shows them in one window.
 
-This is Vaterade's fork of [Giselbaer's Turtle WoW version](https://github.com/gbl/Altoholic_Vanilla),
-which in turn is based on [Dyaxler's Altoholic for Vanilla WoW](https://github.com/Dyaxler/Altoholic_Vanilla).
-Thanks to both for the work this builds on. Their notes follow below.
-
-Vaterade's updates are made for OctoWoW.
+This is an overhaul of Altoholic for OctoWoW, with a new window in pfUI's style. It builds on
+Giselbaer's Turtle WoW version, which in turn is based on Dyaxler's original Altoholic for
+Vanilla WoW. Thanks to both for the work this builds on; their notes are at the end of this page.
 
 ## Requirements
 
-Since 1.4.0 this addon requires [ClassicAPI](https://github.com/brues-code/ClassicAPI),
+Starting in v2.0.0 this addon requires [ClassicAPI](https://github.com/brues-code/ClassicAPI),
 a client mod that brings Lua 5.1 and parts of the modern addon API to the 1.12 client.
 Without it Altoholic only shows a notice at login and leaves your saved data untouched.
 
@@ -87,67 +85,6 @@ The character names are made up, apart from one that is blurred.
   `/alto search primal mana`.
 - `/alto note <name> <text>` leaves a note for one of your characters on this realm.
 
-## Sharing data between accounts
-
-### Possible but difficult
-
-If you have several accounts and want to share Altoholic data between them,
-you must apply some windows tricks to make all accounts share the same data
-file. This isn't supported by WOW itself.
-
-It is going to become a bit technical here. I'll explain the process and what
-happens, but you need to have some technical knowledge and experience with
-using the command line. If you need more explanation than this, please don't
-ask me, ask a friend who knows more. **I won't answer questions regarding this**,
-but if you have suggestions on how to make this section more understandable,
-feel free to ping.
-
-### Behind the scenes
-
-If you have two accounts named Alice and Bob, and your WOW installation is in
-`C:\GAMES\Turtlewow`, then WOW stores all account data for Alice in
-`C:\Games\Turtlewow\WTF\Account\ALICE`, and all data for Bob in
-`C:\Games\Turtlewow\WTF\Account\BOB`. The accounts can't access each other's data.
-
-The full names of the data files would be, in this case,
-`C:\Games\Turtlewow\WTF\Account\ALICE\SavedVariables\Altoholic.lua`
-and `C:\Games\Turtlewow\WTF\Account\BOB\SavedVariables\Altoholic.lua`.
-Now, Windows has a feature called "symbolic link" which allows a file to point
-to a different one. You can make a file named `C:\Games\Turtlewow\Altoholic.lua`
-and tell Windows to actually access that file when one of the real ones gets
-accessed. This is making
-`C:\Games\Turtlewow\WTF\Account\ALICE\SavedVariables\Altoholic.lua` a symbolic
-link to `C:\Games\Turtlewow\Altoholic.lua`, and the same for the BOB file.
-
-When WOW saves variables, it renames the file to a `.bak` file unless the `.bak`
-already exists, so we need to make sure the `.bak` exists before creating the
-symlink, else the symlink will just be renamed.
-
-The included script "make-altoholic-links.ps" should do all the technical stuff.
-Start powershell as administrator (else it won't be able to create symlinks),
-move to a folder that's "above" your `Account` folder, and run the script.
-
-### Warnings
-
-Also note that there will be issues if you run two accounts at once. The data
-will be saved whenever you log out, overwriting everything from before.
-Now imagine Alice and Bob each have 5 arcane essences. You log in both toons,
-both will know about those 5 essences. Now Alice trades 3 essences to Bob and
-logs out. At that time, the database will know that Alices essences are down to
-3, but Bob doesn't reload that info. So Bob's Altoholic will know Bob has 8,
-but think Alice has 5.
-
-When you log out Bob, this info will be written to the common database, so you'll
-see Alice-5 Bob-8 until you log in Alice again.
-
-Also, if you log out a character in Account Alice, and the logout writes the 
-database, and during that write you log in on Account Bob, the Bob account will
-read an incomplete database and give you a warning. When Alice's log out is
-complete, you'll have a working database on the disk, but the in-memory one of
-Bob is botched. In this case, do *not* log out Bob; log Alice back in to read the
-sane database, then log Bob out (will write the botched one), then log Alice out
-(will overwrite the botched one with Alice's good one).
-
 ## Credits
 
 Altoholic 2.0 is built on the work of these addons and people:
@@ -155,18 +92,15 @@ Altoholic 2.0 is built on the work of these addons and people:
 | Who | What Altoholic uses |
 |---|---|
 | Thaoky | Altoholic, the original addon (2.4.015), which all of this grew from |
-| [Dyaxler](https://github.com/Dyaxler/Altoholic_Vanilla) | Altoholic for Vanilla WoW, the backport to 1.12 |
-| [Giselbaer](https://github.com/gbl/Altoholic_Vanilla) | The Turtle WoW version: raid lockouts, attunements, completed quests |
-| [Vaterade](https://github.com/Vaterade/Altoholic) | The OctoWoW version and the 2.0 window |
-| [Shagu, me0wg4ming & brues](https://github.com/brues-code/pfUI) | pfUI (the ClassicAPI edition), whose look and settings window the 2.0 window follows |
-| [brues-code](https://github.com/brues-code/ClassicAPI) | ClassicAPI, which Altoholic is built on, and the pfQuest version it reads |
-| [Shagu, txtsd](https://github.com/brues-code/pfQuest) | pfQuest: the vendors, drops and map pins for Missing Recipes |
-| [Salahaja & The Iron Hammers](https://github.com/Salahaja/pfQuest-octo-plus) | pfQuest-octo-plus, OctoWoW's item and NPC database |
-| [Roman Kharitonov (refaim)](https://github.com/refaim/MissingCrafts) | LibCrafts-1.0 from MissingCrafts: the recipe list for Missing Recipes (MIT) |
+| Dyaxler | Altoholic for Vanilla WoW, the backport to 1.12 |
+| Giselbaer | The Turtle WoW version: raid lockouts, attunements, completed quests |
+| brues-code | pfUI (the ClassicAPI edition), whose look and settings window the 2.0 window follows |
+| brues-code | ClassicAPI, which Altoholic is built on |
+| brues-code | pfQuest: the vendors, drops and map pins for Missing Recipes |
+| Salahaja & The Iron Hammers | pfQuest-octo-plus, OctoWoW's item and NPC database |
+| Roman Kharitonov (refaim) | LibCrafts-1.0 from MissingCrafts: the recipe list for Missing Recipes (MIT) |
 | Grom | Gromissingcrafts: the Survival recipes, and the copy of the recipe list used (MIT) |
 | AtlasLoot | The loot tables behind the loot and upgrade searches (AtlasLoot 4.05) |
-| LibBabble-Boss-3.0 | Boss name translations |
-| The translators | The French, German and Chinese translations |
 
 ## Earlier versions
 
