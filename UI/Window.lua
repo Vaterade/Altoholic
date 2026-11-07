@@ -128,6 +128,10 @@ function UI.CharacterTooltip(owner, ref)
 		local logout = UI.IsPlayer(ref) and 0 or c.lastlogout
 		GameTooltip:AddLine(L["Rest XP"] .. ": " .. Altoholic:GetRestedXP(c.level, c.restxp, logout, c.isResting), 1, 1, 1)
 	end
+	if (c.pvp_hk or 0) > 0 or (c.pvp_HonorPoints or 0) > 0 then
+		GameTooltip:AddDoubleLine(L["Honor points: "] .. "|cff00ff00" .. (c.pvp_HonorPoints or 0),
+			"HK: |cff00ff00" .. (c.pvp_hk or 0) .. "|r  DK: |cff00ff00" .. (c.pvp_dk or 0), 1, 1, 1, 1, 1, 1)
+	end
 	if not UI.IsPlayer(ref) and c.lastlogout and c.lastlogout > 0 then
 		GameTooltip:AddLine(format(L["Last seen %d days ago"], Altoholic:GetDelayInDays(c.lastlogout)), .6, .6, .6)
 	end

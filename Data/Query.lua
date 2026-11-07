@@ -1,5 +1,6 @@
 -- Formatting and lookup helpers for the saved data. Nothing here draws anything.
 local L = Altoholic.L
+local V = Altoholic.vars
 local Professions = Altoholic.Professions
 local WHITE		= "|cFFFFFFFF"
 local RED		= "|cFFFF0000"
@@ -274,4 +275,21 @@ function Altoholic:GetBagTypeString(link)
 	if classID == Enum.ItemClass.Quiver or (classID == Enum.ItemClass.Container and subClassID ~= 0) then
 		return subType
 	end
+end
+
+-- Forgets a character: its record and its reputations, then the realm and the faction if
+-- nothing is left in them. The logged-in character can't be deleted. Returns true if done.
+function Altoholic:DeleteCharacter(faction, realm, name)
+	if faction == V.faction and realm == V.realm and name == V.player then return false end
+	local data = self.db.account.data
+	local r = rawget(data, faction) and rawget(data[faction], realm)
+	if not r then return false end
+	for _, reps in pairs(rawget(r, "reputation") or {}) do
+		if type(reps) == "table" then reps[name] = nil end
+	end
+	local chars = rawget(r, "char")
+	if chars then chars[name] = nil end
+	if not chars or next(chars) == nil then data[faction][realm] = nil end
+	if next(data[faction]) == nil then data[faction] = nil end
+	return true
 end

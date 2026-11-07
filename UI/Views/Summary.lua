@@ -46,7 +46,13 @@ function view:Update()
 					Rested(ref, c),
 				},
 				onEnter = function(row) UI.CharacterTooltip(row, ref) end,
-				onClick = function() UI.Open("containers", ref.realm .. "/" .. ref.name) end,
+				onClick = function(row, button)
+					if button == "RightButton" then
+						view:Menu(row, ref)
+					else
+						UI.Open("containers", ref.realm .. "/" .. ref.name)
+					end
+				end,
 			})
 			rLevels, rMoney, rPlayed = rLevels + c.level, rMoney + c.money, rPlayed + c.played
 		end
@@ -64,6 +70,33 @@ function view:Update()
 		} })
 	end
 	self.table:SetData(data, true)
+end
+
+-- right-click on a character: open one of their pages, or forget them
+function view:Menu(row, ref)
+	local key = ref.realm .. "/" .. ref.name
+	local items = {
+		{ text = L["View bags"], func = function() UI.Open("containers", key) end },
+		{ text = L["View mailbox"], func = function() UI.Open("mail", key) end },
+		{ text = L["View quest log"], func = function() UI.Open("quests", key) end },
+		{ text = L["View auctions"], func = function() UI.Open("auctions", key) end },
+		{ text = L["View bids"], func = function() UI.Open("bids", key) end },
+	}
+	if not UI.IsPlayer(ref) then
+		table.insert(items, { text = "|cffff5555" .. L["Delete this Alt"], func = function()
+			W.ShowMenu(row, {
+				{ text = format(L["Forget %s and everything saved about them?"], UI.ClassHex(ref.c.class) .. ref.name .. "|r") },
+				{ text = "|cffff5555" .. L["Delete"], func = function()
+					if Altoholic:DeleteCharacter(ref.faction, ref.realm, ref.name) then
+						DEFAULT_CHAT_FRAME:AddMessage(W.TEAL_HEX .. "Altoholic: |r" .. L["Character "] .. ref.name .. L[" successfully deleted"])
+						view:Update()
+					end
+				end },
+				{ text = CANCEL or "Cancel" },
+			})
+		end })
+	end
+	W.ShowMenu(row, items)
 end
 
 UI.RegisterView("Summary", view)

@@ -287,6 +287,12 @@ for _, name in ipairs({ "Reputations", "Attunements", "Raids" }) do
 	local good, e = pcall(UI.ShowView, name)
 	check(good, name .. " opens" .. (good and "" or (": " .. tostring(e))))
 end
+-- deleting an alt: a second character, then gone again
+local alt = Altoholic.db.account.data.Alliance.Testrealm.char.Altchar
+alt.class, alt.level, alt.race = "Mage", 10, "Gnome"
+check(#UI.Realms()[1].chars == 2, "a second character shows up")
+check(not Altoholic:DeleteCharacter("Alliance", "Testrealm", "Testchar"), "the logged-in character can't be deleted")
+check(Altoholic:DeleteCharacter("Alliance", "Testrealm", "Altchar") and #UI.Realms()[1].chars == 1, "an alt can")
 UI.Open("options")
 check(UI.current == UI.views.Options and UI.current.boxes.TooltipSource:GetChecked(), "options show the stored settings")
 check(AltoholicMinimapIcon ~= nil, "the minimap button is made at login")
