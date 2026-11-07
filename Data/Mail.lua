@@ -44,13 +44,13 @@ function Altoholic:UpdatePlayerMail()
                 daysleft = daysLeft
 			} )
 		end
+        -- the body of a mail with money in it, kept with the money when the option is on
+        local inboxText
         if Altoholic:Option("ScanMailBody") then
-            local inboxText = GetInboxText(i)
+            inboxText = GetInboxText(i)
             if inboxText then
                 if IsAddOnLoaded("GMail") and string.find(inboxText, GMAIL_ITEMNUM) then
                     inboxText = false
-                else
-                    inboxText = inboxText
                 end
             end
         end

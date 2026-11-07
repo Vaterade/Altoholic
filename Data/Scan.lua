@@ -142,15 +142,12 @@ function Altoholic:UpdatePlayerSpells()
           do break end
         end
         if string.find(spellRank, ".*Rank.*") then
-            SpellName = spellName.." ("..spellRank..")"
+            c.spells[i] = spellName .. " (" .. spellRank .. ")"
         else
-            SpellName = spellName
+            c.spells[i] = spellName
         end
-        c.spells[i] = SpellName
         i = i + 1
     end
-    local i = nil
-    local SpellName = nil
 end
 
 function Altoholic:UpdatePVPStats()
