@@ -407,6 +407,14 @@ UI.Open("containers")
 check(UI.current.args and UI.current.args.name == "Testchar", "Containers opens on the logged-in character")
 local lines = UI.views.Containers.list.data
 check(#lines == 2 and lines[1].bagID == 0 and lines[2].bagID == 1, "containers: a line per bag")
+-- the height arrives late: the list notices on its next frame and draws more rows
+local clist = UI.views.Containers.list
+local before = #clist.rows
+clist.height = 700
+clist.scripts.OnUpdate(clist)
+check(#clist.rows > before, "a list redraws when its height turns out larger (" .. before .. " -> " .. #clist.rows .. " rows)")
+clist.height = 300
+clist.scripts.OnUpdate(clist)
 local slot = UI.views.Containers.list.rows[2].slots[2]
 check(slot.item and tostring(slot.item):find("15248"), "containers: the enchanted item shows by its link")
 -- searching: the text from the box, over this realm

@@ -551,6 +551,7 @@ function W.List(parent, rowHeight, createRow, updateRow)
 	end
 
 	function list:Refresh()
+		self.drawnHeight = self:GetHeight()
 		local visible = Visible()
 		local maxOffset = math.max(0, #self.data - visible)
 		if self.offset > maxOffset then self.offset = maxOffset end
@@ -616,6 +617,11 @@ function W.List(parent, rowHeight, createRow, updateRow)
 		self:Refresh()
 	end)
 	list:SetScript("OnSizeChanged", function(self) self:Refresh() end)
+	-- The client can report a short height while the window is still being laid out, and
+	-- doesn't always say when the real one arrives, so the list watches for it while shown.
+	list:SetScript("OnUpdate", function(self)
+		if self:GetHeight() ~= self.drawnHeight then self:Refresh() end
+	end)
 	return list
 end
 
