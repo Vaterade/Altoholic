@@ -18,9 +18,14 @@ function UI.CharacterGrid(frame, labelWidth)
 	local holder = CreateFrame("Frame", nil, frame)
 	holder:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -8)
 	holder:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
-	local columns = math.max(1, math.floor(((frame:GetWidth() or 686) - labelWidth - 30) / (CELL + GAP)))
-	columns = math.min(columns, 14)
-	grid.columns = columns
+	-- cells are made for the most characters that can fit; how many show is worked out from
+	-- the page's width each time the grid is drawn (see SetData)
+	local columns = 14
+	local function Fit()
+		local width = W.Width(holder)
+		if width <= 0 then width = 686 end
+		return math.max(1, math.min(columns, math.floor((width - labelWidth - 30) / (CELL + GAP))))
+	end
 
 	grid.list = W.List(holder, 22,
 		function(row)
@@ -91,7 +96,8 @@ function UI.CharacterGrid(frame, labelWidth)
 
 	function grid:SetData(chars, lines, keepOffset)
 		self.chars = {}
-		for i = 1, math.min(columns, #chars) do self.chars[i] = chars[i] end
+		self.columns = Fit()
+		for i = 1, math.min(self.columns, #chars) do self.chars[i] = chars[i] end
 		local all = { { classes = true } }
 		for _, l in ipairs(lines) do table.insert(all, l) end
 		self.list:SetData(all, keepOffset)

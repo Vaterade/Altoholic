@@ -178,6 +178,10 @@ Item tooltips are extended through `HookScript("OnTooltipSetItem")` on `GameTool
   widget reads past the end while it fills its rows.
 - Pages are redrawn (throttled) on `GET_ITEM_INFO_RECEIVED` and when a scan calls
   `DataChanged`.
+- Measure frames with `W.Height(f)` / `W.Width(f)`, never `GetHeight`/`GetWidth`: on this
+  client a frame sized by its anchors reports its size multiplied by the UI scale (measured in
+  game: a 478-tall page read 388 at scale 0.8127), while its edges (`GetTop`, `GetBottom`...)
+  are right. Explicitly sized frames read true either way.
 
 ### Script handler conventions
 

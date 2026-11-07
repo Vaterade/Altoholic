@@ -511,6 +511,24 @@ function W.ItemClick(item)
 	end
 end
 
+-- *** Sizes ***
+
+-- A frame's size from its edges. On this client GetHeight and GetWidth of a frame sized by
+-- its anchors come back multiplied by the UI scale (a 478-tall page reads 388 at 0.81), while
+-- its edges are right; a frame given an explicit size reads true either way. Until the frame
+-- has been laid out it has no edges, and GetHeight/GetWidth is all there is.
+function W.Height(f)
+	local top, bottom = f:GetTop(), f:GetBottom()
+	if top and bottom then return top - bottom end
+	return f:GetHeight() or 0
+end
+
+function W.Width(f)
+	local left, right = f:GetLeft(), f:GetRight()
+	if left and right then return right - left end
+	return f:GetWidth() or 0
+end
+
 -- *** Scrolling list ***
 
 -- A virtual list: only the visible rows exist, and scrolling redraws them from the data.
@@ -547,19 +565,20 @@ function W.List(parent, rowHeight, createRow, updateRow)
 	list.bar = bar
 
 	local function Visible()
-		return math.max(1, math.floor((list:GetHeight() or 0) / rowHeight))
+		return math.max(1, math.floor(W.Height(list) / rowHeight))
 	end
 
 	function list:Refresh()
-		self.drawnHeight = self:GetHeight()
+		self.drawnHeight = W.Height(self)
 		local visible = Visible()
+		self.visible = visible
 		local maxOffset = math.max(0, #self.data - visible)
 		if self.offset > maxOffset then self.offset = maxOffset end
 		local scrolls = maxOffset > 0
 		-- list.fit: the few pixels left under the last whole row are shared out between the
 		-- rows, so the list reaches the bottom of its frame instead of stopping short
 		local step = rowHeight
-		if self.fit then step = math.max(rowHeight, (self:GetHeight() or 0) / visible) end
+		if self.fit then step = math.max(rowHeight, W.Height(self) / visible) end
 		for i = 1, visible do
 			local row = self.rows[i]
 			if not row then
@@ -620,7 +639,7 @@ function W.List(parent, rowHeight, createRow, updateRow)
 	-- The client can report a short height while the window is still being laid out, and
 	-- doesn't always say when the real one arrives, so the list watches for it while shown.
 	list:SetScript("OnUpdate", function(self)
-		if self:GetHeight() ~= self.drawnHeight then self:Refresh() end
+		if W.Height(self) ~= self.drawnHeight then self:Refresh() end
 	end)
 	return list
 end

@@ -423,6 +423,15 @@ clist.scripts.OnUpdate(clist)
 check(#clist.rows > before, "a list redraws when its height turns out larger (" .. before .. " -> " .. #clist.rows .. " rows)")
 clist.height = 300
 clist.scripts.OnUpdate(clist)
+-- this client's GetHeight of an anchored frame comes back times the UI scale (0.8127 in game:
+-- 466 read as 378.7); the list must go by its edges instead
+clist.height = 378.7
+clist.GetTop = function() return 770.9 - 8 end
+clist.GetBottom = function() return 292.9 + 4 end
+clist.scripts.OnUpdate(clist)
+check(clist.visible == math.floor(466 / clist.rowHeight), "a list counts its rows from its edges, not the scaled GetHeight (" .. tostring(clist.visible) .. " rows)")
+clist.GetTop, clist.GetBottom, clist.height = nil, nil, 300
+clist.scripts.OnUpdate(clist)
 local slot = UI.views.Containers.list.rows[2].slots[2]
 check(slot.item and tostring(slot.item):find("15248"), "containers: the enchanted item shows by its link")
 -- searching: the text from the box, over this realm
