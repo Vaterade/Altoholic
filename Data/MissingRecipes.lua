@@ -47,7 +47,7 @@ function Altoholic:MissingRecipes(c, profession)
 	local i = 1
 	while list and rawget(list, i) do
 		local r = rawget(list, i)
-		if r.name and not r.isHeader then known[r.name] = true end
+		if r.name and not self:IsRecipeHeader(r) then known[r.name] = true end
 		i = i + 1
 	end
 	local missing, all = {}, self.RecipeDB[en]

@@ -52,7 +52,7 @@ end
 function Altoholic:QueueCraft(name, realm, profession, recipe, count)
 	if not self:CanQueueCrafts() then return nil, "pfUI-trades isn't loaded" end
 	if realm ~= V.realm then return nil, "pfUI-trades only keeps lists for this realm" end
-	if not recipe or not recipe.name or recipe.isHeader then return nil, "not a recipe" end
+	if not recipe or not recipe.name or Altoholic:IsRecipeHeader(recipe) then return nil, "not a recipe" end
 	return pfUITrades.QueueFor(name, profession, self:TaskFromRecipe(recipe), count or 1)
 end
 

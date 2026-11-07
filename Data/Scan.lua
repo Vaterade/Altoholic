@@ -37,6 +37,7 @@ function Altoholic:PLAYER_LOGIN()
 		RequestTimePlayed()
 	end
 	self:CheckExpiredMail()
+	self:RepairRecipeLists()
 	-- the window, when it is loaded
 	if self.UI_OnLogin then self:UI_OnLogin() end
 end

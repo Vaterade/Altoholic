@@ -262,6 +262,17 @@ end
 check(found ~= nil, "recipe recorded")
 check(found and found.reagents and found.reagents:find("2770"), "recipe reagents recorded")
 
+-- a list saved before 2.0: a recipe still flagged as the header its row once was, a header
+-- still holding an old recipe's link, and a row left from a longer list
+local list = c.recipes.Mining.list
+list[2].isHeader = true
+list[3] = { name = "Old Header", isHeader = true, link = "|cffffffff|Hitem:1:0:0:0|h[Gone Item]|h|r", id = 1 }
+check(not Altoholic:IsRecipeHeader(list[2]) and Altoholic:IsRecipeHeader(list[3]), "stale rows: the recipe reads as a recipe, the header as a header")
+Altoholic:RepairRecipeLists()
+check(list[2].isHeader == nil and list[3].isHeader and list[3].link == nil, "the login repair fixes both")
+Fire("TRADE_SKILL_SHOW")
+check(rawget(list, 3) == nil and list[1].isHeader and not list[2].isHeader, "a rescan drops leftover rows")
+
 -- the options read from the database, not from the old check buttons
 check(Altoholic:Option("TooltipSource") == 1 and Altoholic:Option("TooltipAlreadyKnown") == nil, "Option() reads the stored setting")
 

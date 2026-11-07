@@ -178,7 +178,7 @@ function view:Update(args)
 		local list = UI.Array(rawget(p, "list"))
 		for i = 1, #list do
 			local s = list[i]
-			if s.isHeader then
+			if Altoholic:IsRecipeHeader(s) then
 				header = s.name
 				table.insert(lines, { header = header })
 			elseif not (header and folded[args.profession .. "/" .. header]) then
