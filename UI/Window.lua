@@ -34,6 +34,19 @@ function UI.Char(ref)
 	return Altoholic.db.account.data[ref.faction][ref.realm].char[ref.name]
 end
 
+-- A plain copy of a saved list. Saved tables with '*' defaults create an entry for any
+-- index that is read, so a list widget must never read past the end of the real thing.
+function UI.Array(t)
+	local out = {}
+	if type(t) ~= "table" then return out end
+	local i = 1
+	while rawget(t, i) ~= nil do
+		out[i] = rawget(t, i)
+		i = i + 1
+	end
+	return out
+end
+
 function UI.IsPlayer(ref)
 	return ref.name == V.player and ref.realm == V.realm
 end

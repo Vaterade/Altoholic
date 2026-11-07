@@ -118,7 +118,7 @@ function view:Update(args)
 	local lines = {}
 	local header
 	if p and not p.ScanFailed then
-		local list = rawget(p, "list") or {}
+		local list = UI.Array(rawget(p, "list"))
 		for i = 1, #list do
 			local s = list[i]
 			if s.isHeader then

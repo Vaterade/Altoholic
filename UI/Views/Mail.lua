@@ -52,7 +52,7 @@ end
 
 function view:Update(ref)
 	local c = UI.Char(ref)
-	local mail = rawget(c, "mail") or {}
+	local mail = UI.Array(rawget(c, "mail"))
 	self.list:SetData(mail, self.ref == ref)
 	self.ref = ref
 	local who = UI.ClassHex(c.class) .. ref.name .. "|r  "
