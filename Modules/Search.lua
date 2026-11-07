@@ -71,10 +71,7 @@ function Altoholic:Search_Update()
 end
 
 -- *** Search Functions ***
-function Altoholic:SearchReset()
-	AltoholicFrame_SearchEditBox:SetText("")
-	AltoholicFrame_MinLevel:SetText("")
-	AltoholicFrame_MaxLevel:SetText("")
+function Altoholic:SearchClearResults()
 	for i=1, 7 do
 		_G["AltoSearchEntry" .. i]:Hide()
 	end
@@ -82,8 +79,18 @@ function Altoholic:SearchReset()
     self.SearchResults = {}
 end
 
+function Altoholic:SearchReset()
+	AltoholicFrame_SearchEditBox:SetText("")
+	AltoholicFrame_MinLevel:SetText("")
+	AltoholicFrame_MaxLevel:SetText("")
+	self:SearchClearResults()
+end
+
 -- classID and subClassID restrict the search to one item class / subclass (Enum.ItemClass)
 function Altoholic:SearchItem(classID, subClassID)
+	-- a search started some other way (Enter, a menu entry, /alto search) replaces the
+	-- one the box was waiting to run
+	AltoholicFrame_SearchEditBox.searchAt = nil
 	if (V.ongoingsearch ~= nil) then
 		return
 	end

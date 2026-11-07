@@ -60,7 +60,6 @@ function Altoholic:Skin_Apply()
 		Skin("CreateBackdrop", box, nil, true)
 	end
 	Skin("SkinButton", AltoholicFrame_ResetButton)
-	Skin("SkinButton", AltoholicFrame_SearchButton)
 	Skin("SkinDropDown", RarityDropDownMenu)
 	Skin("SkinDropDown", SlotsDropDownMenu)
 	for _, name in ipairs({ "IncludeNoMinLevel", "CheckButton1", "CheckButton2", "CheckButton3" }) do

@@ -1117,6 +1117,51 @@ function Altoholic:Menu_FollowTab(frame)
 	self:Menu_Update()
 end
 
+-- *** The search box ***
+-- Here, not in Modules/Search.lua: the box is in Altoholic.xml, whose OnLoad runs
+-- before the modules load.
+-- Like pfUI's config search: no button, it searches by itself once typing stops for
+-- SEARCH_DELAY seconds (a search can walk every loot table, too slow for each key), or
+-- at once on Enter. Emptying it clears the results. A shift-clicked item that fills it
+-- is searched the same way.
+local SEARCH_DELAY = 0.4
+local HINT_R, HINT_G, HINT_B = .2, 1, .8	-- pfUI's teal
+
+function Altoholic:Search_OnLoad(box)
+	box:SetTextColor(HINT_R, HINT_G, HINT_B)
+	box:SetJustifyH("CENTER")
+	local hint = _G[box:GetName() .. "Hint"]
+	hint:SetText(L["Search"] .. "...")
+	hint:SetTextColor(HINT_R, HINT_G, HINT_B)
+end
+
+-- the "Search..." hint shows while the box is empty and not being typed in
+function Altoholic:Search_UpdateHint(box, focused)
+	box.focused = focused
+	local hint = _G[box:GetName() .. "Hint"]
+	if focused or box:GetText() ~= "" then
+		hint:Hide()
+	else
+		hint:Show()
+	end
+end
+
+function Altoholic:Search_OnTextChanged(box)
+	self:Search_UpdateHint(box, box.focused)
+	box.searchAt = GetTime() + SEARCH_DELAY
+end
+
+function Altoholic:Search_OnUpdate(box)
+	if box.searchAt and GetTime() >= box.searchAt then
+		box.searchAt = nil
+		if box:GetText() == "" then
+			self:SearchClearResults()
+		else
+			self:SearchItem()
+		end
+	end
+end
+
 -- The Search menu and the slot filter are labelled with the client's item class
 -- names, so they are built at PLAYER_LOGIN like the other tables (see Core.lua).
 function Altoholic:BuildSearchSubMenu()

@@ -173,21 +173,12 @@
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentSearch" inherits="GameFontNormalSmall" text="XML_TEXT_2">
-					<Size x="120" y="20" />
-					<Anchors>
-						<!-- centered over the search box (18-188) -->
-						<Anchor point="TOPLEFT">
-							<Offset x="43" y="-35" />
-						</Anchor>
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
+				<!-- the search filters; the search box itself is at the bottom -->
 				<FontString name="$parentLevelRange" inherits="GameFontNormalSmall" text="XML_TEXT_3">
 					<Size x="70" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentSearch" relativePoint="RIGHT" >
-							<Offset x="60" y="0" />
+						<Anchor point="TOPLEFT">
+							<Offset x="18" y="-35" />
 						</Anchor>
 					</Anchors>
 					<Color r="255" g="255" b="255" />
@@ -410,25 +401,64 @@
 				</Scripts>
 			</ScrollFrame>
 			
-			<!-- the search box and the Reset button line up with the left edge of the
-			     first menu column; 170 wide = Reset + gap + Search -->
-			<EditBox name="$parent_SearchEditBox" inherits="InputBoxTemplate">
-				<Size x="170" y="16" />
+			<!-- bottom bar, like pfUI's config: Reset, then the search box out to the second
+			     column's edge (18-298). It searches by itself shortly after typing stops
+			     (Altoholic:Search_OnTextChanged), or at once on Enter. -->
+			<Button name="$parent_ResetButton" inherits="UIPanelButtonTemplate" text="XML_TEXT_6">
+				<Size>
+					<AbsDimension x="80" y="22"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicCategory1" relativePoint="TOPLEFT" >
-						<Offset x="0" y="50" />
+					<Anchor point="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="18" y="9"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
+					<OnClick>
+						Altoholic:SearchReset();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<EditBox name="$parent_SearchEditBox" inherits="InputBoxTemplate">
+				<Size x="188" y="20" />
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_ResetButton" relativePoint="RIGHT" >
+						<Offset x="12" y="0" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<!-- shown while the box is empty and not being typed in -->
+						<FontString name="$parentHint" inherits="GameFontNormal" justifyH="CENTER" setAllPoints="true" />
+					</Layer>
+				</Layers>
+				<Scripts>
 					<OnLoad>
 						this:SetAutoFocus( false );
+						Altoholic:Search_OnLoad(this)
 					</OnLoad>
+					<OnTextChanged>
+						Altoholic:Search_OnTextChanged(this)
+					</OnTextChanged>
+					<OnUpdate>
+						Altoholic:Search_OnUpdate(this)
+					</OnUpdate>
+					<OnEditFocusGained>
+						this:HighlightText();
+						Altoholic:Search_UpdateHint(this, true)
+					</OnEditFocusGained>
+					<OnEditFocusLost>
+						this:HighlightText(0, 0);
+						Altoholic:Search_UpdateHint(this, false)
+					</OnEditFocusLost>
 					<OnEnterPressed>
 						Altoholic:SearchItem();
 						this:ClearFocus();
 					</OnEnterPressed>
 					<OnEscapePressed>
-						Altoholic:ToggleUI()
+						this:ClearFocus();
 					</OnEscapePressed>
 				</Scripts>
 			</EditBox>
@@ -458,40 +488,6 @@
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
-			<Button name="$parent_ResetButton" inherits="UIPanelButtonTemplate" text="XML_TEXT_6">
-				<Size>
-					<AbsDimension x="80" y="24"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_SearchEditBox" relativePoint="BOTTOMLEFT" >
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						Altoholic:SearchReset();
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$parent_SearchButton" inherits="UIPanelButtonTemplate" text="XML_TEXT_7">
-				<Size>
-					<AbsDimension x="80" y="24"/>
-				</Size>
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_ResetButton" relativePoint="RIGHT" >
-						<Offset>
-							<AbsDimension x="10" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						Altoholic:SearchItem();
-					</OnClick>
-				</Scripts>
-			</Button>
 			<CheckButton name="$parent_IncludeNoMinLevel" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
