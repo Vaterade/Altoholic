@@ -52,3 +52,8 @@ Modules\Search.xml
 Modules\Skills.xml
 Modules\Raids.xml
 Modules\Attunements.xml
+
+UI\Widgets.lua
+UI\Window.lua
+UI\Menu.lua
+UI\Views\Summary.lua

@@ -42,22 +42,66 @@ hooksecurefunc = function(name, fn)
 	_G[name] = function(...) local r = { orig(...) } fn(...) return unpack(r) end
 end
 
--- frames: just enough to register events and run scripts
+-- frames: any method not written out here does nothing and returns nil
 local frames = {}
-local function NewFrame()
-	local f = { scripts = {}, events = {} }
-	function f:RegisterEvent(e) self.events[e] = true end
-	function f:UnregisterEvent(e) self.events[e] = nil end
-	function f:SetScript(name, fn) self.scripts[name] = fn end
-	function f:HookScript(name, fn) self.scripts[name] = fn end
-	function f:Show() end
-	function f:Hide() end
+local noop = function() end
+local frameMethods = {}
+local function NewFrame(kind)
+	local f = setmetatable({ scripts = {}, events = {}, kind = kind, shown = true, height = 300, width = 300,
+		text = "", level = 1 }, { __index = function(_, k) return frameMethods[k] or (type(k) == "string" and k:match("^%u") and noop) or nil end })
 	table.insert(frames, f)
 	return f
 end
-CreateFrame = function() return NewFrame() end
+function frameMethods:RegisterEvent(e) self.events[e] = true end
+function frameMethods:UnregisterEvent(e) self.events[e] = nil end
+function frameMethods:SetScript(name, fn) self.scripts[name] = fn end
+function frameMethods:GetScript(name) return self.scripts[name] end
+function frameMethods:HookScript(name, fn) self.scripts[name] = fn end
+function frameMethods:Show()
+	if not self.shown then
+		self.shown = true
+		if self.scripts.OnShow then self.scripts.OnShow(self) end
+	end
+end
+function frameMethods:Hide()
+	if self.shown then
+		self.shown = false
+		if self.scripts.OnHide then self.scripts.OnHide(self) end
+	end
+end
+function frameMethods:IsShown() return self.shown end
+function frameMethods:IsVisible() return self.shown end
+function frameMethods:GetHeight() return self.height end
+function frameMethods:GetWidth() return self.width end
+function frameMethods:SetHeight(h) self.height = h end
+function frameMethods:SetWidth(w) self.width = w end
+function frameMethods:GetFrameLevel() return self.level end
+function frameMethods:SetText(t) self.text = t end
+function frameMethods:GetText() return self.text end
+function frameMethods:GetStringWidth() return 50 end
+function frameMethods:GetEffectiveScale() return 1 end
+function frameMethods:GetChecked() return self.checked end
+function frameMethods:SetChecked(c) self.checked = c end
+function frameMethods:IsEnabled() return 1 end
+function frameMethods:GetValue() return self.value or 0 end
+function frameMethods:SetValue(v)
+	self.value = v
+	if self.scripts.OnValueChanged then self.scripts.OnValueChanged(self, v) end
+end
+function frameMethods:GetPoint() return "CENTER", nil, "CENTER", 0, 0 end
+function frameMethods:CreateTexture() return NewFrame("Texture") end
+function frameMethods:GetThumbTexture() self.thumb = self.thumb or NewFrame("Texture") return self.thumb end
+function frameMethods:GetCheckedTexture() self.checkTex = self.checkTex or NewFrame("Texture") return self.checkTex end
+function frameMethods:CreateFontString() return NewFrame("FontString") end
+CreateFrame = function(kind, name)
+	local f = NewFrame(kind)
+	if name then rawset(_G, name, f) end
+	return f
+end
+UIParent = NewFrame("Frame")
+STANDARD_TEXT_FONT = "Fonts\\FRIZQT__.TTF"
 UISpecialFrames = {}
-GameTooltip, ItemRefTooltip = NewFrame(), NewFrame()
+GameTooltip, ItemRefTooltip = NewFrame("GameTooltip"), NewFrame("GameTooltip")
 DEFAULT_CHAT_FRAME = { AddMessage = function() end }
 SlashCmdList = {}
 
@@ -218,6 +262,28 @@ check(found and found.reagents and found.reagents:find("2770"), "recipe reagents
 
 -- the options read from the database, not from the old check buttons
 check(Altoholic:Option("TooltipSource") == 1 and Altoholic:Option("TooltipAlreadyKnown") == nil, "Option() reads the stored setting")
+
+-- *** the window ***
+local UI = Altoholic.UI
+UI.Toggle()
+check(AltoholicWindow and AltoholicWindow:IsShown(), "/alto opens the new window")
+check(UI.current == UI.views.Summary, "it opens on the account summary")
+local rows = UI.views.Summary.table.list.data
+check(#rows == 3 and rows[1].header == "Testrealm" and rows[2].cells[1]:find("Testchar") and rows[3].total,
+	"summary: realm, character, total")
+local ok, err = true, nil
+for i, cat in ipairs(UI.categories) do
+	local good, e = pcall(UI.SelectCategory, i)
+	if not good then ok, err = false, cat.id .. ": " .. tostring(e) end
+end
+check(ok, "every category opens" .. (err and (" (" .. err .. ")") or ""))
+UI.Open("recipes")
+check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
+UI.Open("containers")
+check(UI.current.args and UI.current.args.name == "Testchar", "Containers opens on the logged-in character")
+Altoholic:DataChanged("mail")
+UI.Toggle()
+check(not AltoholicWindow:IsShown(), "and closes again")
 
 Fire("PLAYER_LOGOUT")
 check(AltoholicDB.account.data.Alliance.Testrealm.char.Testchar.level == 42, "data survives the logout cleanup")

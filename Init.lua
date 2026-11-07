@@ -40,11 +40,14 @@ SlashCmdList["ALTOHOLIC"] = function(msg)
 	command = command:lower()
 	if command == L["search"] and text ~= "" then
 		Altoholic:CmdSearchBags(text)
+	elseif command == "" or command == L["toggle"] then
+		Altoholic.UI.Toggle()
 	elseif command == L["show"] then
-		AltoholicFrame:Show()
+		Altoholic.UI.Show()
 	elseif command == L["hide"] then
-		AltoholicFrame:Hide()
-	elseif command == L["toggle"] then
+		Altoholic.UI.Hide()
+	elseif command == "old" then
+		-- the old window, until every page is rebuilt in the new one
 		Altoholic:ToggleUI()
 	else
 		local usage = {
@@ -52,6 +55,7 @@ SlashCmdList["ALTOHOLIC"] = function(msg)
 			{ L["show"], L["Shows the UI"] },
 			{ L["hide"], L["Hides the UI"] },
 			{ L["toggle"], L["Toggles the UI"] },
+			{ "old", "the old window, until every page is rebuilt" },
 		}
 		DEFAULT_CHAT_FRAME:AddMessage("|cFFFFD700Altoholic " .. Altoholic.vars.version)
 		for _, line in ipairs(usage) do
