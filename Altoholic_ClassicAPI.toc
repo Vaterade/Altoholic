@@ -68,3 +68,4 @@ UI\Views\Skills.lua
 UI\Views\BagUsage.lua
 UI\Views\Reputations.lua
 UI\Views\Attunements.lua
+UI\Views\Raids.lua

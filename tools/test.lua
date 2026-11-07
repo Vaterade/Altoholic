@@ -34,6 +34,7 @@ format, floor, tinsert, tremove, strlower = string.format, math.floor, table.ins
 mod = math.fmod
 cos, sin = function(d) return math.cos(math.rad(d)) end, function(d) return math.sin(math.rad(d)) end
 time = os.time
+date = os.date
 local now = 1000
 GetTime = function() return now end
 debugstack = function() return "" end
@@ -281,7 +282,7 @@ for _, name in ipairs({ "Skills", "BagUsage" }) do
 	local good, e = pcall(UI.ShowView, name)
 	check(good and #UI.views[name].table.list.data == 2, name .. " lists the realm and the character" .. (good and "" or (": " .. tostring(e))))
 end
-for _, name in ipairs({ "Reputations", "Attunements" }) do
+for _, name in ipairs({ "Reputations", "Attunements", "Raids" }) do
 	local good, e = pcall(UI.ShowView, name)
 	check(good, name .. " opens" .. (good and "" or (": " .. tostring(e))))
 end
