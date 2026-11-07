@@ -112,9 +112,16 @@ function view:Create(frame, bar)
 	self.status:SetTextColor(.7, .7, .7)
 	self.bar = bar
 
-	-- how many crafts the Queue buttons add, in the page's bottom right corner under the list
+	-- the page's bottom right corner: Missing Recipes, and above it the Queue count
+	self.missing = W.Button(frame, L["Missing Recipes"], 120, 22, function()
+		UI.ShowView("MissingRecipes", self.args)
+	end)
+	self.missing:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 8)
+	self.missing.tooltip = L["The recipes of this profession this character hasn't learned, and where to get them"]
+
+	-- how many crafts the Queue buttons add
 	self.count = W.EditBox(frame, 40, 22, nil, function(box) box:ClearFocus() end)
-	self.count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 8)
+	self.count:SetPoint("BOTTOMRIGHT", self.missing, "TOPRIGHT", 0, 6)
 	self.count:SetNumeric(true)
 	self.count:SetMaxLetters(3)
 	self.count:SetJustifyH("CENTER")
@@ -153,8 +160,9 @@ end
 function view:Update(args)
 	self.args = args
 	self.canQueue = Altoholic:CanQueueCrafts(args.realm)
-	-- the list stops above the count box while there is one
-	self.holder:SetPoint("BOTTOMRIGHT", self.frame, "BOTTOMRIGHT", -4, self.canQueue and 36 or 4)
+	-- the list stops above the corner's buttons
+	self.holder:SetPoint("BOTTOMRIGHT", self.frame, "BOTTOMRIGHT", -4, self.canQueue and 64 or 36)
+	if Altoholic:EnglishProfession(args.profession) then self.missing:Show() else self.missing:Hide() end
 	if self.canQueue then
 		self.count:Show()
 		self.countLabel:Show()

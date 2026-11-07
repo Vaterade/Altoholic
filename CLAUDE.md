@@ -111,6 +111,10 @@ pfUI-trades keeps lists by realm, so only the logged-in realm's characters can b
 defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button left of the search box, a hidden
 category) and the popup shown 5 s after login. Window parts that need `PLAYER_LOGIN` add a
 function to `UI.loginHooks`.
+`MissingRecipes.lua` compares a character's saved recipes with `Altoholic.RecipeDB`
+(`Items/Recipes.lua`, names translated in `Locale/Recipes.lua`), matching by name. Both files
+are generated from LibCrafts-1.0 by `tools/convert-libcrafts.lua <LibCrafts folder>`; don't
+edit them by hand, convert again.
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
 changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
 answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls

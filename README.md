@@ -35,6 +35,12 @@ font and border size; without it, it draws the same look with pfUI's defaults.
 - **Notes**: the Notes button beside the search box lets you leave
   notes for any character, or type `/alto note <name> <text>`. When that character logs in,
   the notes pop up; Done removes one, Later keeps them for next time.
+- **Missing Recipes**: on the Recipes page, the button in the bottom right corner lists the
+  recipes of that profession the character hasn't learned, by skill level, with where each
+  is learned or found. The recipe list comes from LibCrafts-1.0 by Roman Kharitonov (of
+  [MissingCrafts](https://github.com/refaim/MissingCrafts)), as shipped with Grom's
+  Gromissingcrafts, which adds Survival (MIT, see `Items/Recipes-LICENSE.txt`). It is
+  converted with `tools/convert-libcrafts.lua`.
 - The saved data is the same as 1.x, so nothing is lost when updating.
 
 ## Giselbaer's changes

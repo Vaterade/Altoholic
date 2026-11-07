@@ -19,6 +19,7 @@ Locale\localization_deDE.lua
 Locale\localization_zhTW.lua
 Locale\localization_zhCN.lua
 Locale\Bosses.lua
+Locale\Recipes.lua
 Database.lua
 
 Core.lua
@@ -33,7 +34,9 @@ Data\Search.lua
 Data\Tooltip.lua
 Data\Trades.lua
 Data\Notes.lua
+Data\MissingRecipes.lua
 Items\Loots.lua
+Items\Recipes.lua
 Items\Suggestions.lua
 Items\Suggestions_zhCN.lua
 Items\Suggestions_zhTW.lua
@@ -49,6 +52,7 @@ UI\Views\Search.lua
 UI\Views\Equipment.lua
 UI\Views\Mail.lua
 UI\Views\Recipes.lua
+UI\Views\MissingRecipes.lua
 UI\Views\Skills.lua
 UI\Views\BagUsage.lua
 UI\Views\Reputations.lua

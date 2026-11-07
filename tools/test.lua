@@ -318,6 +318,19 @@ check(queuedArgs and queuedArgs[1] == "Testchar" and queuedArgs[2] == "Mining" a
 	"recipes: Queue sends the recipe and its reagents to pfUI-trades")
 check(UI.current.list.rows[2].queued:GetText():find("3"), "recipes: the row shows how many are queued")
 pfUITrades = nil
+-- missing recipes: Mining has 13, Testchar knows Smelt Copper
+local missing, total = Altoholic:MissingRecipes(c, "Mining")
+check(total == 13 and #missing == 12, "missing recipes: all of Mining but Smelt Copper (" .. tostring(missing and #missing) .. "/" .. tostring(total) .. ")")
+UI.Open("recipes")
+check(UI.current.missing:IsShown(), "recipes: the Missing Recipes button shows for a known profession")
+UI.current.missing.scripts.OnClick(UI.current.missing)
+check(UI.current == UI.views.MissingRecipes and #UI.current.list.data == 12, "the button opens the missing list")
+UI.views.MissingRecipes.only.checked = true	-- a click checks it before OnClick runs
+UI.views.MissingRecipes.only.scripts.OnClick(UI.views.MissingRecipes.only)
+local learnable = #UI.current.list.data
+check(learnable > 0 and learnable < 12, "and it narrows to what skill 150 can learn (" .. learnable .. ")")
+UI.views.MissingRecipes.only.checked = nil
+UI.views.MissingRecipes.only.scripts.OnClick(UI.views.MissingRecipes.only)
 check(rl and #rl == 2 and rl[1].header == "Smelting" and rl[2].recipe, "recipes: the header and the recipe")
 for _, id in ipairs({ "quests", "auctions", "bids" }) do
 	local good, e = pcall(UI.Open, id)
