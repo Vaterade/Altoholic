@@ -31,6 +31,7 @@ Data\Auctions.lua
 Data\Quests.lua
 Data\Search.lua
 Data\Tooltip.lua
+Data\Trades.lua
 Items\Loots.lua
 Items\Suggestions.lua
 Items\Suggestions_zhCN.lua

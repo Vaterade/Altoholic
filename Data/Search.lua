@@ -14,7 +14,8 @@
 --     recipes = true,            -- also the crafts the characters know
 --   })
 -- Each result: { id, count, char, location, realm, iLvl, craftName, craftLink }; char,
--- location and realm are coloured text ready to show.
+-- location and realm are coloured text ready to show. A known recipe also has name,
+-- realmName, profession and recipe: the character, and the saved recipe.
 
 local L = Altoholic.L
 local V = Altoholic.vars
@@ -96,7 +97,9 @@ local function SearchRealm(f, results, faction, realm)
 							local craftName = craft.link and Altoholic:GetCraftFromRecipe(craft.link)
 							if craftName and string.find(strlower(craftName), f.value, 1, true) then
 								table.insert(results, { id = craft.id, char = who, craftName = craftName,
-									craftLink = craft.link, location = profession, realm = realmText })
+									craftLink = craft.link, location = profession, realm = realmText,
+									-- who knows it, for queueing it on them
+									name = name, realmName = realm, profession = profession, recipe = craft })
 							end
 						end
 					end

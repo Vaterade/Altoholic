@@ -28,6 +28,10 @@ font and border size; without it, it draws the same look with pfUI's defaults.
 - Equipment, Reputations and Attunements compare a realm's characters side by side; both
   factions of a realm are shown together.
 - Right-click a character in Account Summary to open their pages or forget them.
+- With [pfUI-trades](https://github.com/Vaterade/pfUI-trades) loaded, Recipes has a Queue
+  button on each recipe that adds crafts to that character's task list there, and
+  right-clicking a recipe in Search queues it on whoever knows it. Only characters on the
+  realm you're logged in to can be given work.
 - The saved data is the same as 1.x, so nothing is lost when updating.
 
 ## Giselbaer's changes

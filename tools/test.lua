@@ -300,6 +300,24 @@ check(AltoholicMinimapIcon ~= nil, "the minimap button is made at login")
 UI.Open("recipes")
 check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
 local rl = UI.current.lines
+check(not UI.current.canQueue and not UI.current.list.rows[2].queue:IsShown(), "recipes: no Queue button without pfUI-trades")
+-- with pfUI-trades: queue 3 Smelt Copper for the logged-in character
+local queuedArgs
+pfUITrades = {
+	QueueFor = function(name, profession, task, count) queuedArgs = { name, profession, task, count } return task end,
+	QueuedFor = function() return queuedArgs and queuedArgs[4] or 0 end,
+}
+C_Item = C_Item or {}
+C_Item.GetItemNameByID = function(id) return "Item " .. id end
+C_Item.GetItemIconByID = function() return "icon" end
+UI.Open("recipes")
+UI.current.count:SetText("3")
+UI.current.list.rows[2].queue.scripts.OnClick(UI.current.list.rows[2].queue)
+check(queuedArgs and queuedArgs[1] == "Testchar" and queuedArgs[2] == "Mining" and queuedArgs[4] == 3
+	and queuedArgs[3].name == "Smelt Copper" and queuedArgs[3].reagents[1].id == 2770 and queuedArgs[3].reagents[1].count == 1,
+	"recipes: Queue sends the recipe and its reagents to pfUI-trades")
+check(UI.current.list.rows[2].queued:GetText():find("3"), "recipes: the row shows how many are queued")
+pfUITrades = nil
 check(rl and #rl == 2 and rl[1].header == "Smelting" and rl[2].recipe, "recipes: the header and the recipe")
 for _, id in ipairs({ "quests", "auctions", "bids" }) do
 	local good, e = pcall(UI.Open, id)

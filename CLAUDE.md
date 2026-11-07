@@ -105,6 +105,8 @@ The data layer is `Core.lua`, `Data/*.lua` and `Items/`, and it doesn't touch th
 `tools/test.lua` loads it alone. `Data/Scan.lua` (login, bags, bank, stats, events),
 `Professions.lua`, `Mail.lua`, `Auctions.lua`, `Quests.lua` capture data; `Tooltip.lua`
 extends tooltips; `Query.lua` holds formatting helpers and `Constants.lua` shared tables.
+`Trades.lua` queues saved recipes in pfUI-trades (`pfUITrades.QueueFor`) when it is loaded;
+pfUI-trades keeps lists by realm, so only the logged-in realm's characters can be queued.
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
 changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
 answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls

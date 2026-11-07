@@ -156,13 +156,32 @@ function view:Create(frame, bar)
 				if r.item and r.item.craftLink then
 					GameTooltip:SetOwner(r, "ANCHOR_RIGHT")
 					GameTooltip:SetHyperlink(r.item.craftLink)
+					if r.item.recipe and Altoholic:CanQueueCrafts(r.item.realmName) then
+						GameTooltip:AddLine(" ")
+						GameTooltip:AddLine(L["Right-click to queue it in pfUI-trades"], .2, 1, .8)
+					end
 					GameTooltip:Show()
 				end
 			end)
 			row:SetScript("OnLeave", function() GameTooltip:Hide() end)
-			row:SetScript("OnClick", function(r)
-				if r.item and r.item.craftLink and IsShiftKeyDown() and ChatFrameEditBox and ChatFrameEditBox:IsVisible() then
-					ChatFrameEditBox:Insert(r.item.craftLink)
+			row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			row:SetScript("OnClick", function(r, button)
+				local s = r.item
+				if not s or not s.craftLink then return end
+				if button == "RightButton" then
+					-- queue the recipe on whoever knows it, in pfUI-trades
+					if not s.recipe or not Altoholic:CanQueueCrafts(s.realmName) then return end
+					local items = {}
+					for _, n in ipairs({ 1, 5, 10, 20 }) do
+						table.insert(items, { text = format(L["Queue %d on %s"], n, s.char), func = function()
+							if Altoholic:QueueCraft(s.name, s.realmName, s.profession, s.recipe, n) then
+								DEFAULT_CHAT_FRAME:AddMessage(W.TEAL_HEX .. "Altoholic:|r " .. format(L["queued %d x %s for %s"], n, s.recipe.name, s.name))
+							end
+						end })
+					end
+					W.ShowMenu(r, items)
+				elseif IsShiftKeyDown() and ChatFrameEditBox and ChatFrameEditBox:IsVisible() then
+					ChatFrameEditBox:Insert(s.craftLink)
 				end
 			end)
 		end,

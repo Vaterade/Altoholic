@@ -1,5 +1,8 @@
 -- Recipes: what a character can make with one profession, by the window's headers, with
 -- the reagents each recipe takes. Headers fold on click.
+-- With pfUI-trades loaded, each recipe has a Queue button that adds crafts to that
+-- character's task list there (the count is in the bottom bar), and shows how many are
+-- queued already.
 local L = Altoholic.L
 local W = Altoholic.W
 local UI = Altoholic.UI
@@ -10,15 +13,7 @@ local SIZE = 18
 local view = {}
 local folded = {}		-- headers folded this session, by profession and name
 
--- "itemID:count|itemID:count|..." (see Data/Professions.lua)
-local function Reagents(s)
-	local list = {}
-	for id, count in string.gmatch(s or "", "(%d+):(%d+)") do
-		table.insert(list, { tonumber(id), tonumber(count) })
-	end
-	return list
-end
-UI.ParseReagents = Reagents
+local function Reagents(s) return Altoholic:ParseReagents(s) end
 
 local function RecipeTooltip(row)
 	local r = row.item and row.item.recipe
@@ -51,6 +46,14 @@ function view:Create(frame, bar)
 				b.count:SetFont(W.FontPath(), 9, "OUTLINE")
 				row.reagents[i] = b
 			end
+			row.queue = W.Button(row, L["Queue"], 54, 18, function()
+				local line = row.item
+				if line and line.recipe then self:Queue(line.recipe) end
+			end)
+			row.queue:SetPoint("RIGHT", row, "RIGHT", -4, 0)
+			row.queue.tooltip = L["Add to this character's task list in pfUI-trades"]
+			row.queued = W.Text(row, nil, "RIGHT")
+			row.queued:SetPoint("RIGHT", row.queue, "LEFT", -6, 0)
 			row.hl = row:CreateTexture(nil, "HIGHLIGHT")
 			row.hl:SetAllPoints(row)
 			row.hl:SetColorTexture(1, 1, 1, .05)
@@ -77,6 +80,8 @@ function view:Create(frame, bar)
 				local sign = folded[self.args.profession .. "/" .. line.header] and "+ " or "- "
 				row.text:SetText("|cff888888" .. sign .. W.TEAL_HEX .. line.header)
 				for i = 1, REAGENTS do row.reagents[i]:Hide() end
+				row.queue:Hide()
+				row.queued:SetText("")
 				return
 			end
 			row.text:SetText("   " .. (line.recipe.link or line.recipe.name or ""))
@@ -91,12 +96,45 @@ function view:Create(frame, bar)
 					b:Hide()
 				end
 			end
+			if self.canQueue then
+				row.queue:Show()
+				local n = Altoholic:QueuedCrafts(self.args.name, self.args.profession, line.recipe.name)
+				row.queued:SetText(n > 0 and (W.TEAL_HEX .. format(L["%d queued"], n)) or "")
+			else
+				row.queue:Hide()
+				row.queued:SetText("")
+			end
 		end)
 	self.message = W.Message(holder)
 	self.status = W.Text(bar)
 	self.status:SetPoint("LEFT", bar, "LEFT", 4, 0)
 	self.status:SetTextColor(.7, .7, .7)
 	self.bar = bar
+
+	-- how many crafts the Queue buttons add
+	self.count = W.EditBox(bar, 40, 22, nil, function(box) box:ClearFocus() end)
+	self.count:SetPoint("RIGHT", bar, "RIGHT", -4, 0)
+	self.count:SetNumeric(true)
+	self.count:SetMaxLetters(3)
+	self.count:SetJustifyH("CENTER")
+	self.count:SetText("1")
+	self.countLabel = W.Text(bar, nil, "RIGHT")
+	self.countLabel:SetPoint("RIGHT", self.count, "LEFT", -6, 0)
+	self.countLabel:SetText(L["Queue"] .. " x")
+	self.countLabel:SetTextColor(.7, .7, .7)
+end
+
+function view:Queue(recipe)
+	local count = tonumber(self.count:GetText()) or 1
+	if count < 1 then count = 1 end
+	local args = self.args
+	local task, why = Altoholic:QueueCraft(args.name, args.realm, args.profession, recipe, count)
+	if task then
+		DEFAULT_CHAT_FRAME:AddMessage(W.TEAL_HEX .. "Altoholic:|r " .. format(L["queued %d x %s for %s"], count, recipe.name, args.name))
+	else
+		DEFAULT_CHAT_FRAME:AddMessage(W.TEAL_HEX .. "Altoholic:|r " .. (why or ""))
+	end
+	self.list:Refresh()
 end
 
 -- the rank in the profession, coloured as the old window did
@@ -113,6 +151,14 @@ end
 
 function view:Update(args)
 	self.args = args
+	self.canQueue = Altoholic:CanQueueCrafts(args.realm)
+	if self.canQueue then
+		self.count:Show()
+		self.countLabel:Show()
+	else
+		self.count:Hide()
+		self.countLabel:Hide()
+	end
 	local c = UI.Char(args)
 	local p = rawget(rawget(c, "recipes") or {}, args.profession)
 	local lines = {}
