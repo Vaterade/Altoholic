@@ -46,7 +46,7 @@ Altoholic.EquipmentSlots = {
 	[14] = INVTYPE_2HWEAPON,
 	[15] = INVTYPE_WEAPONMAINHAND,
 	[16] = INVTYPE_WEAPONOFFHAND,	-- also "INVTYPE_HOLDABLE"
-	-- [17] "INVTYPE_SHIELD" is set by BuildSearchSubMenu
+	-- [17] "INVTYPE_SHIELD": the Search page names it after the Shields subclass
 	[18] = L["Ranged"]		-- "INVTYPE_RANGED",  "INVTYPE_THROWN", "INVTYPE_RANGEDRIGHT", "INVTYPE_RELIC"
 }
 

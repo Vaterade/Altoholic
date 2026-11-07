@@ -1,6 +1,6 @@
 Altoholic = {}
 Altoholic.vars = {}
-Altoholic.vars.version = "v1.4.0"
+Altoholic.vars.version = "v2.0.0"
 
 -- *** Events ***
 -- Events are dispatched to the method of the same name, without the event name:
@@ -46,16 +46,12 @@ SlashCmdList["ALTOHOLIC"] = function(msg)
 		Altoholic.UI.Show()
 	elseif command == L["hide"] then
 		Altoholic.UI.Hide()
-	elseif command == "old" then
-		-- the old window, until every page is rebuilt in the new one
-		Altoholic:ToggleUI()
 	else
 		local usage = {
 			{ L["search"] .. " <item name>", L["Search in bags"] },
 			{ L["show"], L["Shows the UI"] },
 			{ L["hide"], L["Hides the UI"] },
 			{ L["toggle"], L["Toggles the UI"] },
-			{ "old", "the old window, until every page is rebuilt" },
 		}
 		DEFAULT_CHAT_FRAME:AddMessage("|cFFFFD700Altoholic " .. Altoholic.vars.version)
 		for _, line in ipairs(usage) do

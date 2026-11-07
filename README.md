@@ -15,6 +15,21 @@ Since 1.4.0 this addon requires [ClassicAPI](https://github.com/brues-code/Class
 a client mod that brings Lua 5.1 and parts of the modern addon API to the 1.12 client.
 Without it Altoholic only shows a notice at login and leaves your saved data untouched.
 
+## 2.0: a new window
+
+The window is rebuilt from scratch in the style of [pfUI](https://github.com/shagu/pfUI)'s
+settings window: flat dark panels, a column of categories, a column of characters under
+their realms, and a search box along the bottom that searches as you type. It uses no
+Blizzard templates. pfUI isn't required: when it is loaded, the window takes pfUI's colours,
+font and border size; without it, it draws the same look with pfUI's defaults.
+
+- `/alto` opens and closes the window; the minimap button does too (right-click for the
+  options, drag to move it).
+- Equipment, Reputations and Attunements compare a realm's characters side by side; both
+  factions of a realm are shown together.
+- Right-click a character in Account Summary to open their pages or forget them.
+- The saved data is the same as 1.x, so nothing is lost when updating.
+
 ## Giselbaer's changes
 
 This version fixes several bugs, improves some things, and adds a menu tab to show

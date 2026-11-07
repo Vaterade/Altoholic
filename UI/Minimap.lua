@@ -67,10 +67,8 @@ function UI.CreateMinimapButton()
 	UI.UpdateMinimapButton()
 end
 
--- the window's half of PLAYER_LOGIN
-local oldOnLogin = Altoholic.UI_OnLogin
+-- the window's half of PLAYER_LOGIN (Data/Scan.lua calls it)
 function Altoholic:UI_OnLogin()
-	if oldOnLogin then oldOnLogin(self) end
-	if AltoholicMinimapButton then AltoholicMinimapButton:Hide() end	-- the old window's
+	self.db.account.options.MatchPfUI = nil		-- the 1.x window's pfUI skin switch
 	UI.CreateMinimapButton()
 end

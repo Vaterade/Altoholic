@@ -1,7 +1,3 @@
-Altoholic.SearchResults = {}
-Altoholic.CharacterInfo = {}
-Altoholic.BagIndices = {}
-Altoholic.MenuCache = {}
 local L = Altoholic.L
 local V = Altoholic.vars
 
@@ -9,7 +5,7 @@ local V = Altoholic.vars
 -- files load, since the client data they come from is only certain to be ready
 -- by then. ReadClientNames() fills the tables below, and every table that uses
 -- them is built after it (BuildFactionsRefTable, BuildLootTable,
--- BuildSuggestions, BuildSearchSubMenu). Until then, and for anything the
+-- BuildSuggestions). Until then, and for anything the
 -- client has no name for, a lookup returns the English name it was asked for.
 
 -- Profession names as the client spells them, read from SkillLine.dbc by ID.
@@ -169,23 +165,6 @@ function Altoholic:ReadClientNames()
 	end
 end
 
-Altoholic.Categories = {
-	"AltoSummary", 
-	"AltoBags",
-	"AltoContainers",
-	"AltoMail",
-	"AltoSearch",
-	"AltoEquipment",
-	"AltoReputations",
-	"AltoOptions",
-	"AltoQuests",
-	"AltoRecipes",
-	"AltoAuctions",
-	"AltoSkills",
-	"AltoRaids",
-	"AltoAttunements",
-}
-
 Altoholic.RecipesBooks = {
     --Craft Recipes:
     "Pattern:",
@@ -218,9 +197,6 @@ Altoholic.XPToNext	= {
     106300,111800,117500,123200,129100,135100,141200,147500,153900,
     160400,167100,173900,180800,187900,195000,202300,209800
 }
-
--- Allow ESC to close the main frame
-tinsert(UISpecialFrames, "AltoholicFrame");
 
 -- Factions reference table, based on http://www.wowwiki.com/Factions
 -- a table with a similar structure (but only with required lines) will be build to make the reputations frame
@@ -711,4 +687,3 @@ function Altoholic:CmdSearchBags(text)
 	UI.Search(strlower(text))
 end
 
-Altoholic_UIDropDownMenu_CreateInfo = Altoholic_UIDropDownMenu_CreateInfo or loadstring("local t = {} return function() for k in pairs(t) do t[k] = nil t[k] = {} end return t end")()

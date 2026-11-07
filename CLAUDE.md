@@ -4,9 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Altoholic for the WoW 1.12 client (Turtle WoW fork): a Lua + XML addon that records every
+Altoholic for the WoW 1.12 client (Turtle WoW fork): a Lua addon that records every
 character's bags, bank, mail, equipment, professions, quests, reputations and raid lockouts
-into one account-wide saved variable (`AltoholicDB`) and shows them in a tabbed window.
+into one account-wide saved variable (`AltoholicDB`) and shows them in a window styled like
+pfUI's settings. There is no XML: every frame is made in Lua.
 
 Since 1.4.0 it **requires [ClassicAPI](https://github.com/brues-code/ClassicAPI)**, a client DLL
 that rewrites Lua 5.1 syntax onto the client's Lua 5.0 VM and backports parts of the modern
@@ -19,8 +20,11 @@ There is no build step. The offline checks are syntax passes and a test of the d
 ```sh
 luajit tools/test.lua      # loads the TOC's Lua files without the window, fires the scan events
 find . -name '*.lua' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 -n1 luac -p
-find . -name '*.xml' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 xmllint --noout
 ```
+
+`tools/test.lua` stubs the client API (unknown globals become no-op stubs, frames accept
+any method) and also opens every page of the window, so a Lua error in a view shows up
+offline. It can't show what the window looks like.
 
 `luac` here is a current Lua, so it accepts the 5.1 syntax the addon uses but will not catch
 5.0-only breakage in `ClassicAPICheck.lua` (see below).
@@ -44,7 +48,7 @@ database.
 - ClassicAPI's reference is one ~830 KB file, too large to fetch whole. Query it with
   `curl -sL https://raw.githubusercontent.com/brues-code/ClassicAPI/master/docs/API.md | grep …`
   (the branch is `master`).
-- File encodings are mixed: the XML files and `Items/Suggestions_zh*.lua` carry a UTF-8 BOM,
+- File encodings are mixed: `Items/Suggestions_zh*.lua` carry a UTF-8 BOM,
   and `Items/Suggestions.lua` contains non-UTF-8 bytes. Scripted bulk edits must be
   byte-preserving (read and write as latin-1) or they will fail or corrupt those files.
 - `private/` is git-ignored. Files that should not reach players' downloads are marked
@@ -57,13 +61,12 @@ database.
 ClassicAPI loads `Altoholic_ClassicAPI.toc` in preference to `Altoholic.toc`. The first is the
 real manifest and defines the load order; the second is a stub that loads only
 `ClassicAPICheck.lua` and still declares `SavedVariables` so stored data is written back
-untouched. A new file must be added to `Altoholic_ClassicAPI.toc` (or pulled in by a
-`<Script file=…>` in a module's XML). Keep `## Version` in both TOCs and
-`Altoholic.vars.version` in `Init.lua` in step.
+untouched. A new file must be added to `Altoholic_ClassicAPI.toc`. Keep `## Version` in
+both TOCs and `Altoholic.vars.version` in `Init.lua` in step.
 
 ### The base (replaces Ace2)
 
-Everything hangs off the single global table `Altoholic`; the XML needs it to be global.
+Everything hangs off the single global table `Altoholic`.
 Load order matters:
 
 - `Init.lua` creates `Altoholic`, the event dispatcher and the `/alto` slash command.
@@ -124,25 +127,28 @@ server command, whose reply arrives as `CHAT_MSG_ADDON` with prefix `TWQUEST`;
 Item tooltips are extended through `HookScript("OnTooltipSetItem")` on `GameTooltip` and
 `ItemRefTooltip`. That handler receives the tooltip as the global `this`, not as an argument.
 
-### UI modules
+### The window (`UI/`)
 
-Each tab is a `Modules/<Name>.xml` + `<Name>.lua` pair; the XML loads its Lua through a
-`<Script file>` element and defines a frame named `Alto<Something>`. The frame names are listed
-in `Altoholic.Categories`, and `ActivateMenuItem(frame)` shows one and hides the rest. Each
-module exposes `Altoholic:<Name>_Update()`, which redraws a `FauxScrollFrame` from the saved
-data. The left-hand menu and its per-character submenus are built in `Altoholic.lua`
-(`Menu_Update`, `Build*SubMenu`), and `BuildCharacterInfoTable()` builds the realm/character
-line list that the summary-style tabs share.
-
-Tabs that list items can be drawn before the client has the item cached. They are named in the
-`ItemTabs` map in `Altoholic.lua` and get redrawn (throttled) on `GET_ITEM_INFO_RECEIVED`; a new
-item-listing tab should be added there.
+- `UI/Widgets.lua` (`Altoholic.W`) is the only place that knows about pfUI. It draws every
+  control in pfUI's style (panels, buttons, check boxes, edit boxes, dropdowns, sliders,
+  item buttons, a right-click menu, a virtual `List` and a `Table` with column captions)
+  and reads pfUI's colours, font and pixel size from `pfUI_config` / `pfUI` when present.
+  pfUI is never required. Don't use Blizzard templates or `UIDropDownMenu`.
+- `UI/Window.lua` (`Altoholic.UI`) builds `AltoholicWindow` like pfUI's config: categories,
+  the category's entries (a second column), the page, and a bottom bar with the view's own
+  strip on the left and the search box on the right. `UI/Menu.lua` lists the categories;
+  `UI.CharacterEntries` makes the realm-grouped character entries. Characters are refs
+  `{ faction, realm, name, c }` from `UI.Realms()`, which groups both factions of a realm.
+- A page is a view, `UI.RegisterView(name, { Create(frame, bar), Update(args) })`, in
+  `UI/Views/`. `UI.Open(categoryId, entryKey)` opens a page from anywhere.
+  `UI/Grid.lua` lays out realm-wide comparisons (characters as columns).
+- Read saved data with `rawget`, and give lists to widgets as `UI.Array(t)` copies: saved
+  tables with `'*'` defaults create an entry for any key or index that is read, and a list
+  widget reads past the end while it fills its rows.
+- Pages are redrawn (throttled) on `GET_ITEM_INFO_RECEIVED` and when a scan calls
+  `DataChanged`.
 
 ### Script handler conventions
 
-- Handlers set from Lua with `SetScript`/`HookScript` take positional arguments
+- Handlers set with `SetScript`/`HookScript` take positional arguments
   (`function(self, button)`), which ClassicAPI supplies.
-- Inline `<Scripts>` bodies in XML are kept to one line that passes the 1.12 globals into a
-  named Lua function, e.g. `Altoholic_Equipment_OnClick(this, arg1)`. Put logic in the module's
-  Lua, not in the XML, and do not rely on `self` inside an XML body.
-- `UIDropDownMenu` callbacks still read the global `this`, as the stock 1.12 menu code does.

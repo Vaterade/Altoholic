@@ -472,10 +472,21 @@ function UI.Hide()
 end
 
 -- the scans tell the window when what it lists has changed
-local oldOnDataChanged = Altoholic.OnDataChanged
-function Altoholic:OnDataChanged(what)
-	if oldOnDataChanged then oldOnDataChanged(self, what) end
+function Altoholic:OnDataChanged()
 	UI.Refresh()
+end
+
+-- A page can be drawn before the client has the items it shows; they come in one by
+-- one, so the page is redrawn once they stop for half a second. A failed query must not
+-- redraw: the redraw would only ask for the item again.
+local refreshPending
+function Altoholic:GET_ITEM_INFO_RECEIVED(_, success)
+	if not success or refreshPending or not (win and win:IsShown()) then return end
+	refreshPending = true
+	C_Timer.After(0.5, function()
+		refreshPending = nil
+		UI.Refresh()
+	end)
 end
 
 -- *** A page for views not rebuilt yet, and for empty categories ***
