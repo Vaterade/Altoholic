@@ -64,6 +64,15 @@ real manifest and defines the load order; the second is a stub that loads only
 untouched. A new file must be added to `Altoholic_ClassicAPI.toc`. Keep `## Version` in
 both TOCs and `Altoholic.vars.version` in `Init.lua` in step.
 
+### Releases
+
+A push to `master` runs `.github/workflows/release.yml`: if the version (which must agree in
+both TOCs and `Init.lua`) has no tag yet and `CHANGELOG.md` has a `## [x.y.z]` section, it
+tags `vx.y.z` and BigWigsMods/packager publishes `Altoholic-vx.y.z-classic.zip` with that
+section as the notes. `.pkgmeta` names the folder `Altoholic` and leaves out `tools/`,
+`Screenshots/`, `CLAUDE.md` and the other files players don't need. A push that keeps the
+version does nothing.
+
 ### The base (replaces Ace2)
 
 Everything hangs off the single global table `Altoholic`.
