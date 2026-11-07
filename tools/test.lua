@@ -304,6 +304,15 @@ for _, id in ipairs({ "quests", "auctions", "bids" }) do
 	local good, e = pcall(UI.Open, id)
 	check(good and UI.current.args and UI.current.args.name == "Testchar", id .. " opens on the logged-in character" .. (good and "" or (": " .. tostring(e))))
 end
+-- an auction: short time left in the cell, bid and buyout in their own columns
+c.auctions[1] = { id = 2589, count = 5, timeLeft = 4, startPrice = 150, buyoutPrice = 300 }
+AUCTION_TIME_LEFT4, AUCTION_TIME_LEFT4_DETAIL = "Very Long", "Greater than 8 hours"
+UI.Open("auctions")
+local arow = UI.views.Auctions.list.rows[1]
+check(arow.time.text:GetText():find("Very Long") and not arow.time.text:GetText():find("8 hours")
+	and arow.bid:GetText() ~= "" and arow.buyout:GetText() ~= arow.bid:GetText(), "auctions: short time left, bid and buyout apart")
+c.auctions[1] = nil
+UI.Open("bids")
 check(rawget(c.auctions, 1) == nil and rawget(c.bids, 1) == nil, "listing auctions and bids adds no empty entries")
 UI.Open("mail")
 check(UI.current == UI.views.Mail and rawget(c.mail, 1) == nil, "mail opens and adds no empty mail")
