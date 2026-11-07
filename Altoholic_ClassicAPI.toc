@@ -30,6 +30,7 @@ Data\Professions.lua
 Data\Mail.lua
 Data\Auctions.lua
 Data\Quests.lua
+Data\Search.lua
 Data\Tooltip.lua
 Items\Loots.lua
 Items\Suggestions.lua
@@ -58,3 +59,4 @@ UI\Window.lua
 UI\Menu.lua
 UI\Views\Summary.lua
 UI\Views\Containers.lua
+UI\Views\Search.lua

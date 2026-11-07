@@ -30,7 +30,7 @@ strsplit = function(sep, s)
 	for part in string.gmatch(s .. sep, "(.-)" .. sep:gsub("%p", "%%%0")) do table.insert(out, part) end
 	return unpack(out)
 end
-format, floor, tinsert, tremove = string.format, math.floor, table.insert, table.remove
+format, floor, tinsert, tremove, strlower = string.format, math.floor, table.insert, table.remove, string.lower
 mod = math.fmod
 cos, sin = function(d) return math.cos(math.rad(d)) end, function(d) return math.sin(math.rad(d)) end
 time = os.time
@@ -285,6 +285,21 @@ local lines = UI.views.Containers.list.data
 check(#lines == 2 and lines[1].bagID == 0 and lines[2].bagID == 1, "containers: a line per bag")
 local slot = UI.views.Containers.list.rows[2].slots[2]
 check(slot.item and tostring(slot.item):find("15248"), "containers: the enchanted item shows by its link")
+-- searching: the text from the box, over this realm
+GetItemInfo = function(id)
+	local items = { [2589] = { "Linen Cloth", 1, 0, "" }, [15248] = { "Gleaming Claymore", 2, 20, "INVTYPE_2HWEAPON" } }
+	local it = items[tonumber(id) or tonumber(tostring(id):match("item:(%d+)"))]
+	if it then return it[1], "item:" .. id, it[2], it[3], "", "", 1, it[4], "icon" end
+end
+GetItemQualityColor = function() return 1, 1, 1, "|cffffffff" end
+UI.searchBox:SetText("linen")
+UI.Search("linen")
+local found = UI.views.Search.list.data
+check(UI.current == UI.views.Search and #found == 2 and found[1].id == 2589 and found[1].count == 7, "search finds the linen in the bags and the equipped slot")
+UI.Search("claymore")
+check(#UI.views.Search.list.data == 1, "and the claymore")
+UI.Search("nothing like this")
+check(#UI.views.Search.list.data == 0, "and nothing for a name no item has")
 Altoholic:DataChanged("mail")
 UI.Toggle()
 check(not AltoholicWindow:IsShown(), "and closes again")

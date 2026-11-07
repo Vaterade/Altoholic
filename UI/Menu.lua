@@ -65,6 +65,6 @@ Add({ id = "bids", title = BIDS, entries = function()
 	return UI.CharacterEntries("Bids")
 end })
 
-Add({ id = "search", title = L["Search"], view = "Search" })
+Add({ id = "search", title = L["Search"], entries = function() return UI.SearchEntries() end })
 
 Add({ id = "options", title = L["Options"], view = "Options" })

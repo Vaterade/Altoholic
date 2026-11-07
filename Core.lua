@@ -705,11 +705,10 @@ Altoholic.Gathering = {
 }
 
 function Altoholic:CmdSearchBags(text)
-	if not (AltoholicFrame:IsVisible()) then
-		AltoholicFrame:Show();
-	end
-	AltoholicFrame_SearchEditBox:SetText(strlower(text))
-	Altoholic:SearchItem();
+	local UI = self.UI
+	UI.Show()
+	UI.searchBox:SetText(strlower(text))
+	UI.Search(strlower(text))
 end
 
 Altoholic_UIDropDownMenu_CreateInfo = Altoholic_UIDropDownMenu_CreateInfo or loadstring("local t = {} return function() for k in pairs(t) do t[k] = nil t[k] = {} end return t end")()
