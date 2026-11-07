@@ -9,14 +9,25 @@ local view = {}
 
 function view:Create(frame)
 	self.table = W.Table(frame, {
-		{ title = L["Name"], width = 110 },
+		{ title = L["Name"], width = 100 },
 		{ title = L["Level"], width = 40, justify = "RIGHT" },
-		{ title = "", width = 130 },
-		{ title = L["Talents"], width = 70, justify = "CENTER" },
-		{ title = L["Money"], width = 130, justify = "RIGHT" },
-		{ title = L["Played"], width = 100, justify = "RIGHT" },
+		{ title = "", width = 115 },
+		{ title = L["Talents"], width = 60, justify = "CENTER" },
+		{ title = L["Money"], width = 115, justify = "RIGHT" },
+		{ title = L["Played"], width = 85, justify = "RIGHT" },
+		{ title = L["Last Played"], width = 75, justify = "RIGHT" },
 		{ title = L["Rest XP"], justify = "RIGHT" },
 	})
+end
+
+-- when the character was last logged out: "online" for the one playing now
+local function LastPlayed(ref, c)
+	if UI.IsPlayer(ref) then return "|cff00ff00" .. L["Online"] end
+	if not c.lastlogout or c.lastlogout == 0 then return "|cff555555-" end
+	local days = Altoholic:GetDelayInDays(c.lastlogout)
+	if days == 0 then return L["Today"] end
+	if days == 1 then return L["1 day ago"] end
+	return format(L["%d days ago"], days)
 end
 
 local function Rested(ref, c)
@@ -43,6 +54,7 @@ function view:Update()
 					c.talent,
 					Altoholic:GetMoneyString(c.money),
 					Altoholic:GetTimeString(c.played),
+					LastPlayed(ref, c),
 					Rested(ref, c),
 				},
 				onEnter = function(row) UI.CharacterTooltip(row, ref) end,
@@ -58,7 +70,7 @@ function view:Update()
 		end
 		table.insert(data, { total = true, cells = {
 			L["Totals"], WHITE .. rLevels, "", "",
-			Altoholic:GetMoneyString(rMoney, WHITE), Altoholic:GetTimeString(rPlayed), "",
+			Altoholic:GetMoneyString(rMoney, WHITE), Altoholic:GetTimeString(rPlayed), "", "",
 		} })
 		levels, money, played = levels + rLevels, money + rMoney, played + rPlayed
 	end
@@ -66,7 +78,7 @@ function view:Update()
 		table.insert(data, { header = L["Account"] })
 		table.insert(data, { total = true, cells = {
 			L["Totals"], WHITE .. levels, "", "",
-			Altoholic:GetMoneyString(money, WHITE), Altoholic:GetTimeString(played), "",
+			Altoholic:GetMoneyString(money, WHITE), Altoholic:GetTimeString(played), "", "",
 		} })
 	end
 	self.table:SetData(data, true)

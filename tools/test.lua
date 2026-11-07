@@ -273,6 +273,7 @@ check(UI.current == UI.views.Summary, "it opens on the account summary")
 local rows = UI.views.Summary.table.list.data
 check(#rows == 3 and rows[1].header == "Testrealm" and rows[2].cells[1]:find("Testchar") and rows[3].total,
 	"summary: realm, character, total")
+check(#rows[2].cells == 8 and rows[2].cells[7]:find("Online") and #rows[3].cells == 8, "summary: Last Played after Played, the player online")
 local ok, err = true, nil
 for i, cat in ipairs(UI.categories) do
 	local good, e = pcall(UI.SelectCategory, i)
