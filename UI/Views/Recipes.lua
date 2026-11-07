@@ -1,6 +1,6 @@
 -- Recipes: what a character can make with one profession, by the window's headers, with
 -- the reagents each recipe takes. Headers fold on click.
--- With pfUI-trades loaded, each recipe has a Queue button that adds crafts to that
+-- With pfUI-tradeskill loaded, each recipe has a Queue button that adds crafts to that
 -- character's task list there (the count is in the page's bottom right), and shows how many are
 -- queued already.
 local L = Altoholic.L
@@ -52,7 +52,7 @@ function view:Create(frame, bar)
 				if line and line.recipe then self:Queue(line.recipe) end
 			end)
 			row.queue:SetPoint("RIGHT", row, "RIGHT", -4, 0)
-			row.queue.tooltip = L["Add to this character's task list in pfUI-trades"]
+			row.queue.tooltip = L["Add to this character's task list in pfUI-tradeskill"]
 			row.queued = W.Text(row, nil, "RIGHT")
 			row.queued:SetPoint("RIGHT", row.queue, "LEFT", -6, 0)
 			row.hl = row:CreateTexture(nil, "HIGHLIGHT")

@@ -169,7 +169,7 @@ function view:Create(frame, bar)
 					GameTooltip:SetHyperlink(r.item.craftLink)
 					if r.item.recipe and Altoholic:CanQueueCrafts(r.item.realmName) then
 						GameTooltip:AddLine(" ")
-						GameTooltip:AddLine(L["Right-click to queue it in pfUI-trades"], .2, 1, .8)
+						GameTooltip:AddLine(L["Right-click to queue it in pfUI-tradeskill"], .2, 1, .8)
 					end
 					GameTooltip:Show()
 				end
@@ -180,7 +180,7 @@ function view:Create(frame, bar)
 				local s = r.item
 				if not s or not s.craftLink then return end
 				if button == "RightButton" then
-					-- queue the recipe on whoever knows it, in pfUI-trades
+					-- queue the recipe on whoever knows it, in pfUI-tradeskill
 					if not s.recipe or not Altoholic:CanQueueCrafts(s.realmName) then return end
 					local items = {}
 					for _, n in ipairs({ 1, 5, 10, 20 }) do

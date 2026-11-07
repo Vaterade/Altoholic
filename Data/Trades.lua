@@ -1,6 +1,6 @@
--- Queueing crafts for a character in pfUI-trades, when that addon is loaded. pfUI-trades keeps
+-- Queueing crafts for a character in pfUI-tradeskill, when that addon is loaded. pfUI-tradeskill keeps
 -- each character's task list by realm, so only characters on the logged-in realm can be given
--- work. A task is built from the recipe Altoholic saved; pfUI-trades fills in the rest (the
+-- work. A task is built from the recipe Altoholic saved; pfUI-tradeskill fills in the rest (the
 -- spell ID, how many one craft makes) when that character next opens the profession.
 local V = Altoholic.vars
 
@@ -30,7 +30,7 @@ local function ItemIcon(id)
 	return icon
 end
 
--- the task pfUI-trades wants, from a saved recipe { name, link, id, reagents }
+-- the task pfUI-tradeskill wants, from a saved recipe { name, link, id, reagents }
 function Altoholic:TaskFromRecipe(recipe)
 	local reagents = {}
 	for _, r in ipairs(self:ParseReagents(recipe.reagents)) do
@@ -50,8 +50,8 @@ end
 
 -- queues count crafts of a saved recipe on a character; returns the task, or nil and why not
 function Altoholic:QueueCraft(name, realm, profession, recipe, count)
-	if not self:CanQueueCrafts() then return nil, "pfUI-trades isn't loaded" end
-	if realm ~= V.realm then return nil, "pfUI-trades only keeps lists for this realm" end
+	if not self:CanQueueCrafts() then return nil, "pfUI-tradeskill isn't loaded" end
+	if realm ~= V.realm then return nil, "pfUI-tradeskill only keeps lists for this realm" end
 	if not recipe or not recipe.name or Altoholic:IsRecipeHeader(recipe) then return nil, "not a recipe" end
 	return pfUITrades.QueueFor(name, profession, self:TaskFromRecipe(recipe), count or 1)
 end

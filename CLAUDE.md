@@ -105,8 +105,8 @@ The data layer is `Core.lua`, `Data/*.lua` and `Items/`, and it doesn't touch th
 `tools/test.lua` loads it alone. `Data/Scan.lua` (login, bags, bank, stats, events),
 `Professions.lua`, `Mail.lua`, `Auctions.lua`, `Quests.lua` capture data; `Tooltip.lua`
 extends tooltips; `Query.lua` holds formatting helpers and `Constants.lua` shared tables.
-`Trades.lua` queues saved recipes in pfUI-trades (`pfUITrades.QueueFor`) when it is loaded;
-pfUI-trades keeps lists by realm, so only the logged-in realm's characters can be queued.
+`Trades.lua` queues saved recipes in pfUI-tradeskill (`pfUITrades.QueueFor`) when it is loaded;
+pfUI-tradeskill keeps lists by realm, so only the logged-in realm's characters can be queued.
 `Notes.lua` keeps notes for characters in `AltoholicDB.account.notes[realm][name]`, outside the
 defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button left of the search box, a hidden
 category) and the popup shown 5 s after login. Window parts that need `PLAYER_LOGIN` add a

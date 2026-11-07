@@ -1,5 +1,5 @@
 -- About, like pfUI's About page: the name drawn in blocks, the version, and what Altoholic
--- needs (ClassicAPI) or can use (pfUI, pfUI-trades, pfQuest...) with whether each is there.
+-- needs (ClassicAPI) or can use (pfUI, pfUI-tradeskill, pfQuest...) with whether each is there.
 -- The credits are in README.md.
 local L = Altoholic.L
 local V = Altoholic.vars
@@ -90,7 +90,7 @@ local DEPENDENCIES = {
 		end
 		return AddonState("pfUI")
 	end },
-	{ "pfUI-trades", L["AddOn"], false, function() return AddonState("pfUI-trades") end },
+	{ "pfUI-tradeskill", L["AddOn"], false, function() return AddonState("pfUI-tradeskill") end },
 	{ "pfQuest", L["AddOn"], false, function() return AddonState("pfQuest") end },
 	{ "pfQuest-octo-plus", L["AddOn"], false, function() return AddonState("pfQuest-octo-plus") end },
 }
