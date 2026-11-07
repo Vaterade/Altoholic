@@ -281,6 +281,10 @@ UI.Open("recipes")
 check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
 UI.Open("containers")
 check(UI.current.args and UI.current.args.name == "Testchar", "Containers opens on the logged-in character")
+local lines = UI.views.Containers.list.data
+check(#lines == 2 and lines[1].bagID == 0 and lines[2].bagID == 1, "containers: a line per bag")
+local slot = UI.views.Containers.list.rows[2].slots[2]
+check(slot.item and tostring(slot.item):find("15248"), "containers: the enchanted item shows by its link")
 Altoholic:DataChanged("mail")
 UI.Toggle()
 check(not AltoholicWindow:IsShown(), "and closes again")

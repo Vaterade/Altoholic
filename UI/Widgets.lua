@@ -410,6 +410,7 @@ function W.ItemButton(parent, size)
 		self.item = item
 		if not item then
 			self.icon:SetTexture(texture)
+			if texture then self.icon:SetTexCoord(.08, .92, .08, .92) end
 			self.count:SetText("")
 			self.backdrop:SetBackdropBorderColor(W.BorderColor())
 			return
@@ -426,6 +427,7 @@ function W.ItemButton(parent, size)
 	end
 
 	b:SetScript("OnEnter", function(self)
+		if self.onEnter then self.onEnter(self) return end
 		if not self.item then return end
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		local item = self.item
@@ -458,6 +460,15 @@ function W.ItemClick(item)
 		DressUpItemLink(link)
 	elseif ChatFrameEditBox and ChatFrameEditBox:IsVisible() then
 		ChatFrameEditBox:Insert(link)
+	elseif WIM_EditBoxInFocus then
+		WIM_EditBoxInFocus:Insert(link)
+	elseif Altoholic.UI and Altoholic.UI.searchBox then
+		-- no chat box open: search for it instead
+		local name = GetItemInfo(Altoholic:GetItemString(item))
+		if name then
+			Altoholic.UI.searchBox:SetText(name)
+			Altoholic.UI.Search(name)
+		end
 	end
 end
 

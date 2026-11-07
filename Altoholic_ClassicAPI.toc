@@ -57,3 +57,4 @@ UI\Widgets.lua
 UI\Window.lua
 UI\Menu.lua
 UI\Views\Summary.lua
+UI\Views\Containers.lua
