@@ -76,12 +76,23 @@ local view = {}
 
 -- the filters, kept for the session
 local filters = { scope = "realm", rarity = 0, slot = 0, noMinLevel = true, mail = true, recipes = true }
+local onlyUsable = true		-- upgrade results: only what the character can use
 
 function view:Create(frame, bar)
-	local top = CreateFrame("Frame", nil, frame)
-	top:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -8)
-	top:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -8)
-	top:SetHeight(48)
+	local strip = CreateFrame("Frame", nil, frame)
+	strip:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -8)
+	strip:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -8)
+	strip:SetHeight(48)
+	-- the filters; upgrade results show the "only usable" box in their place
+	local top = CreateFrame("Frame", nil, strip)
+	top:SetAllPoints(strip)
+	self.filters = top
+	self.usable = W.Checkbox(strip, "", function(_, on)
+		onlyUsable = on
+		if self.upgrade then self:ShowUpgrades() end
+	end)
+	self.usable:SetPoint("TOPLEFT", strip, "TOPLEFT", 0, -4)
+	self.usable:Hide()
 	local function Rerun() self:Run() end
 
 	local scope = W.Dropdown(top, 160, SCOPES, function(_, v) filters.scope = v Rerun() end)
@@ -130,7 +141,7 @@ function view:Create(frame, bar)
 	Toggle(XML_TEXT_MAIN_WINDOW_7 or L["Include known recipes"], "recipes", mail, mail.label:GetStringWidth() + 24)
 
 	local holder = CreateFrame("Frame", nil, frame)
-	holder:SetPoint("TOPLEFT", top, "BOTTOMLEFT", 0, -6)
+	holder:SetPoint("TOPLEFT", strip, "BOTTOMLEFT", 0, -6)
 	holder:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
 	self.list = W.List(holder, 26,
 		function(row)
@@ -209,9 +220,10 @@ function view:Create(frame, bar)
 	self.status:SetTextColor(.7, .7, .7)
 end
 
--- shows a list that was worked out elsewhere (an equipment upgrade search)
-function UI.ShowSearchResults(results, title)
-	UI.pendingResults = { results = results, title = title }
+-- Shows a list that was worked out elsewhere: an equipment upgrade search for ref, whose
+-- results the "only usable" box can narrow to what that character can use.
+function UI.ShowSearchResults(results, title, ref)
+	UI.pendingResults = { results = results, title = title, ref = ref }
 	UI.Open("search")
 end
 
@@ -223,6 +235,31 @@ function view:Show(results, emptyText)
 	else
 		self.message:Hide()
 	end
+end
+
+-- upgrade results, narrowed to what the character can use while the box is ticked; the
+-- equipped item they are compared with stays on top
+function view:ShowUpgrades()
+	local u = self.upgrade
+	local shown = u.results
+	if u.ref then
+		self.usable.label:SetText(format(L["Only what %s can use"], UI.ClassHex(u.ref.c.class) .. u.ref.name .. "|r"))
+		self.usable:SetChecked(onlyUsable)
+		self.usable:Show()
+		if onlyUsable then
+			shown = {}
+			for i, r in ipairs(u.results) do
+				if (i == 1 and r.location == L["Currently equipped"]) or not r.id or Altoholic:CanUseItem(u.ref.c, r.id) then
+					table.insert(shown, r)
+				end
+			end
+		end
+	else
+		self.usable:Hide()
+	end
+	self.filters:Hide()
+	self:Show(shown, L["No match found!"])
+	self.status:SetText((u.title or "") .. "  " .. format(L["%d results"], #shown))
 end
 
 function view:Run()
@@ -252,10 +289,13 @@ function view:Update(args)
 	local pending = UI.pendingResults
 	if pending then
 		UI.pendingResults = nil
-		self:Show(pending.results, L["No match found!"])
-		self.status:SetText((pending.title or "") .. "  " .. format(L["%d results"], #pending.results))
+		self.upgrade = pending
+		self:ShowUpgrades()
 		return
 	end
+	self.upgrade = nil
+	self.usable:Hide()
+	self.filters:Show()
 	self.args = args
 	self:Run()
 end

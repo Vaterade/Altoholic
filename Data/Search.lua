@@ -220,3 +220,72 @@ function Altoholic:UpgradeRoles(class)
 	if id == CLASS_PRIEST or id == CLASS_SHAMAN or id == CLASS_DRUID or id == CLASS_PALADIN then Add(L["Heal"], "Heal") end
 	return roles
 end
+
+-- *** Can a character use an item ***
+-- Worked out from the character's class and level, since the game's own check only answers
+-- for the character being played: the item's class restriction (ClassicAPI's allowableClass,
+-- which covers tier sets), its required level, and the armour and weapon types the class can
+-- learn. Classes by Altoholic.Classes' numbers.
+
+-- the game's class bit for each of Altoholic's class numbers
+local CLASS_BIT = { [1] = 128, [2] = 1, [3] = 4, [4] = 8, [5] = 256, [6] = 1024, [7] = 64, [8] = 2, [9] = 16 }
+
+-- armour subclasses: 0 misc, 1 cloth, 2 leather, 3 mail, 4 plate, 6 shield, 7 libram, 8 idol,
+-- 9 totem; a number is the level the class can first wear it at
+local ARMOR = {
+	[1] = { [0] = 1, [1] = 1 },											-- Mage
+	[2] = { [0] = 1, [1] = 1, [2] = 1, [3] = 1, [4] = 40, [6] = 1 },	-- Warrior
+	[3] = { [0] = 1, [1] = 1, [2] = 1, [3] = 40 },						-- Hunter
+	[4] = { [0] = 1, [1] = 1, [2] = 1 },								-- Rogue
+	[5] = { [0] = 1, [1] = 1 },											-- Warlock
+	[6] = { [0] = 1, [1] = 1, [2] = 1, [8] = 1 },						-- Druid
+	[7] = { [0] = 1, [1] = 1, [2] = 1, [3] = 40, [6] = 1, [9] = 1 },	-- Shaman
+	[8] = { [0] = 1, [1] = 1, [2] = 1, [3] = 1, [4] = 40, [6] = 1, [7] = 1 },	-- Paladin
+	[9] = { [0] = 1, [1] = 1 },											-- Priest
+}
+
+-- weapon subclasses: 0 1H axe, 1 2H axe, 2 bow, 3 gun, 4 1H mace, 5 2H mace, 6 polearm,
+-- 7 1H sword, 8 2H sword, 10 staff, 13 fist, 14 misc, 15 dagger, 16 thrown, 18 crossbow,
+-- 19 wand, 20 fishing pole
+local function Set(...)
+	local t = { [14] = true, [20] = true }
+	for _, v in ipairs({ ... }) do t[v] = true end
+	return t
+end
+local WEAPON = {
+	[1] = Set(7, 10, 15, 19),											-- Mage
+	[2] = Set(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 15, 16, 18),			-- Warrior
+	[3] = Set(0, 1, 2, 3, 6, 7, 8, 10, 13, 15, 16, 18),				-- Hunter
+	[4] = Set(2, 3, 4, 7, 13, 15, 16, 18),								-- Rogue
+	[5] = Set(7, 10, 15, 19),											-- Warlock
+	[6] = Set(4, 5, 10, 13, 15),										-- Druid
+	[7] = Set(0, 1, 4, 5, 10, 13, 15),									-- Shaman
+	[8] = Set(0, 1, 4, 5, 6, 7, 8),										-- Paladin
+	[9] = Set(4, 10, 15, 19),											-- Priest
+}
+
+-- true when the character (a saved record, with class and level) can use the item; true too
+-- when the item isn't cached yet, rather than hiding it
+function Altoholic:CanUseItem(c, itemID)
+	local class = self.Classes[c.class]
+	if not class then return true end
+	local level = c.level or 60
+	local data = C_Item and C_Item.GetItemDataByID and C_Item.GetItemDataByID(itemID)
+	if data then
+		if data.allowableClass and data.allowableClass ~= -1 and bit.band(data.allowableClass, CLASS_BIT[class]) == 0 then
+			return false
+		end
+		if (data.requiredLevel or 0) > level then return false end
+	else
+		local _, _, _, minLevel = GetItemInfo(itemID)
+		if minLevel and minLevel > level then return false end
+	end
+	local _, _, _, _, _, classID, subClassID = C_Item.GetItemInfoInstant(itemID)
+	if classID == Enum.ItemClass.Armor then
+		local from = ARMOR[class][subClassID]
+		return from ~= nil and level >= from
+	elseif classID == Enum.ItemClass.Weapon then
+		return WEAPON[class][subClassID] == true
+	end
+	return true
+end

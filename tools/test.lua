@@ -24,6 +24,7 @@ end
 
 -- *** Lua 5.0 / WoW globals ***
 getmetatable("").__index = string
+bit = bit or require("bit")
 strtrim = function(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1")) end
 strsplit = function(sep, s)
 	local out = {}
@@ -439,6 +440,26 @@ C_Item = C_Item or {}
 C_Item.GetItemInfoInstant = function() return 15248, "", "", "", "", 2, 8 end
 Altoholic.LootTable = { ["Molten Core"] = { ["Ragnaros"] = { 15248 } } }
 check(type(Altoholic:FindUpgrade(2589)) == "table", "an upgrade search runs")
+-- who can use what: a hunter (class 3) at 42 can wear mail but not plate, and use bows not wands
+local hunter = { class = "Hunter", level = 42 }
+local kinds = { [101] = { 4, 3 }, [102] = { 4, 4 }, [103] = { 2, 2 }, [104] = { 2, 19 } }	-- mail, plate, bow, wand
+C_Item.GetItemInfoInstant = function(id) local k = kinds[id] or { 15, 0 } return id, "", "", "", "", k[1], k[2] end
+Enum.ItemClass.Armor, Enum.ItemClass.Weapon = 4, 2
+check(Altoholic:CanUseItem(hunter, 101) and not Altoholic:CanUseItem(hunter, 102)
+	and Altoholic:CanUseItem(hunter, 103) and not Altoholic:CanUseItem(hunter, 104), "a hunter: mail and bows yes, plate and wands no")
+C_Item.GetItemDataByID = function(id) return id == 103 and { allowableClass = 128, requiredLevel = 1 } or nil end	-- mage only
+check(not Altoholic:CanUseItem(hunter, 103), "an item for another class only isn't usable")
+check(not Altoholic:CanUseItem({ class = "Hunter", level = 30 }, 101), "mail waits for level 40")
+C_Item.GetItemDataByID = nil
+-- the upgrade results page narrows to them
+UI.ShowSearchResults({ { id = 101, iLvl = 50, location = "x" }, { id = 102, iLvl = 50, location = "y" } }, "test",
+	{ name = "Hunt", c = hunter })
+check(UI.views.Search.usable:IsShown() and #UI.views.Search.list.data == 1, "upgrade results show only what the character can use")
+UI.views.Search.usable.checked = nil
+UI.views.Search.usable.scripts.OnClick(UI.views.Search.usable)
+check(#UI.views.Search.list.data == 2, "and all of them with the box unticked")
+UI.views.Search.usable.checked = true
+UI.views.Search.usable.scripts.OnClick(UI.views.Search.usable)
 Altoholic:DataChanged("mail")
 UI.Toggle()
 check(not AltoholicWindow:IsShown(), "and closes again")

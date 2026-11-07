@@ -10,8 +10,9 @@ local COLUMNS = 16
 
 local view = {}
 
-local function FindUpgrade(item, role, title)
-	UI.ShowSearchResults(Altoholic:FindUpgrade(item, role), title)
+-- the results go to the Search page, which can narrow them to what this character can use
+local function FindUpgrade(item, role, title, ref)
+	UI.ShowSearchResults(Altoholic:FindUpgrade(item, role), title, ref)
 end
 
 local function ItemMenu(button)
@@ -19,7 +20,7 @@ local function ItemMenu(button)
 	local items = {}
 	local _, link = GetItemInfo(Altoholic:GetItemString(item))
 	for _, r in ipairs(Altoholic:UpgradeRoles(ref.c.class)) do
-		table.insert(items, { text = r[1], func = function() FindUpgrade(item, r[2], link or "") end })
+		table.insert(items, { text = r[1], func = function() FindUpgrade(item, r[2], link or "", ref) end })
 	end
 	W.ShowMenu(button, items)
 end
