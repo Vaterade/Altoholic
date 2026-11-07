@@ -1,7 +1,7 @@
 -- Recipes: what a character can make with one profession, by the window's headers, with
 -- the reagents each recipe takes. Headers fold on click.
 -- With pfUI-trades loaded, each recipe has a Queue button that adds crafts to that
--- character's task list there (the count is in the bottom bar), and shows how many are
+-- character's task list there (the count is in the page's bottom right), and shows how many are
 -- queued already.
 local L = Altoholic.L
 local W = Altoholic.W
@@ -34,6 +34,7 @@ function view:Create(frame, bar)
 	local holder = CreateFrame("Frame", nil, frame)
 	holder:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -8)
 	holder:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
+	self.holder, self.frame = holder, frame
 	self.list = W.List(holder, 22,
 		function(row)
 			row.text = W.Text(row)
@@ -111,14 +112,14 @@ function view:Create(frame, bar)
 	self.status:SetTextColor(.7, .7, .7)
 	self.bar = bar
 
-	-- how many crafts the Queue buttons add
-	self.count = W.EditBox(bar, 40, 22, nil, function(box) box:ClearFocus() end)
-	self.count:SetPoint("RIGHT", bar, "RIGHT", -4, 0)
+	-- how many crafts the Queue buttons add, in the page's bottom right corner under the list
+	self.count = W.EditBox(frame, 40, 22, nil, function(box) box:ClearFocus() end)
+	self.count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 8)
 	self.count:SetNumeric(true)
 	self.count:SetMaxLetters(3)
 	self.count:SetJustifyH("CENTER")
 	self.count:SetText("1")
-	self.countLabel = W.Text(bar, nil, "RIGHT")
+	self.countLabel = W.Text(frame, nil, "RIGHT")
 	self.countLabel:SetPoint("RIGHT", self.count, "LEFT", -6, 0)
 	self.countLabel:SetText(L["Queue"] .. " x")
 	self.countLabel:SetTextColor(.7, .7, .7)
@@ -152,6 +153,8 @@ end
 function view:Update(args)
 	self.args = args
 	self.canQueue = Altoholic:CanQueueCrafts(args.realm)
+	-- the list stops above the count box while there is one
+	self.holder:SetPoint("BOTTOMRIGHT", self.frame, "BOTTOMRIGHT", -4, self.canQueue and 36 or 4)
 	if self.canQueue then
 		self.count:Show()
 		self.countLabel:Show()
