@@ -32,6 +32,7 @@ Data\Quests.lua
 Data\Search.lua
 Data\Tooltip.lua
 Data\Trades.lua
+Data\Notes.lua
 Items\Loots.lua
 Items\Suggestions.lua
 Items\Suggestions_zhCN.lua
@@ -56,3 +57,4 @@ UI\Views\Raids.lua
 UI\Views\Quests.lua
 UI\Views\Auctions.lua
 UI\Views\Options.lua
+UI\Views\Notes.lua

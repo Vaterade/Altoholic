@@ -107,6 +107,10 @@ The data layer is `Core.lua`, `Data/*.lua` and `Items/`, and it doesn't touch th
 extends tooltips; `Query.lua` holds formatting helpers and `Constants.lua` shared tables.
 `Trades.lua` queues saved recipes in pfUI-trades (`pfUITrades.QueueFor`) when it is loaded;
 pfUI-trades keeps lists by realm, so only the logged-in realm's characters can be queued.
+`Notes.lua` keeps notes for characters in `AltoholicDB.account.notes[realm][name]`, outside the
+defaults table; `UI/Views/Notes.lua` has the page (opened by the Notes button, a hidden
+category) and the popup shown 5 s after login. Window parts that need `PLAYER_LOGIN` add a
+function to `UI.loginHooks`.
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
 changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
 answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls

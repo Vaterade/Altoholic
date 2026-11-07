@@ -93,6 +93,7 @@ function view:Menu(row, ref)
 		{ text = L["View quest log"], func = function() UI.Open("quests", key) end },
 		{ text = L["View auctions"], func = function() UI.Open("auctions", key) end },
 		{ text = L["View bids"], func = function() UI.Open("bids", key) end },
+		{ text = L["Notes"], func = function() UI.Open("notes", key) end },
 	}
 	if not UI.IsPlayer(ref) then
 		table.insert(items, { text = "|cffff5555" .. L["Delete this Alt"], func = function()

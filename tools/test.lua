@@ -367,6 +367,30 @@ Altoholic:DataChanged("mail")
 UI.Toggle()
 check(not AltoholicWindow:IsShown(), "and closes again")
 
+-- *** notes ***
+check(Altoholic:AddNote("Testrealm", "Testchar", "  ") == nil, "an empty note isn't kept")
+Altoholic:AddNote("Testrealm", "Testchar", "Sell the linen")
+Altoholic:AddNote("Testrealm", "Testchar", "Train Mining")
+check(Altoholic:NoteCount("Testrealm", "Testchar") == 2, "two notes kept")
+UI.Toggle()
+UI.notesButton.scripts.OnClick(UI.notesButton)
+check(UI.current == UI.views.Notes and UI.current.args.name == "Testchar" and #UI.current.list.data == 2,
+	"the Notes button opens the logged-in character's notes")
+check(UI.notesButton.label:GetText():find("2"), "the Notes button counts them")
+check(UI.ShowLoginNotes() and AltoholicNotesPopup:IsShown(), "the login popup shows them")
+AltoholicNotesPopup.lines[1].done.scripts.OnClick(AltoholicNotesPopup.lines[1].done)
+check(Altoholic:NoteCount("Testrealm", "Testchar") == 1 and #UI.current.list.data == 1, "Done removes one, the page follows")
+UI.current.input:SetText("Buy coal")
+UI.current:Add()
+check(Altoholic:NoteCount("Testrealm", "Testchar") == 2 and UI.current.input:GetText() == "", "the page adds a note")
+Altoholic:CmdNote("testchar Bank the ore")
+check(Altoholic:NoteCount("Testrealm", "Testchar") == 3, "/alto note finds the character whatever the case")
+AltoholicNotesPopup.done.scripts.OnClick(AltoholicNotesPopup.done)
+check(Altoholic:NoteCount("Testrealm", "Testchar") == 0 and rawget(AltoholicDB.account, "notes") and next(AltoholicDB.account.notes) == nil,
+	"Done with all clears them, and the empty tables go")
+check(not UI.ShowLoginNotes(), "no popup without notes")
+UI.Toggle()
+
 Fire("PLAYER_LOGOUT")
 check(AltoholicDB.account.data.Alliance.Testrealm.char.Testchar.level == 42, "data survives the logout cleanup")
 

@@ -257,7 +257,7 @@ function UI.SelectCategory(index)
 	local cat = UI.categories[index]
 	if not cat then return end
 	UI.category = index
-	for i, row in ipairs(catRows) do row:SetSelected(i == index) end
+	for i, row in pairs(catRows) do row:SetSelected(i == index) end
 	content:ClearAllPoints()
 	content:SetPoint("BOTTOMRIGHT", page, "BOTTOMRIGHT", 0, 0)
 	if cat.entries then
@@ -385,9 +385,13 @@ function UI.Create()
 	area:SetPoint("BOTTOMRIGHT", win, "BOTTOMRIGHT", -7, 37)
 	W.Backdrop(area)
 
+	-- hidden categories are opened from elsewhere (Notes, by its button)
+	local shown = 0
 	for i, cat in ipairs(UI.categories) do
+		if cat.hidden then break end
+		shown = shown + 1
 		local row = W.MenuRow(area, ROW)
-		row:SetPoint("TOPLEFT", area, "TOPLEFT", 0, -(i - 1) * ROW)
+		row:SetPoint("TOPLEFT", area, "TOPLEFT", 0, -(shown - 1) * ROW)
 		row:SetWidth(COLUMN)
 		row.text:SetText(cat.title)
 		row:SetScript("OnClick", function() UI.SelectCategory(i) end)
@@ -427,11 +431,17 @@ function UI.Create()
 	end)
 	UI.searchBox = search
 
+	-- Notes, where pfUI's config has its Unlock button
+	local notes = W.Button(win, L["Notes"], 110, 25, function() UI.Open("notes") end)
+	notes:SetPoint("TOPLEFT", area.backdrop, "BOTTOMLEFT", 0, -5)
+	UI.notesButton = notes
+
 	bar = CreateFrame("Frame", nil, win)
-	bar:SetPoint("TOPLEFT", area.backdrop, "BOTTOMLEFT", 0, -5)
+	bar:SetPoint("TOPLEFT", notes, "TOPRIGHT", 5, 0)
 	bar:SetPoint("BOTTOMRIGHT", search, "BOTTOMLEFT", -5, 0)
 
 	win:SetScript("OnShow", function()
+		UI.UpdateNotesButton()
 		-- the logged-in character is rescanned, so the window shows them as they are now
 		Altoholic:UpdatePlayerStats()
 		Altoholic:UpdatePlayerBags()
@@ -472,8 +482,32 @@ function UI.Hide()
 end
 
 -- the scans tell the window when what it lists has changed
-function Altoholic:OnDataChanged()
+function Altoholic:OnDataChanged(what)
+	if what == "notes" then
+		UI.UpdateNotesButton()
+		-- the second column shows how many notes each character has
+		local cat = UI.category and UI.categories[UI.category]
+		if cat and cat.id == "notes" and win and win:IsShown() then
+			entries = Flatten(cat.entries(), {}, 0)
+			RefreshColumn()
+		end
+	end
 	UI.Refresh()
+end
+
+-- the Notes button counts the notes waiting on this realm
+function UI.UpdateNotesButton()
+	if not UI.notesButton then return end
+	local count = 0
+	local realm = rawget(Altoholic.db.account, "notes") and Altoholic.db.account.notes[V.realm]
+	for _, list in pairs(realm or {}) do count = count + #list end
+	UI.notesButton:SetLabel(count > 0 and (L["Notes"] .. " " .. W.TEAL_HEX .. "(" .. count .. ")") or L["Notes"])
+end
+
+-- PLAYER_LOGIN's window half (Data/Scan.lua calls it): each part of the window adds to this
+UI.loginHooks = {}
+function Altoholic:UI_OnLogin()
+	for _, hook in ipairs(UI.loginHooks) do hook() end
 end
 
 -- A page can be drawn before the client has the items it shows; they come in one by
