@@ -20,8 +20,17 @@ Add({ id = "containers", title = L["Containers"], entries = function()
 	return UI.CharacterEntries("Containers")
 end })
 
+-- equipment compares a realm's characters side by side, so it lists realms
 Add({ id = "equipment", title = L["Equipment"], entries = function()
-	return UI.CharacterEntries("Equipment")
+	local list = {}
+	for _, realm in ipairs(UI.Realms()) do
+		table.insert(list, { text = realm.name, key = realm.name, view = "Equipment", args = realm.name })
+	end
+	return list
+end, default = function(list)
+	for _, e in ipairs(list) do
+		if e.args == Altoholic.vars.realm then return e end
+	end
 end })
 
 Add({ id = "mail", title = L["E-Mail"], entries = function()

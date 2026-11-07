@@ -284,6 +284,45 @@ local function Menu()
 	return menu
 end
 
+-- A right-click menu at the cursor: items { { text = "...", func = fn }, ... }
+function W.ShowMenu(owner, items)
+	local m = Menu()
+	m.owner = owner
+	for i, it in ipairs(items) do
+		local row = m.rows[i]
+		if not row then
+			row = CreateFrame("Button", nil, m)
+			row:SetHeight(18)
+			row.text = W.Text(row)
+			row.text:SetPoint("LEFT", row, "LEFT", 6, 0)
+			row.hl = row:CreateTexture(nil, "HIGHLIGHT")
+			row.hl:SetAllPoints(row)
+			row.hl:SetColorTexture(1, 1, 1, .1)
+			m.rows[i] = row
+		end
+		row:ClearAllPoints()
+		row:SetPoint("TOPLEFT", m, "TOPLEFT", 1, -1 - (i - 1) * 18)
+		row:SetPoint("RIGHT", m, "RIGHT", -1, 0)
+		row.text:SetText(it.text)
+		row.text:SetTextColor(1, 1, 1)
+		row:SetScript("OnClick", function()
+			m:Hide()
+			if it.func then it.func() end
+		end)
+		row:Show()
+	end
+	for i = #items + 1, #m.rows do m.rows[i]:Hide() end
+	local width = 80
+	for i = 1, #items do width = math.max(width, m.rows[i].text:GetStringWidth() + 16) end
+	m:SetWidth(width)
+	m:SetHeight(#items * 18 + 2)
+	local x, y = GetCursorPosition()
+	local scale = UIParent:GetEffectiveScale()
+	m:ClearAllPoints()
+	m:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x / scale, y / scale)
+	m:Show()
+end
+
 -- items: { { text = "...", value = v }, ... } or a function returning that list.
 -- onSelect(dropdown, value, item). dd:SetValue(v) selects without calling onSelect.
 function W.Dropdown(parent, width, items, onSelect)

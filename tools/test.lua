@@ -300,6 +300,13 @@ UI.Search("claymore")
 check(#UI.views.Search.list.data == 1, "and the claymore")
 UI.Search("nothing like this")
 check(#UI.views.Search.list.data == 0, "and nothing for a name no item has")
+UI.Open("equipment")
+check(UI.current == UI.views.Equipment and #UI.current.list.data == 20 and UI.current.chars[1].name == "Testchar",
+	"equipment: the realm's characters, a line per slot")
+C_Item = C_Item or {}
+C_Item.GetItemInfoInstant = function() return 15248, "", "", "", "", 2, 8 end
+Altoholic.LootTable = { ["Molten Core"] = { ["Ragnaros"] = { 15248 } } }
+check(type(Altoholic:FindUpgrade(2589)) == "table", "an upgrade search runs")
 Altoholic:DataChanged("mail")
 UI.Toggle()
 check(not AltoholicWindow:IsShown(), "and closes again")
