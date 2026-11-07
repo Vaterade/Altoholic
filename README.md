@@ -40,7 +40,9 @@ font and border size; without it, it draws the same look with pfUI's defaults.
   is learned or found. The recipe list comes from LibCrafts-1.0 by Roman Kharitonov (of
   [MissingCrafts](https://github.com/refaim/MissingCrafts)), as shipped with Grom's
   Gromissingcrafts, which adds Survival (MIT, see `Items/Recipes-LICENSE.txt`). It is
-  converted with `tools/convert-libcrafts.lua`.
+  converted with `tools/convert-libcrafts.lua`. With [pfQuest](https://github.com/brues-code/pfQuest)
+  loaded, hovering a recipe item names the vendors, mobs and chests it comes from and their
+  zones, and clicking it shows them on pfQuest's world map.
 - The saved data is the same as 1.x, so nothing is lost when updating.
 
 ## Giselbaer's changes

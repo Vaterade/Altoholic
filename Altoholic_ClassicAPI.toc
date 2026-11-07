@@ -35,6 +35,7 @@ Data\Tooltip.lua
 Data\Trades.lua
 Data\Notes.lua
 Data\MissingRecipes.lua
+Data\Sources.lua
 Items\Loots.lua
 Items\Recipes.lua
 Items\Suggestions.lua

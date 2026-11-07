@@ -318,6 +318,29 @@ check(queuedArgs and queuedArgs[1] == "Testchar" and queuedArgs[2] == "Mining" a
 	"recipes: Queue sends the recipe and its reagents to pfUI-trades")
 check(UI.current.list.rows[2].queued:GetText():find("3"), "recipes: the row shows how many are queued")
 pfUITrades = nil
+-- item sources from pfQuest's database
+check(not Altoholic:HasItemSources() and Altoholic:ItemSources(3396) == nil, "no sources without pfQuest")
+pfDB = {
+	items = { data = { [3396] = { V = { [10] = 1 }, U = { [20] = 2.5 }, R = { [5] = 0.4 } } } },
+	units = { data = { [10] = { coords = { { 50, 50, 1519, 0 } } }, [20] = { coords = { { 1, 1, 40, 300 }, { 2, 2, 12, 300 } } } },
+		loc = { [10] = "Vendor Vic", [20] = "Mob Max" } },
+	objects = { data = { [30] = { coords = { { 5, 5, 40, 0 } } } }, loc = { [30] = "Battered Chest" } },
+	refloot = { data = { [5] = { O = { [30] = true } } } },
+	zones = { loc = { [1519] = "Stormwind City", [40] = "Westfall", [12] = "Elwynn Forest" } },
+}
+local src = Altoholic:ItemSources(3396)
+check(src and src.vendors[1].name == "Vendor Vic" and src.vendors[1].zone == "Stormwind City"
+	and src.drops[1].name == "Mob Max" and src.drops[1].zone == "Elwynn Forest, Westfall"
+	and src.objects[1].name == "Battered Chest", "sources: vendor, drop with zones, and a chest from reference loot")
+local tipLines = {}
+local tip = { AddDoubleLine = function(_, l) table.insert(tipLines, l) end, AddLine = function(_, l) table.insert(tipLines, l) end }
+check(Altoholic:AddItemSources(tip, 3396) and #tipLines == 3, "the tooltip gets a line per source")
+local mapped
+pfDatabase = { SearchItemID = function(_, id) mapped = id return { [1519] = 1 } end, GetBestMap = function(_, m) return next(m) end }
+pfMap = { ShowMapID = function(_, map) mapped = mapped and map end, DeleteNode = function() end }
+check(Altoholic:ShowItemOnMap(3396) and mapped == 1519, "an item goes on pfQuest's map")
+pfDB, pfDatabase, pfMap = nil, nil, nil
+
 -- missing recipes: Mining has 13, Testchar knows Smelt Copper
 local missing, total = Altoholic:MissingRecipes(c, "Mining")
 check(total == 13 and #missing == 12, "missing recipes: all of Mining but Smelt Copper (" .. tostring(missing and #missing) .. "/" .. tostring(total) .. ")")

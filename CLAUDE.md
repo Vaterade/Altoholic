@@ -114,7 +114,9 @@ function to `UI.loginHooks`.
 `MissingRecipes.lua` compares a character's saved recipes with `Altoholic.RecipeDB`
 (`Items/Recipes.lua`, names translated in `Locale/Recipes.lua`), matching by name. Both files
 are generated from LibCrafts-1.0 by `tools/convert-libcrafts.lua <LibCrafts folder>`; don't
-edit them by hand, convert again.
+edit them by hand, convert again. `Sources.lua` reads an item's vendors, drops and objects
+from pfQuest's `pfDB` when pfQuest is loaded (names from `pfDB[kind].loc`, zones from
+`pfDB.zones.loc`) and maps them with `pfDatabase:SearchItemID`; it finds nothing otherwise.
 Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
 changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
 answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls

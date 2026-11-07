@@ -2,6 +2,8 @@
 -- database converted from LibCrafts-1.0 (Data/MissingRecipes.lua). Opened from the Recipes
 -- page's bottom right corner, like Equipment's upgrade search; Known Recipes in the same
 -- corner goes back. Hover a line for its reagents; the recipe item's icon has its tooltip.
+-- With pfQuest loaded, that tooltip names the vendors, mobs and chests the recipe comes from
+-- and their zones, and clicking the icon shows them on pfQuest's map (Data/Sources.lua).
 local L = Altoholic.L
 local W = Altoholic.W
 local UI = Altoholic.UI
@@ -94,7 +96,21 @@ function view:Create(frame)
 				local r, b = m.recipes[i], row.recipes[i]
 				if r then
 					b:SetItem(r.id)
-					b.onTooltip = function(_, tip) tip:AddLine(r.sources, .2, 1, .8, true) end
+					b.onTooltip = function(_, tip)
+						tip:AddLine(" ")
+						-- pfQuest knows who sells or drops it, and where; else just the kind of source
+						if not Altoholic:AddItemSources(tip, r.id) then
+							tip:AddLine(r.sources, .2, 1, .8, true)
+						end
+						if Altoholic:HasItemSources() then
+							tip:AddLine(L["Click to show on the map"], .2, 1, .8)
+						end
+					end
+					b.onClick = function()
+						if not Altoholic:ShowItemOnMap(r.id) and Altoholic:HasItemSources() then
+							DEFAULT_CHAT_FRAME:AddMessage(W.TEAL_HEX .. "Altoholic:|r " .. L["pfQuest knows no place for this recipe"])
+						end
+					end
 					b:Show()
 				else
 					b:Hide()
