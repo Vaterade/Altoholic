@@ -63,3 +63,5 @@ UI\Views\Search.lua
 UI\Views\Equipment.lua
 UI\Views\Mail.lua
 UI\Views\Recipes.lua
+UI\Views\Skills.lua
+UI\Views\BagUsage.lua

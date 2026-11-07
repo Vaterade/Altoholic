@@ -277,6 +277,10 @@ for i, cat in ipairs(UI.categories) do
 	if not good then ok, err = false, cat.id .. ": " .. tostring(e) end
 end
 check(ok, "every category opens" .. (err and (" (" .. err .. ")") or ""))
+for _, name in ipairs({ "Skills", "BagUsage" }) do
+	local good, e = pcall(UI.ShowView, name)
+	check(good and #UI.views[name].table.list.data == 2, name .. " lists the realm and the character" .. (good and "" or (": " .. tostring(e))))
+end
 UI.Open("recipes")
 check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
 local rl = UI.current.lines

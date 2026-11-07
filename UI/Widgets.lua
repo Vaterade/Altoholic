@@ -649,7 +649,7 @@ end
 -- A list with column captions, for the account-wide views. columns:
 --   { { title = "Level", width = 40, justify = "RIGHT" }, ... }   (the last column takes what's left)
 -- Each data item is one of
---   { cells = { "text", ... }, onEnter = fn(row), onClick = fn(row, button) }
+--   { cells = { "text", ... }, onEnter = fn(row, column), onClick = fn(row, button) }
 --   { header = "text" }   a section title across the whole width (a realm), in teal
 --   { total = true, cells = { ... } }   a totals line, dimmed caption
 function W.Table(parent, columns, rowHeight)
@@ -708,10 +708,29 @@ function W.Table(parent, columns, rowHeight)
 			row.hl:SetAllPoints(row)
 			row.hl:SetColorTexture(1, 1, 1, .05)
 			row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			-- onEnter(row, column): the column under the cursor, followed as it moves
 			row:SetScript("OnEnter", function(self)
-				if self.item and self.item.onEnter then self.item.onEnter(self) end
+				self.hoverColumn = nil
+				self.hovered = true
 			end)
-			row:SetScript("OnLeave", function() GameTooltip:Hide() end)
+			row:SetScript("OnUpdate", function(self)
+				if not self.hovered or not self.item or not self.item.onEnter then return end
+				local x = GetCursorPosition() / self:GetEffectiveScale() - (self:GetLeft() or 0)
+				local col, edge = #columns, 0
+				for i, c in ipairs(columns) do
+					edge = edge + (c.width or 0)
+					if i < #columns and x < edge then col = i break end
+				end
+				if col ~= self.hoverColumn then
+					self.hoverColumn = col
+					GameTooltip:Hide()
+					self.item.onEnter(self, col)
+				end
+			end)
+			row:SetScript("OnLeave", function(self)
+				self.hovered = nil
+				GameTooltip:Hide()
+			end)
 			row:SetScript("OnClick", function(self, button)
 				if self.item and self.item.onClick then self.item.onClick(self, button) end
 			end)
