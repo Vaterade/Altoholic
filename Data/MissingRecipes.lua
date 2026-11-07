@@ -16,6 +16,12 @@ local function Describe(letters, map)
 	return table.concat(parts, ", ")
 end
 
+-- A recipe name as compared: the client writes some apostrophes curly (Turtle's own
+-- recipes, "Herbalist’s"), the recipe list straight.
+function Altoholic:RecipeKey(name)
+	return (string.gsub(name or "", "\226\128\153", "'"))
+end
+
 -- the English name RecipeDB uses for a profession as the client named it
 function Altoholic:EnglishProfession(profession)
 	for en in pairs(self.RecipeDB or {}) do
@@ -47,13 +53,13 @@ function Altoholic:MissingRecipes(c, profession)
 	local i = 1
 	while list and rawget(list, i) do
 		local r = rawget(list, i)
-		if r.name and not self:IsRecipeHeader(r) then known[r.name] = true end
+		if r.name and not self:IsRecipeHeader(r) then known[self:RecipeKey(r.name)] = true end
 		i = i + 1
 	end
 	local missing, all = {}, self.RecipeDB[en]
 	for _, craft in ipairs(all) do
 		local name = L[craft[2]]
-		if not known[name] and not known[craft[2]] then
+		if not known[self:RecipeKey(name)] and not known[self:RecipeKey(craft[2])] then
 			local recipes, how = {}, {}
 			for _, r in ipairs(craft[7] or {}) do
 				table.insert(recipes, { id = r[1], sources = Describe(r[2], RECIPE) })

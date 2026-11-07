@@ -19,10 +19,10 @@ local function IsCraftName(name)
 	if not craftNames then
 		craftNames = {}
 		for _, crafts in pairs(Altoholic.RecipeDB or {}) do
-			for _, craft in ipairs(crafts) do craftNames[L[craft[2]]] = true end
+			for _, craft in ipairs(crafts) do craftNames[Altoholic:RecipeKey(L[craft[2]])] = true end
 		end
 	end
-	return craftNames[name]
+	return craftNames[Altoholic:RecipeKey(name)]
 end
 
 -- A recipe list row is a header when the profession window said so. Rows saved before 2.0

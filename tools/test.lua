@@ -273,6 +273,10 @@ check(list[2].isHeader == nil and list[3].isHeader and list[3].link == nil, "the
 Fire("TRADE_SKILL_SHOW")
 check(rawget(list, 3) == nil and list[1].isHeader and not list[2].isHeader, "a rescan drops leftover rows")
 
+check(Altoholic:RecipeKey("Simple Herbalist\226\128\153s Backpack") == "Simple Herbalist's Backpack"
+	and not Altoholic:IsRecipeHeader({ isHeader = true, name = "Simple Herbalist\226\128\153s Backpack", link = "x" }),
+	"a curly apostrophe matches the recipe list's straight one")
+
 -- the options read from the database, not from the old check buttons
 check(Altoholic:Option("TooltipSource") == 1 and Altoholic:Option("TooltipAlreadyKnown") == nil, "Option() reads the stored setting")
 
