@@ -69,3 +69,5 @@ UI\Views\BagUsage.lua
 UI\Views\Reputations.lua
 UI\Views\Attunements.lua
 UI\Views\Raids.lua
+UI\Views\Quests.lua
+UI\Views\Auctions.lua

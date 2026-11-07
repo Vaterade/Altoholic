@@ -290,8 +290,13 @@ UI.Open("recipes")
 check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
 local rl = UI.current.lines
 check(rl and #rl == 2 and rl[1].header == "Smelting" and rl[2].recipe, "recipes: the header and the recipe")
+for _, id in ipairs({ "quests", "auctions", "bids" }) do
+	local good, e = pcall(UI.Open, id)
+	check(good and UI.current.args and UI.current.args.name == "Testchar", id .. " opens on the logged-in character" .. (good and "" or (": " .. tostring(e))))
+end
+check(rawget(c.auctions, 1) == nil and rawget(c.bids, 1) == nil, "listing auctions and bids adds no empty entries")
 UI.Open("mail")
-check(UI.current == UI.views.Mail, "mail opens")
+check(UI.current == UI.views.Mail and rawget(c.mail, 1) == nil, "mail opens and adds no empty mail")
 UI.Open("containers")
 check(UI.current.args and UI.current.args.name == "Testchar", "Containers opens on the logged-in character")
 local lines = UI.views.Containers.list.data
