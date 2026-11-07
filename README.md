@@ -94,9 +94,7 @@ Altoholic 2.0 is built on the work of these addons and people:
 | Thaoky | Altoholic, the original addon (2.4.015), which all of this grew from |
 | Dyaxler | Altoholic for Vanilla WoW, the backport to 1.12 |
 | Giselbaer | The Turtle WoW version: raid lockouts, attunements, completed quests |
-| brues-code | pfUI (the ClassicAPI edition), whose look and settings window the 2.0 window follows |
-| brues-code | ClassicAPI, which Altoholic is built on |
-| brues-code | pfQuest: the vendors, drops and map pins for Missing Recipes |
+| brues-code | ClassicAPI, the DLL Altoholic is built on; pfUI (the ClassicAPI edition), whose look and settings window the 2.0 window follows; and pfQuest, for the vendors, drops and map pins in Missing Recipes |
 | Salahaja & The Iron Hammers | pfQuest-octo-plus, OctoWoW's item and NPC database |
 | Roman Kharitonov (refaim) | LibCrafts-1.0 from MissingCrafts: the recipe list for Missing Recipes (MIT) |
 | Grom | Gromissingcrafts: the Survival recipes, and the copy of the recipe list used (MIT) |
