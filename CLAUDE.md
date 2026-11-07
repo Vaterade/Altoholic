@@ -14,9 +14,10 @@ addon API. There is no stock-client fallback.
 
 ## Commands
 
-There is no build step and no test suite. The only offline checks are syntax passes:
+There is no build step. The offline checks are syntax passes and a test of the data layer:
 
 ```sh
+luajit tools/test.lua      # loads the TOC's Lua files without the window, fires the scan events
 find . -name '*.lua' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 -n1 luac -p
 find . -name '*.xml' -not -path './private/*' -not -path './.git/*' -print0 | xargs -0 xmllint --noout
 ```
@@ -95,7 +96,16 @@ Load order matters:
 - `Core.lua` holds constants and shared helpers; `Items/` holds the loot tables (item IDs by
   source, from AtlasLoot) and the per-class suggestion data.
 
-### Startup and scanning (`Altoholic.lua`)
+### Startup and scanning (`Data/`)
+
+The data layer is `Core.lua`, `Data/*.lua` and `Items/`, and it doesn't touch the window:
+`tools/test.lua` loads it alone. `Data/Scan.lua` (login, bags, bank, stats, events),
+`Professions.lua`, `Mail.lua`, `Auctions.lua`, `Quests.lua` capture data; `Tooltip.lua`
+extends tooltips; `Query.lua` holds formatting helpers and `Constants.lua` shared tables.
+Settings are read with `Altoholic:Option(name)` (1 or nil), never from a widget. A scan that
+changes what the window lists calls `Altoholic:DataChanged(what)`, and the window, if loaded,
+answers through `Altoholic:OnDataChanged(what)`; `PLAYER_LOGIN` likewise calls
+`Altoholic:UI_OnLogin()` when it exists.
 
 `PLAYER_LOGIN` initialises the database and registers the always-on events.
 `PLAYER_ENTERING_WORLD` waits one second (to let the login burst of events pass) and calls

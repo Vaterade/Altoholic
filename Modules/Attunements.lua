@@ -2,13 +2,9 @@
 	    Lua 5.1 Copyright (C) 1994-2006 Lua.org, PUC-Rio
 ]]
 
-local L = Altoholic.L
 local V = Altoholic.vars
 local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
 local TEAL		= "|cFF00FF9A"
-local YELLOW	= "|cFFFFFF00"
-local ORANGE	= "|cFFFF7F00"
 
 
 local attunements = {
@@ -56,28 +52,6 @@ local function hasAnyQuestComplete(charInfo, questsString)
 		end
     end
 	return false
-end
-
-function Altoholic:ResetWeeklyQuestsIfExpired(charInfo)
-	if not charInfo then return end
-	if not charInfo.CompletedQuests then return end
-
-	-- code stolen from raid module
-	local basetime = 1663128000 + 86400	-- this is for Nordanaar, every Thu
-	local resetdays = 7
-	local now = time()
-	local passedresets = math.floor((now - basetime) / (resetdays * 86400))
-	local lastreset = basetime + passedresets * resetdays * 86400
-
-	if not charInfo.CompletedQuestsLastCheck or charInfo.CompletedQuestsLastCheck < lastreset then
-		charInfo.CompletedQuests["41888"] = nil
-		charInfo.CompletedQuests["41891"] = nil
-		charInfo.CompletedQuests["41897"] = nil
-		charInfo.CompletedQuests["41890"] = nil
-		charInfo.CompletedQuests["41889"] = nil
-		charInfo.CompletedQuests["41892"] = nil
-	end
-
 end
 
 function Altoholic:Attunements_Update()

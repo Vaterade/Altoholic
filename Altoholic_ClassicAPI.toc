@@ -23,6 +23,14 @@ Database.lua
 
 AltoholicTemplates.xml
 Core.lua
+Data\Constants.lua
+Data\Query.lua
+Data\Scan.lua
+Data\Professions.lua
+Data\Mail.lua
+Data\Auctions.lua
+Data\Quests.lua
+Data\Tooltip.lua
 Items\Loots.lua
 Items\Suggestions.lua
 Items\Suggestions_zhCN.lua

@@ -4,3 +4,4 @@ make-altoholic-links.ps export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .github export-ignore
+tools export-ignore

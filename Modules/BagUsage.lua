@@ -1,5 +1,4 @@
 local L = Altoholic.L
-local V = Altoholic.vars
 local INFO_REALM_LINE = 1
 local INFO_CHARACTER_LINE = 2
 local INFO_TOTAL_LINE = 3
@@ -173,14 +172,4 @@ function Altoholic_BagUsage_OnEnter(self)
 	AltoTooltip:AddLine(" ",1,1,1);
 	AltoTooltip:AddLine(CYAN .. numSlots .. " |r" .. L["slots"] .. " ("  .. GREEN .. numFree .. "|r " ..L["free"] .. ") ",1,1,1);
 	AltoTooltip:Show();	
-end
-
--- The kind of a specialty bag ("Soul Bag", "Quiver"...) from the bag item's own
--- subclass, so Turtle's custom bag types are named too. nil for a plain bag or
--- one the client has not cached.
-function Altoholic:GetBagTypeString(link)
-	local _, _, subType, _, _, classID, subClassID = C_Item.GetItemInfoInstant(link)
-	if classID == Enum.ItemClass.Quiver or (classID == Enum.ItemClass.Container and subClassID ~= 0) then
-		return subType
-	end
 end

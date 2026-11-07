@@ -4,7 +4,6 @@ local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local TEAL		= "|cFF00FF9A"
 local YELLOW	= "|cFFFFFF00"
-local ORANGE	= "|cFFFF7F00"
 
 
 function Altoholic:Reputations_Update()
@@ -191,36 +190,6 @@ function Altoholic_Reputations_OnClick(self, button)
         elseif (WIM_EditBoxInFocus) then
             WIM_EditBoxInFocus:Insert(self.CharName .. L[" is "] .. repLevel .. L[" with "] .. V.Factions[repID] .. " (" .. (earned - bottom) .. "/" .. (top - bottom) .. ")");
         end
-	end
-end
-
-function Altoholic:GetReputationInfo(repString)
-	local bottom, top, earned = strsplit("|", repString)
-	bottom = tonumber(bottom)
-	top = tonumber(top)
-	earned = tonumber(earned)
-	local rate = (earned - bottom) / (top - bottom) * 100
-
-	return bottom, top, earned, rate
-end
-
-function Altoholic:GetRepLevelString(bottom)
-	if bottom == -42000 then
-		return FACTION_STANDING_LABEL1 -- "Hated"
-	elseif bottom == -6000 then
-		return FACTION_STANDING_LABEL2 -- "Hostile"
-	elseif bottom == -3000 then
-		return FACTION_STANDING_LABEL3 -- "Unfriendly"
-	elseif bottom == 0 then
-		return FACTION_STANDING_LABEL4 -- "Neutral"
-	elseif bottom == 3000 then
-		return FACTION_STANDING_LABEL5 -- "Friendly"
-	elseif bottom == 9000 then
-		return FACTION_STANDING_LABEL6 -- "Honored"
-	elseif bottom == 21000 then
-		return FACTION_STANDING_LABEL7 -- "Revered"
-	elseif bottom == 42000 then
-		return FACTION_STANDING_LABEL8 -- "Exalted"
 	end
 end
 
