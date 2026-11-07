@@ -100,6 +100,7 @@ CreateFrame = function(kind, name)
 	return f
 end
 UIParent = NewFrame("Frame")
+Minimap = NewFrame("Frame")
 STANDARD_TEXT_FONT = "Fonts\\FRIZQT__.TTF"
 UISpecialFrames = {}
 GameTooltip, ItemRefTooltip = NewFrame("GameTooltip"), NewFrame("GameTooltip")
@@ -286,6 +287,9 @@ for _, name in ipairs({ "Reputations", "Attunements", "Raids" }) do
 	local good, e = pcall(UI.ShowView, name)
 	check(good, name .. " opens" .. (good and "" or (": " .. tostring(e))))
 end
+UI.Open("options")
+check(UI.current == UI.views.Options and UI.current.boxes.TooltipSource:GetChecked(), "options show the stored settings")
+check(AltoholicMinimapIcon ~= nil, "the minimap button is made at login")
 UI.Open("recipes")
 check(UI.current and UI.current.args and UI.current.args.profession == "Mining", "Recipes opens the logged-in character's profession")
 local rl = UI.current.lines

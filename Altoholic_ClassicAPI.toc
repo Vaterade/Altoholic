@@ -57,6 +57,7 @@ Modules\Attunements.xml
 UI\Widgets.lua
 UI\Window.lua
 UI\Grid.lua
+UI\Minimap.lua
 UI\Menu.lua
 UI\Views\Summary.lua
 UI\Views\Containers.lua
@@ -71,3 +72,4 @@ UI\Views\Attunements.lua
 UI\Views\Raids.lua
 UI\Views\Quests.lua
 UI\Views\Auctions.lua
+UI\Views\Options.lua
