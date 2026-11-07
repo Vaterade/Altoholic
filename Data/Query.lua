@@ -20,14 +20,6 @@ function Altoholic:DataChanged(what)
 	if self.OnDataChanged then self:OnDataChanged(what) end
 end
 
-function Altoholic_GetItemLink(itemID)
-    if not itemID then return end
-    local itemName, itemString, itemQuality = GetItemInfo(itemID)
-    local _, _, _, itemColor = GetItemQualityColor(itemQuality)
-    local itemLink = itemColor .. "|H" .. itemString .. "|h[" .. itemName .. "]|h|r"
-    return itemLink
-end
-
 function Altoholic:GetIDFromLink(link)
 	if not link then return end
 	return tonumber(string.match(link, "item:(%d+)"))
@@ -38,12 +30,6 @@ end
 function Altoholic:GetItemString(link)
 	if type(link) ~= "string" then return link end
 	return string.match(link, "item:[%-%d:]+") or link
-end
-
-function Altoholic:GetEnchantIDFromLink(link)
-    if not link then return end
-    local itemId = string.match(link, ".*(enchant:%d+).*")
-    return tostring(itemId)
 end
 
 -- true when the link carries an enchant or a random suffix, which the bare item ID would lose
@@ -81,14 +67,6 @@ function Altoholic:GetRealmString(faction, realm)
 		return "|cFF2459FF" .. realm
 	else
 		return "|cFFFF0000" .. realm
-	end
-end
-
-function Altoholic:GetFullRealmString(faction, realm)
-	if faction == "Alliance" then
-		return "|cFF2459FF[" .. FACTION_ALLIANCE .. "] " .. WHITE .. realm
-	else
-		return "|cFFFF0000[" .. FACTION_HORDE .. "] " .. WHITE .. realm
 	end
 end
 
@@ -171,31 +149,6 @@ function Altoholic:GetSkillColor(rank)
 	else
 		return GREEN
 	end
-end
-
-local function compare_Character_By_Level(c1, c2)
-	local l1 = Altoholic.db.account.data[Altoholic_compare_faction][Altoholic_compare_realm].char[c1].level
-	local l2 = Altoholic.db.account.data[Altoholic_compare_faction][Altoholic_compare_realm].char[c2].level
-	if l1 == l2 then
-		return c1 < c2  -- alphabetically when same level
-	else
-		return l1 > l2  -- highest level first
-	end
-end
-
-function Altoholic:Get_Sorted_Character_List(faction, realm)
-	Altoholic_sorted_character_list = {}
-	Altoholic_compare_faction = faction
-	Altoholic_compare_realm = realm
-	-- DEFAULT_CHAT_FRAME:AddMessage(TEAL .. "getting list for "..faction.." on "..realm)
-	for CharacterName, c in pairs(self.db.account.data[faction][realm].char) do
-		-- no class: the record was only ever looked up, never scanned
-		if c.class ~= "" then
-			table.insert(Altoholic_sorted_character_list, CharacterName)
-		end
-	end
-	table.sort(Altoholic_sorted_character_list, compare_Character_By_Level)
-	return Altoholic_sorted_character_list
 end
 
 function Altoholic:GetProfessionID(skill)
