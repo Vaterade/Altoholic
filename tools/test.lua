@@ -331,6 +331,14 @@ check(not Altoholic:DeleteCharacter("Alliance", "Testrealm", "Testchar"), "the l
 check(Altoholic:DeleteCharacter("Alliance", "Testrealm", "Altchar") and #UI.Realms()[1].chars == 1, "an alt can")
 UI.Open("about")
 check(UI.current == UI.views.About and UI.current.info[1]:GetText() == Altoholic.vars.version, "About shows the version")
+-- the copy button says "Copied" only when the clipboard took the text
+CopyToClipboard = function() return 0 end
+UI.current:Copy("https://example.invalid/a")
+check(UI.current.copied:GetText() == "https://example.invalid/a", "About: a failed copy shows the link to copy by hand")
+CopyToClipboard = function(s) return string.len(s) end
+UI.current:Copy("https://example.invalid/a")
+check(UI.current.copied:GetText() ~= "https://example.invalid/a", "About: a copy that worked says so")
+CopyToClipboard = nil
 local deps = UI.current.deps.list.data
 check(#deps == 5 and deps[1].cells[1] == "ClassicAPI" and deps[1].cells[3]:find("v1%.18%.10")
 	and deps[2].cells[3]:find("Optional %- not installed"), "About's Needed column: ClassicAPI's version, pfUI optional and not installed")
@@ -430,7 +438,12 @@ clist.GetTop = function() return 770.9 - 8 end
 clist.GetBottom = function() return 292.9 + 4 end
 clist.scripts.OnUpdate(clist)
 check(clist.visible == math.floor(466 / clist.rowHeight), "a list counts its rows from its edges, not the scaled GetHeight (" .. tostring(clist.visible) .. " rows)")
-clist.GetTop, clist.GetBottom, clist.height = nil, nil, 300
+-- before the list is laid out it has no edges: ClassicAPI's unscaled height is the true size
+clist.GetTop, clist.GetBottom = nil, nil
+clist.GetUnscaledHeight = function() return 466 end
+clist.scripts.OnUpdate(clist)
+check(clist.visible == math.floor(466 / clist.rowHeight), "a list with no edges yet counts its rows from the unscaled height (" .. tostring(clist.visible) .. " rows)")
+clist.GetUnscaledHeight, clist.height = nil, 300
 clist.scripts.OnUpdate(clist)
 local slot = UI.views.Containers.list.rows[2].slots[2]
 check(slot.item and tostring(slot.item):find("15248"), "containers: the enchanted item shows by its link")

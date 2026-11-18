@@ -514,19 +514,22 @@ end
 -- *** Sizes ***
 
 -- A frame's size from its edges. On this client GetHeight and GetWidth of a frame sized by
--- its anchors come back multiplied by the UI scale (a 478-tall page reads 388 at 0.81), while
--- its edges are right; a frame given an explicit size reads true either way. Until the frame
--- has been laid out it has no edges, and GetHeight/GetWidth is all there is.
+-- its anchors come back multiplied by the UI scale (a 478-tall page reads 388 at 0.81), as
+-- 1.12 does, while its edges are right; a frame given an explicit size reads true either way.
+-- Until the frame has been laid out it has no edges; then ClassicAPI's GetUnscaledHeight /
+-- GetUnscaledWidth give the true size, and GetHeight/GetWidth is the last resort.
 function W.Height(f)
 	local top, bottom = f:GetTop(), f:GetBottom()
 	if top and bottom then return top - bottom end
-	return f:GetHeight() or 0
+	local unscaled = f.GetUnscaledHeight and f:GetUnscaledHeight()
+	return unscaled or f:GetHeight() or 0
 end
 
 function W.Width(f)
 	local left, right = f:GetLeft(), f:GetRight()
 	if left and right then return right - left end
-	return f:GetWidth() or 0
+	local unscaled = f.GetUnscaledWidth and f:GetUnscaledWidth()
+	return unscaled or f:GetWidth() or 0
 end
 
 -- *** Scrolling list ***

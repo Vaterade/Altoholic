@@ -149,10 +149,10 @@ function view:Create(frame)
 	}, 20)
 end
 
--- copies a link, or shows it for copying by hand without ClassicAPI's clipboard
+-- copies a link, or shows it for copying by hand when the clipboard is missing or fails
 function view:Copy(url)
-	if CopyToClipboard then
-		CopyToClipboard(url)
+	-- CopyToClipboard returns 0 when the clipboard could not be written
+	if CopyToClipboard and (CopyToClipboard(url) or 0) ~= 0 then
 		self.copied:SetText(L["Copied"])
 	else
 		self.copied:SetText(url)
