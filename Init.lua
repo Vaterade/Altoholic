@@ -1,6 +1,6 @@
 Altoholic = {}
 Altoholic.vars = {}
-Altoholic.vars.version = "v2.0.0"
+Altoholic.vars.version = "v2.0.1"
 
 -- *** Events ***
 -- Events are dispatched to the method of the same name, without the event name:

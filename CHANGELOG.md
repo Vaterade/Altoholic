@@ -6,12 +6,14 @@ the version in the `.toc` files into the GitHub release notes, so write it for p
 Versions follow [semantic versioning](https://semver.org/): a fix raises the last number, a
 new feature the middle one, and a change that breaks the old way of doing things the first.
 
-## [Unreleased]
+## [2.0.1] - 2026-11-18
 
 ### Fixed
 - Lists filled only part of their page at UI scales below 1, leaving empty rows' worth of space
   at the bottom (Containers showed 10 lines with room for 13). Reputations and Attunements
   showed fewer characters than fit for the same reason.
+- The About page said "Copied" even when the link couldn't be copied. It now shows the link
+  to copy by hand instead.
 
 ## [2.0.0] - 2026-11-07
 
